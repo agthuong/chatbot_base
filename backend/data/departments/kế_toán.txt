@@ -1,0 +1,77 @@
+# PHÒNG BAN: Kế toán
+
+## Giai đoạn: CONSTRUCTION
+
+### Giai đoạn con: Construction
+
+#### Task: KẾT-001 - Đặt hàng và triển khai thi công
+##### Thuộc giai đoạn: CONSTRUCTION
+##### Giai đoạn con: Construction
+##### Điều kiện tiên quyết: Đơn đặt hàng, so sánh giá, Đề nghị thanh toán đã thống nhất với nhà thầu//nhà cung cấp
+- Ngày khởi công: Đặt hàng đạt 70% khối lượng
+- Sau khi khởi công 7 ngày: Đặt hàng đạt 100% khối lượng
+##### Người phụ trách: Kế toán trưởng
+##### Người thực hiện: NV kế toán
+##### Mô tả: Kiểm tra hồ sơ đúng đủ, nhập liệu Misa
+##### Mục tiêu: N
+##### Đầu ra: Hồ sơ Kế toán trưởng phê duyệt
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: NV Mua hàng
+##### Định kỳ thực hiện: N
+##### Gửi kết quả qua: N
+
+#### Task: KẾT-002 - Đặt hàng và triển khai thi công
+##### Thuộc giai đoạn: CONSTRUCTION
+##### Giai đoạn con: Construction
+##### Điều kiện tiên quyết: Lịch chi được BOD phê duyệt
+##### Người phụ trách: Kế toán trưởng
+##### Người thực hiện: NV kế toán
+##### Mô tả: Kiểm tra lịch chi, hồ sơ trên misa
+Chi tiền theo đúng lịch chi đã phê duyệt
+##### Mục tiêu: N
+##### Đầu ra: Ủy nhiệm chi
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: NV Mua hàng
+##### Định kỳ thực hiện: N
+##### Gửi kết quả qua: N
+
+### Giai đoạn con: Construction (Bước chuyển tiếp)
+
+#### Task: KẾT-003 - Nghiệm thu giai đoạn với khách hàng
+##### Thuộc giai đoạn: CONSTRUCTION
+##### Giai đoạn con: Construction (Bước chuyển tiếp)
+##### Điều kiện tiên quyết: 1. Ủy nhiệm chi từ khách hàng
+2. Biên bản nghiệm thu giai đoạn với khách hàng
+##### Người phụ trách: Kế toán trưởng
+##### Người thực hiện: NV kế toán
+##### Mô tả: Phiếu thu của khách hàng
+##### Mục tiêu: Thu tiền
+##### Đầu ra: Phiếu thu
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: NV Kinh doanh
+##### Định kỳ thực hiện: N
+##### Gửi kết quả qua: PM
+
+## Giai đoạn: AFTERSALE-MAINTENANCE
+
+### Giai đoạn con: After Sales & Maintainance
+
+#### Task: KẾT-004 - Quyết toán với thầu phụ
+##### Thuộc giai đoạn: AFTERSALE-MAINTENANCE
+##### Giai đoạn con: After Sales & Maintainance
+##### Điều kiện tiên quyết: Bộ hồ sơ bao gồm:
+- Biên bản nghiệm thu khối lượng quyết toán
+- Bảng giá trị khối lượng nghiệm thu quyết toán
+- ĐNTT
+- Hóa đơn tài chính nếu có
+##### Người phụ trách: TP Kế toán
+##### Người thực hiện: NV Kế toán
+##### Mô tả: Kiểm tra hồ sơ kế toán
+Nhập liệu, lưu trữ 01 bộ hồ sơ
+##### Mục tiêu: Thanh toán đúng đủ khối lượng cho thầu phụ
+##### Đầu ra: Hồ sơ mua hàng còn lại
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: NV Đặt hàng
+##### Định kỳ thực hiện: Khi phát sinh
+##### Gửi kết quả qua: PM/Misa/Lưu trữ trên server
+

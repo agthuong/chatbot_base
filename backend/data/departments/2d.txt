@@ -1,0 +1,53 @@
+# PHÒNG BAN: 2D
+
+## Giai đoạn: CONSTRUCTION
+
+### Giai đoạn con: Construction
+
+#### Task: 2D-001 - Chuẩn bị kick-off nội bộ/ Chuẩn bị họp cập nhật dự án
+##### Thuộc giai đoạn: CONSTRUCTION
+##### Giai đoạn con: Construction
+##### Điều kiện tiên quyết: N
+##### Người phụ trách: Chỉ huy trưởng
+##### Người thực hiện: 2D, Thi công, Thiết kế
+##### Phối hợp với: 2D, Thi công, Thiết kế
+##### Mô tả: Khảo sát mặt bằng
+##### Mục tiêu: N
+##### Đầu ra: Biên bản khảo sát mặt bằng
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: Chỉ huy trưởng
+##### Định kỳ thực hiện: Khi phát sinh
+##### Gửi kết quả qua: PM
+
+#### Task: 2D-002 - Chuẩn bị kick-off nội bộ/ Chuẩn bị họp cập nhật dự án
+##### Thuộc giai đoạn: CONSTRUCTION
+##### Giai đoạn con: Construction
+##### Điều kiện tiên quyết: N
+##### Người phụ trách: Tp Thiết kế
+##### Người thực hiện: NV 2D
+##### Mô tả: Vẽ bản vẽ xin phép
+##### Mục tiêu: N
+##### Đầu ra: Bản vẽ xin phép
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: Chỉ huy trưởng / NV Thiết kế
+##### Định kỳ thực hiện: Khi phát sinh
+##### Gửi kết quả qua: Email/PM/Viber
+
+## Giai đoạn: DEFECT-HANDOVER
+
+### Giai đoạn con: Defect & Handover
+
+#### Task: 2D-003 - Chuẩn bị hồ sơ Quyết toán
+##### Thuộc giai đoạn: DEFECT-HANDOVER
+##### Giai đoạn con: Defect & Handover
+##### Điều kiện tiên quyết: Bảng khối lượng quyết toán Ver 01
+##### Người phụ trách: TP Thiết kế
+##### Người thực hiện: N
+##### Mô tả: Điều chỉnh bản vẽ xin phép theo thực tế để làm bản vẽ hoàn công
+##### Mục tiêu: Hoàn công với tòa nhà
+##### Đầu ra: Bản vẽ hoàn công
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: Chỉ huy trưởng/NV Kinh doanh
+##### Định kỳ thực hiện: Khi phát sinh
+##### Gửi kết quả qua: PM/Viber/Mail
+

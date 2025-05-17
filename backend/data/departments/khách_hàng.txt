@@ -1,0 +1,23 @@
+# PHÒNG BAN: Khách hàng
+
+## Giai đoạn: DEFECT-HANDOVER
+
+### Giai đoạn con: Defect & Handover
+
+#### Task: KHÁ-001 - Nghiệm thu với khách hàng
+##### Thuộc giai đoạn: DEFECT-HANDOVER
+##### Giai đoạn con: Defect & Handover
+##### Điều kiện tiên quyết: Công trình hoàn thành 100% khối lượng công việc đã ký kết
+##### Người phụ trách: TP Thiết kế
+##### Người thực hiện: NV Thiết kế
+##### Mô tả: Nghiệm thu nội bộ khách hàng
+Kiểm tra công năng, thẩm mỹ của sản phẩm tại công trình
+Điều chỉnh những vị trí chưa đạt chất lượng
+##### Mục tiêu: Đảm bảo dự án hoàn thiện tốt nhất
+##### Đầu ra: 1. Biên bản nghiệm thu nội bộ
+2.Defect list nội bộ
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: Giám sát
+##### Định kỳ thực hiện: Khi dự án đạt 98% khối lượng công việc đã ký kết
+##### Gửi kết quả qua: PM/Viber/Mail
+

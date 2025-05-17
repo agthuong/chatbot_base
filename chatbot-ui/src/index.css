@@ -1,0 +1,168 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+    --font-vietnamese: 'Noto Sans Vietnamese', 'Inter', system-ui, sans-serif;
+    
+    /* Biến typography cho bảng chế độ sáng */
+    --tw-prose-body: #374151;
+    --tw-prose-headings: #111827;
+    --tw-prose-lead: #4b5563;
+    --tw-prose-links: #111827;
+    --tw-prose-links-hover: #1f2937;
+    --tw-prose-bold: #111827;
+    --tw-prose-counters: #6b7280;
+    --tw-prose-bullets: #6b7280;
+    --tw-prose-hr: #e5e7eb;
+    --tw-prose-quotes: #111827;
+    --tw-prose-quote-borders: #e5e7eb;
+    --tw-prose-th-backgrounds: #f3f4f6;
+    --tw-prose-th-borders: #d1d5db;
+    --tw-prose-td-borders: #e5e7eb;
+  }
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+    
+    /* Biến typography cho bảng chế độ tối */
+    --tw-prose-body: #d1d5db;
+    --tw-prose-headings: #f3f4f6;
+    --tw-prose-lead: #9ca3af;
+    --tw-prose-links: #e5e7eb;
+    --tw-prose-links-hover: #f3f4f6;
+    --tw-prose-bold: #f3f4f6;
+    --tw-prose-counters: #9ca3af;
+    --tw-prose-bullets: #9ca3af;
+    --tw-prose-hr: #374151;
+    --tw-prose-quotes: #f3f4f6;
+    --tw-prose-quote-borders: #374151;
+    --tw-prose-th-backgrounds: #1f2937;
+    --tw-prose-th-borders: #374151;
+    --tw-prose-td-borders: #374151;
+  }
+}
+@layer base {
+  @font-face {
+    font-family: 'geist';
+    src: url(./assets/fonts/geist.woff2) format('woff2');
+  }
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-vietnamese), 'geist', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  /* Đảm bảo Markdown render với font Việt */
+  .markdown {
+    font-family: var(--font-vietnamese), 'geist', sans-serif;
+  }
+}
+
+/* Thêm kiểu dáng cho bảng */
+.prose table {
+  font-size: 0.9em;
+  width: 100%;
+  margin: 1.5rem 0;
+  border-radius: 0.5rem;
+  border: 1px solid var(--tw-prose-td-borders);
+  overflow: hidden;
+}
+
+.prose table thead {
+  background-color: var(--tw-prose-th-backgrounds);
+}
+
+.prose table th {
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  color: var(--tw-prose-headings);
+}
+
+.prose table td {
+  padding: 0.75rem 1rem;
+  vertical-align: top;
+  border-top: 1px solid var(--tw-prose-td-borders);
+}
+
+/* Dòng có màu xen kẽ */
+.prose table tbody tr:nth-child(odd) {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.dark .prose table tbody tr:nth-child(odd) {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.prose table tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dark .prose table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Đảm bảo bảng tự động tạo thanh cuộn khi cần thiết */
+@media (max-width: 768px) {
+  .prose table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+
+/* Cải thiện hiển thị bảng trong message */
+.message-content .prose table {
+  max-width: 100%;
+}

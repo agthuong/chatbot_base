@@ -1,0 +1,13 @@
+# DANH SÁCH PHÒNG BAN
+
+1. [2D](./2d.txt)
+2. [Dự toán](./dự_toán.txt)
+3. [Khách hàng](./khách_hàng.txt)
+4. [Kinh doanh](./kinh_doanh.txt)
+5. [Kế toán](./kế_toán.txt)
+6. [Marketing](./marketing.txt)
+7. [Mua hàng](./mua_hàng.txt)
+8. [Team dự án](./team_dự_án.txt)
+9. [Thi công](./thi_công.txt)
+10. [Thiết kế](./thiết_kế.txt)
+11. [Đặt hàng](./đặt_hàng.txt)

@@ -1,0 +1,66 @@
+# PHÒNG BAN: Đặt hàng
+
+## Giai đoạn: CONSTRUCTION
+
+### Giai đoạn con: Construction
+
+#### Task: ĐẶT-001 - Yêu cầu đặt hàng
+##### Thuộc giai đoạn: CONSTRUCTION
+##### Giai đoạn con: Construction
+##### Điều kiện tiên quyết: 1. Bảng spec vật liệu
+2. Final Khối lượng công việc
+3. Final 3D
+4. Bản vẽ thi công 
+5. Phiếu yêu cầu vật tư
+##### Người phụ trách: TP Dự toán - Đặt hàng
+##### Người thực hiện: NV đặt hàng
+##### Mô tả: Đặt hàng: (Nhận các phiếu yêu cầu vật tư từ Giám sát cho các hạn mục Dbhomes mua vật tư và book thi công lắp đặt)
+- Lọc khối lượng hạn mục gửi thầu lấy giá: đối với các hạn mục có kỹ thuật và phương án thi công phức tạp, PMH tạo group với GM/TP thi công/ CHT tương tác kỹ thuật để chốt cơ sở lấy giá cho đúng
+(RIÊNG: các hạn mục (* )sẽ gửi các nhà thầu chiến lược, gửi PO cho thầu xác nhận dựa trên giá chuẩn, và thầu báo giá các hạn mục ngoài giá chuẩn)
+- Lập bảng so sánh giá
+##### Mục tiêu: Khối lượng đúng, đủ
+##### Đầu ra: Bảng khối lượng chi tiết đơn đặt hàng dự kiến
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: Chỉ huy trưởng / Giám sát
+##### Định kỳ thực hiện: N
+##### Gửi kết quả qua: Không
+
+#### Task: ĐẶT-002 - Đặt hàng và triển khai thi công
+##### Thuộc giai đoạn: CONSTRUCTION
+##### Giai đoạn con: Construction
+##### Điều kiện tiên quyết: Đơn đặt hàng, so sánh giá, Đề nghị thanh toán đã thống nhất với nhà thầu//nhà cung cấp
+- Ngày khởi công: Đặt hàng đạt 70% khối lượng
+- Sau khi khởi công 7 ngày: Đặt hàng đạt 100% khối lượng
+##### Người phụ trách: TP Dự toán - Đặt hàng
+##### Người thực hiện: NV đặt hàng
+##### Mô tả: Lên lịch thanh toán cho Nhà thầu/Nhà cung cấp
+##### Mục tiêu: N
+##### Đầu ra: Lịch chi được BOD phê duyệt
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: NV Kế toán
+##### Định kỳ thực hiện: N
+##### Gửi kết quả qua: PM
+
+## Giai đoạn: AFTERSALE-MAINTENANCE
+
+### Giai đoạn con: After Sales & Maintainance
+
+#### Task: ĐẶT-003 - Quyết toán với thầu phụ
+##### Thuộc giai đoạn: AFTERSALE-MAINTENANCE
+##### Giai đoạn con: After Sales & Maintainance
+##### Điều kiện tiên quyết: Biên bản nghiệm thu Khối lượng QT thầu phụ có xác nhận của Nhà thầu/Nhà cung cấp, Giám sát và Chỉ huy trưởng Dbhomes ở dự án đó
+##### Người phụ trách: TP Dự toán - Đặt hàng
+##### Người thực hiện: NV Đặt hàng
+##### Mô tả: Hoàn tất hồ sơ quyết toán với thầu phụ
+Thanh toán cho thầu phụ
+##### Mục tiêu: Thanh toán đúng đủ khối lượng cho thầu phụ
+##### Đầu ra: Bộ hồ sơ bao gồm:
+- Biên bản nghiệm thu khối lượng quyết toán
+- Bảng giá trị khối lượng nghiệm thu quyết toán
+- ĐNTT
+- Hóa đơn tài chính nếu có
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: NV Kế toán
+##### Định kỳ thực hiện: Khi phát sinh
+##### Gửi kết quả qua: PM/Lưu trữ trên server
+

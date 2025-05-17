@@ -1,0 +1,92 @@
+# PHÒNG BAN: Marketing
+
+## Giai đoạn: MKT-SALES
+
+### Giai đoạn con: Branding MKT
+
+#### Task: MAR-001 - Branding
+##### Thuộc giai đoạn: MKT-SALES
+##### Giai đoạn con: Branding MKT
+##### Điều kiện tiên quyết: BOD duyệt
+##### Người phụ trách: CEO
+##### Người thực hiện: MKT team
+##### Mô tả: Hoạt động Branding MKT
+##### Mục tiêu: Nhận diện thương hiệu
+##### Đầu ra: Activity update and report - BM.MKT.01
+##### Thời gian thực hiện: Always on
+##### Người nhận kết quả: BOD
+##### Định kỳ thực hiện: Tháng
+##### Gửi kết quả qua: Email/ PM in the future
+##### Form thực hiện: N
+##### Đo lường/đánh giá: 2 lần nhắc/ Tháng
+
+### Giai đoạn con: Sales Sourcing
+
+#### Task: MAR-002 - Tìm kiếm cơ hội bán hàng
+##### Thuộc giai đoạn: MKT-SALES
+##### Giai đoạn con: Sales Sourcing
+##### Điều kiện tiên quyết: BOD duyệt
+##### Người phụ trách: MKT leader
+##### Người thực hiện: MKT team
+##### Mô tả: Digital MKT
+##### Mục tiêu: Xu hướng Thị trường/ Data khách tiềm năng
+##### Đầu ra: Dataset
+##### Thời gian thực hiện: Always on
+##### Người nhận kết quả: Sales
+##### Định kỳ thực hiện: Tuần
+##### Gửi kết quả qua: PM/Pipeline/New opp
+##### Form thực hiện: N
+##### Đo lường/đánh giá: CPL + Conversion%
+
+#### Task: MAR-003 - Tìm kiếm cơ hội bán hàng
+##### Thuộc giai đoạn: MKT-SALES
+##### Giai đoạn con: Sales Sourcing
+##### Điều kiện tiên quyết: BOD duyệt
+##### Người phụ trách: MKT leader
+##### Người thực hiện: MKT team
+##### Mô tả: Event
+##### Mục tiêu: Xu hướng Thị trường/ Data khách tiềm năng
+##### Đầu ra: Dataset
+##### Thời gian thực hiện: Always on
+##### Người nhận kết quả: BOD/ Phòng KD
+##### Định kỳ thực hiện: Tháng
+##### Gửi kết quả qua: PM/Pipeline/New opp
+##### Form thực hiện: N
+##### Đo lường/đánh giá: CPL + Conversion%
+
+## Giai đoạn: DEFECT-HANDOVER
+
+### Giai đoạn con: Defect & Handover
+
+#### Task: MAR-004 - Bàn giao khách hàng
+##### Thuộc giai đoạn: DEFECT-HANDOVER
+##### Giai đoạn con: Defect & Handover
+##### Điều kiện tiên quyết: N
+##### Người phụ trách: Trưởng nhóm Marketing
+##### Người thực hiện: NV Marketing
+##### Mô tả: Setup standee, setup décor không gian để chụp hình
+Chụp hình, quay video dự án khi bàn giao để làm tư liệu
+##### Mục tiêu: Truyển thông sau dự án và làm tư liệu tham khảo
+##### Đầu ra: Hình ảnh, video (nếu có)
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: Chỉ huy trưởng / NV Kinh doanh
+##### Định kỳ thực hiện: Khi phát sinh
+##### Gửi kết quả qua: PM/Viber/Lưu trữ trên server
+
+### Giai đoạn con: After Sales & Maintainance (Bước chuyển tiếp)
+
+#### Task: MAR-005 - Nghiệm thu và bàn giao khách hàng
+##### Thuộc giai đoạn: DEFECT-HANDOVER
+##### Giai đoạn con: After Sales & Maintainance (Bước chuyển tiếp)
+##### Điều kiện tiên quyết: N
+##### Người phụ trách: Trưởng nhóm Marketing
+##### Người thực hiện: NV Marketing
+##### Mô tả: Setup standee, setup décor không gian để chụp hình
+Chụp hình, quay video dự án khi bàn giao để làm tư liệu
+##### Mục tiêu: Truyển thông sau dự án và làm tư liệu tham khảo
+##### Đầu ra: Hình ảnh, video (nếu có)
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: Chỉ huy trưởng / NV Kinh doanh
+##### Định kỳ thực hiện: Khi phát sinh
+##### Gửi kết quả qua: PM/Viber/Lưu trữ trên server
+

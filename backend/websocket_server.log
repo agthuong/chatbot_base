@@ -1,0 +1,565 @@
+2025-05-17 11:17:24,080 - websocket_server - WARNING - Không thể import từ chatbot.py. Sử dụng hàm mock.
+2025-05-17 11:17:24,081 - websocket_server - WARNING - Không thể import DepartmentInfoTool. Sử dụng mock class.
+2025-05-17 11:17:24,084 - websocket_server - INFO - Khởi động server WebSocket tại 0.0.0.0:8090
+2025-05-17 11:17:24,145 - websockets.server - INFO - server listening on 0.0.0.0:8090
+2025-05-17 11:17:24,145 - websocket_server - INFO - Server WebSocket đang chạy tại ws://0.0.0.0:8090
+2025-05-17 11:17:24,145 - websocket_server - INFO - Đã cấu hình ping_timeout=6000 giây, ping_interval=60 giây
+2025-05-17 11:17:58,030 - websockets.server - INFO - connection open
+2025-05-17 11:18:00,782 - websocket_server - INFO - Nhận tin nhắn dạng JSON: {"content":"test alo alo /no_think","session_id":""}
+2025-05-17 11:18:00,783 - websocket_server - INFO - Session ID không được cung cấp trong tin nhắn JSON, sử dụng current_session_id: 16b1f3ea-b548-4dc1-91ef-f517c74092b7
+2025-05-17 11:18:00,783 - websocket_server - INFO - Session ID từ client (sau khi kiểm tra): 16b1f3ea-b548-4dc1-91ef-f517c74092b7
+2025-05-17 11:18:00,784 - websocket_server - INFO - Tắt chế độ thinking cho câu hỏi: test alo alo /no_think...
+2025-05-17 11:18:00,784 - websocket_server - INFO - Nhận tin nhắn thông thường: test alo alo /no_think, enable_thinking=False
+2025-05-17 11:18:00,784 - websocket_server - INFO - Không có lịch sử tin nhắn cho phiên này
+2025-05-17 11:18:00,785 - websocket_server - INFO - Phân tích câu hỏi: Phòng ban=None, Loại=general, Thinking=False
+2025-05-17 11:18:00,785 - websocket_server - INFO - Xử lý streaming response cho: 'test alo alo /no_think', phòng ban: None, session_id: 16b1f3ea-b548-4dc1-91ef-f517c74092b7
+2025-05-17 11:18:00,785 - websocket_server - INFO - Session ID nhận được: 16b1f3ea-b548-4dc1-91ef-f517c74092b7
+2025-05-17 11:18:00,786 - websocket_server - INFO - Phát hiện lệnh /no_think, tắt chế độ thinking cho: test alo alo
+2025-05-17 11:18:00,786 - websocket_server - INFO - Xử lý streaming response. Query: 'test alo alo', Mode thinking: False
+2025-05-17 11:18:00,786 - websocket_server - INFO - Không có lịch sử tin nhắn cho phiên này
+2025-05-17 11:18:00,786 - websocket_server - INFO - Phân tích câu hỏi: Phòng ban=None, Loại=general, Thinking=False
+2025-05-17 11:18:00,787 - websocket_server - INFO - Query thực tế gửi đến mô hình: test alo alo /no_think
+2025-05-17 11:18:00,787 - websocket_server - INFO - Câu hỏi chung, chế độ thinking: False
+2025-05-17 11:18:00,787 - websocket_server - INFO - Đã lưu hội thoại chung vào lịch sử của session 16b1f3ea-b548-4dc1-91ef-f517c74092b7
+2025-05-17 11:19:18,362 - websockets.server - INFO - connection open
+2025-05-17 11:19:19,935 - websockets.server - INFO - connection open
+2025-05-17 11:19:22,491 - websocket_server - INFO - Nhận tin nhắn dạng JSON: {"content":"alo /no_think","session_id":""}
+2025-05-17 11:19:22,492 - websocket_server - INFO - Session ID không được cung cấp trong tin nhắn JSON, sử dụng current_session_id: 16b1f3ea-b548-4dc1-91ef-f517c74092b7
+2025-05-17 11:19:22,492 - websocket_server - INFO - Session ID từ client (sau khi kiểm tra): 16b1f3ea-b548-4dc1-91ef-f517c74092b7
+2025-05-17 11:19:22,493 - websocket_server - INFO - Tắt chế độ thinking cho câu hỏi: alo /no_think...
+2025-05-17 11:19:22,493 - websocket_server - INFO - Nhận tin nhắn thông thường: alo /no_think, enable_thinking=False
+2025-05-17 11:19:22,493 - websocket_server - INFO - Đã thêm 1 tin nhắn gần nhất vào prompt
+2025-05-17 11:19:22,495 - websocket_server - INFO - Đã lưu lịch sử tin nhắn và prompt vào file: data/logs/history_prompt_20250517_111922.txt
+2025-05-17 11:19:22,496 - websocket_server - INFO - Phân tích câu hỏi: Phòng ban=None, Loại=general, Thinking=False
+2025-05-17 11:19:22,496 - websocket_server - INFO - Xử lý streaming response cho: 'alo /no_think', phòng ban: None, session_id: 16b1f3ea-b548-4dc1-91ef-f517c74092b7
+2025-05-17 11:19:22,497 - websocket_server - INFO - Session ID nhận được: 16b1f3ea-b548-4dc1-91ef-f517c74092b7
+2025-05-17 11:19:22,497 - websocket_server - INFO - Phát hiện lệnh /no_think, tắt chế độ thinking cho: alo
+2025-05-17 11:19:22,497 - websocket_server - INFO - Xử lý streaming response. Query: 'alo', Mode thinking: False
+2025-05-17 11:19:22,498 - websocket_server - INFO - Đã thêm 1 tin nhắn gần nhất vào prompt
+2025-05-17 11:19:22,499 - websocket_server - INFO - Đã lưu lịch sử tin nhắn và prompt vào file: data/logs/history_prompt_20250517_111922.txt
+2025-05-17 11:19:22,499 - websocket_server - INFO - Phân tích câu hỏi: Phòng ban=None, Loại=general, Thinking=False
+2025-05-17 11:19:22,499 - websocket_server - INFO - Query thực tế gửi đến mô hình: alo /no_think
+2025-05-17 11:19:22,500 - websocket_server - INFO - Câu hỏi chung, chế độ thinking: False
+2025-05-17 11:19:22,500 - websocket_server - INFO - Đã lưu hội thoại chung vào lịch sử của session 16b1f3ea-b548-4dc1-91ef-f517c74092b7
+2025-05-17 11:19:24,785 - websocket_server - WARNING - Session  không tồn tại, sử dụng session hiện tại
+2025-05-17 11:19:24,785 - websocket_server - INFO - Nhận yêu cầu phân tích (thinking) cho câu hỏi: Mock response for general query: alo /no_think
+2025-05-17 11:19:24,786 - websocket_server - INFO - Đã thêm 2 tin nhắn gần nhất vào prompt
+2025-05-17 11:19:24,787 - websocket_server - INFO - Đã lưu lịch sử tin nhắn và prompt vào file: data/logs/history_prompt_20250517_111924.txt
+2025-05-17 11:19:24,787 - websocket_server - INFO - Phân tích câu hỏi để xác định phòng ban hoặc loại câu hỏi
+2025-05-17 11:19:24,788 - websocket_server - INFO - Lấy phân tích cho câu hỏi chung
+2025-05-17 11:19:24,788 - websocket_server - INFO - Gửi phản hồi thinking với request_id: thinking_1747455564784_zgioz0p
+2025-05-17 11:19:24,789 - websocket_server - INFO - Đã gửi nội dung thinking (304 ký tự)
+2025-05-17 11:21:28,193 - websockets.server - INFO - server closing
+2025-05-17 11:21:28,256 - websockets.server - INFO - server closed
+2025-05-17 11:21:28,257 - websocket_server - INFO - Server bị dừng bởi người dùng
+2025-05-17 11:21:30,523 - websocket_server - INFO - Khởi động server WebSocket tại 0.0.0.0:8090
+2025-05-17 11:21:30,558 - websockets.server - INFO - server listening on 0.0.0.0:8090
+2025-05-17 11:21:30,558 - websocket_server - INFO - Server WebSocket đang chạy tại ws://0.0.0.0:8090
+2025-05-17 11:21:30,558 - websocket_server - INFO - Đã cấu hình ping_timeout=6000 giây, ping_interval=60 giây
+2025-05-17 11:23:52,845 - websockets.server - INFO - connection open
+2025-05-17 11:23:53,834 - websocket_server - INFO - Nhận tin nhắn dạng JSON: {"content":"alo /no_think","session_id":""}
+2025-05-17 11:23:53,834 - websocket_server - INFO - Session ID không được cung cấp trong tin nhắn JSON, sử dụng current_session_id: d16ec270-a709-41a4-bfe8-5f693a828ea5
+2025-05-17 11:23:53,834 - websocket_server - INFO - Session ID từ client (sau khi kiểm tra): d16ec270-a709-41a4-bfe8-5f693a828ea5
+2025-05-17 11:23:53,835 - websocket_server - INFO - Tắt chế độ thinking cho câu hỏi: alo /no_think...
+2025-05-17 11:23:53,835 - websocket_server - INFO - Nhận tin nhắn thông thường: alo /no_think, enable_thinking=False
+2025-05-17 11:23:53,835 - websocket_server - INFO - Không có lịch sử tin nhắn cho phiên này
+2025-05-17 11:23:53,835 - chatbot_rag - INFO - Đang phân tích câu hỏi với LLM: alo /no_think, session_id: d16ec270-a709-41a4-bfe8-5f693a828ea5
+2025-05-17 11:23:53,837 - chatbot_rag - WARNING - [analyze_query_with_llm] Không thể import get_session_history từ websocket_server, sử dụng get_chat_history
+2025-05-17 11:23:53,838 - chatbot_rag - INFO - [analyze_query_with_llm] Lấy lịch sử từ get_chat_history: 0 bản ghi
+2025-05-17 11:23:53,838 - chatbot_rag - INFO - [analyze_query_with_llm] Sử dụng lịch sử hội thoại: 0 bản ghi
+2025-05-17 11:23:53,839 - chatbot_rag - INFO - [analyze_query_with_llm] Prompt cuối cùng: Lịch sử tin nhắn:
+
+Câu hỏi người dùng hiện tại: "alo /no_think"
+
+Phân tích câu hỏi và trả về JSON có định dạng:
+{"department": "tên phòng ban hoặc null", "query_type": "department_specific hoặc genera...
+2025-05-17 11:23:53,839 - chatbot_rag - INFO - Kích thước prompt: 486 ký tự
+2025-05-17 11:23:53,839 - chatbot_rag - INFO - Kích thước system prompt: 4181 ký tự
+2025-05-17 11:23:53,839 - chatbot_rag - INFO - Tổng kích thước: 4667 ký tự
+2025-05-17 11:23:53,841 - chatbot_rag - INFO - Đã lưu full prompt vào file: data/logs/llm_full_prompt_20250517_112353.txt
+2025-05-17 11:23:53,842 - chatbot_rag - INFO - System prompt: 
+Bạn là trợ lý AI chuyên phân tích nội dung câu hỏi để xác định:
+1. Phòng ban mà người dùng đang hỏi về (department)
+2. Phân loại câu hỏi là về phòng ban cụ thể hay câu hỏi chung (query_type)
+3. Xác đ...
+2025-05-17 11:23:53,842 - chatbot_rag - INFO - User prompt: Lịch sử tin nhắn:
+
+Câu hỏi người dùng hiện tại: "alo /no_think"
+
+Phân tích câu hỏi và trả về JSON có định dạng:
+{"department": "tên phòng ban hoặc null", "query_type": "department_specific hoặc genera...
+2025-05-17 11:23:53,843 - chatbot_rag - INFO - Gửi truy vấn đến LLM API tại http://localhost:1234/v1/chat/completions với stream=False
+2025-05-17 11:24:07,324 - chatbot_rag - INFO - Mã phản hồi từ API: 200
+2025-05-17 11:24:07,325 - chatbot_rag - INFO - Phản hồi gốc từ LLM API (200 ký tự đầu): <think>
+
+</think>
+
+{"department": "Kinh doanh", "query_type": "department_specific", "error": false}
+2025-05-17 11:24:07,330 - chatbot_rag - INFO - Đã lưu phản hồi đầy đủ vào file: data/logs/llm_response_20250517_112407.txt
+2025-05-17 11:24:07,334 - chatbot_rag - INFO - [analysis_20250517_112407] Đã ghi phản hồi gốc vào: data/logs/analysis_20250517_112407_raw.txt
+2025-05-17 11:24:07,335 - chatbot_rag - INFO - [analysis_20250517_112407] Phản hồi gốc: <think>
+
+</think>
+
+{"department": "Kinh doanh", "query_type": "department_specific", "error": false}...
+2025-05-17 11:24:07,335 - chatbot_rag - WARNING - [analysis_20250517_112407] Phát hiện thẻ <think> trong phản hồi. Xử lý đặc biệt...
+2025-05-17 11:24:07,336 - chatbot_rag - INFO - [analysis_20250517_112407] Đã tìm thấy 1 mẫu JSON tiềm năng trong phản hồi
+2025-05-17 11:24:07,337 - chatbot_rag - INFO - [analysis_20250517_112407] Tìm thấy JSON hợp lệ trong thẻ <think>: {'department': 'Kinh doanh', 'query_type': 'department_specific', 'error': False}
+2025-05-17 11:24:07,337 - websocket_server - INFO - Phân tích câu hỏi: Phòng ban=Kinh doanh, Loại=department_specific, Thinking=False
+2025-05-17 11:24:07,338 - websocket_server - INFO - Xử lý streaming response cho: 'alo /no_think', phòng ban: Kinh doanh, session_id: d16ec270-a709-41a4-bfe8-5f693a828ea5
+2025-05-17 11:24:07,338 - websocket_server - INFO - Session ID nhận được: d16ec270-a709-41a4-bfe8-5f693a828ea5
+2025-05-17 11:24:07,339 - websocket_server - INFO - Phát hiện lệnh /no_think, tắt chế độ thinking cho: alo
+2025-05-17 11:24:07,339 - websocket_server - INFO - Xử lý streaming response. Query: 'alo', Mode thinking: False
+2025-05-17 11:24:07,341 - websocket_server - INFO - Không có lịch sử tin nhắn cho phiên này
+2025-05-17 11:24:07,341 - websocket_server - INFO - Phân tích câu hỏi: Phòng ban=Kinh doanh, Loại=department_specific, Thinking=False
+2025-05-17 11:24:07,342 - websocket_server - INFO - Query thực tế gửi đến mô hình: alo /no_think
+2025-05-17 11:24:07,342 - websocket_server - INFO - Câu hỏi về phòng ban cụ thể: Kinh doanh, chế độ thinking: False
+2025-05-17 11:24:07,342 - chatbot_rag - INFO - Truy vấn Smart RAG - Giai đoạn: None, Phòng ban: Kinh doanh, Session: d16ec270-a709-41a4-bfe8-5f693a828ea5
+2025-05-17 11:24:07,356 - department_info_tool - INFO - Đã tải 11 phòng ban
+2025-05-17 11:24:07,357 - department_info_tool - INFO - Đang trích xuất thông tin cho phòng ban: Kinh doanh
+2025-05-17 11:24:07,358 - department_info_tool - INFO - Đã đọc thành công file C:\Users\thuon\OneDrive\Desktop\test\chatbot_qwen\docker_build\data\departments\kinh_doanh.txt, kích thước: 16485 bytes
+2025-05-17 11:24:07,379 - department_info_tool - INFO - Đã tìm thấy 5 giai đoạn và 24 công việc cho phòng ban Kinh doanh
+2025-05-17 11:24:07,379 - chatbot_rag - INFO - Tạo prompt LLM cho phòng ban: Kinh doanh, session_id: d16ec270-a709-41a4-bfe8-5f693a828ea5
+2025-05-17 11:24:07,380 - chatbot_rag - INFO - Số task: 24
+2025-05-17 11:24:07,380 - chatbot_rag - INFO - Lấy lịch sử hội thoại từ phiên d16ec270-a709-41a4-bfe8-5f693a828ea5
+2025-05-17 11:24:07,381 - chatbot_rag - WARNING - [create_llm_prompt] Không thể import get_session_history từ websocket_server. Thử get_chat_history (cục bộ).
+2025-05-17 11:24:07,381 - chatbot_rag - INFO - [create_llm_prompt] Đã lấy được 0 bản ghi lịch sử từ get_chat_history (cục bộ).
+2025-05-17 11:24:07,384 - chatbot_rag - INFO - Gọi LLM:  tại 
+2025-05-17 11:24:07,386 - chatbot_rag - INFO - Đã lưu prompt vào file: data/logs/prompt_20250517_112407.txt
+2025-05-17 11:24:07,387 - chatbot_rag - INFO - Kích thước prompt: 12219 ký tự
+2025-05-17 11:24:07,387 - chatbot_rag - INFO - Kích thước system prompt: 2631 ký tự
+2025-05-17 11:24:07,387 - chatbot_rag - INFO - Tổng kích thước: 14850 ký tự
+2025-05-17 11:24:07,389 - chatbot_rag - INFO - Đã lưu full prompt vào file: data/logs/llm_full_prompt_20250517_112407.txt
+2025-05-17 11:24:07,389 - chatbot_rag - INFO - System prompt: 
+Bạn là trợ lý AI chuyên về công việc của các phòng ban trong công ty. 
+Nhiệm vụ của bạn là phân tích thông tin về các task trong phòng ban và cung cấp thông tin hữu ích cho người dùng.
+
+Dự án được ch...
+2025-05-17 11:24:07,390 - chatbot_rag - INFO - User prompt: 
+Vai trò của bạn: Trợ lý thông minh cung cấp thông tin về phòng ban và công việc trong công ty.
+
+
+Câu hỏi người dùng hiện tại: "alo /no_think"
+
+Thông tin về phòng ban Kinh doanh:
+Số lượng tasks: 24
+Cá...
+2025-05-17 11:24:07,390 - chatbot_rag - INFO - Gửi truy vấn đến LLM API tại http://localhost:1234/v1/chat/completions với stream=True
+2025-05-17 11:24:51,101 - chatbot_rag - INFO - Mã phản hồi từ API: 200
+2025-05-17 11:24:51,102 - chatbot_rag - INFO - Phản hồi gốc từ LLM API (200 ký tự đầu): <think>
+
+</think>
+
+**Alo!** 😄  
+Bạn đang cần thông tin gì về phòng ban **Kinh doanh**? Mình sẵn sàng hỗ trợ bạn ngay lập tức nhé! Nếu bạn muốn biết chi tiết về các task, giai đoạn hoặc quy trình liên 
+2025-05-17 11:24:51,104 - chatbot_rag - INFO - Đã lưu phản hồi đầy đủ vào file: data/logs/llm_response_20250517_112451.txt
+2025-05-17 11:24:51,106 - chatbot_rag - INFO - Đã lưu response vào file: data/logs/response_20250517_112407.txt
+2025-05-17 11:24:51,106 - chatbot_rag - INFO - Thời gian truy vấn LLM: 43.75 giây
+2025-05-17 11:24:51,700 - department_info_tool - INFO - Đang trích xuất thông tin cho phòng ban: Kinh doanh
+2025-05-17 11:24:51,701 - department_info_tool - INFO - Đã đọc thành công file C:\Users\thuon\OneDrive\Desktop\test\chatbot_qwen\docker_build\data\departments\kinh_doanh.txt, kích thước: 16485 bytes
+2025-05-17 11:24:51,703 - department_info_tool - INFO - Đã tìm thấy 5 giai đoạn và 24 công việc cho phòng ban Kinh doanh
+2025-05-17 11:24:55,500 - websocket_server - INFO - Đã trích xuất thinking (0 ký tự) và còn lại 218 ký tự phản hồi
+2025-05-17 11:24:55,501 - websocket_server - INFO - Đã trích xuất phần thinking (0 ký tự) từ phản hồi
+2025-05-17 11:24:55,501 - websocket_server - INFO - Đã lưu hội thoại phòng ban Kinh doanh vào lịch sử của session d16ec270-a709-41a4-bfe8-5f693a828ea5
+2025-05-17 11:25:55,751 - websockets.server - INFO - connection open
+2025-05-17 11:29:12,047 - websockets.server - INFO - connection open
+2025-05-17 11:43:10,391 - websockets.server - INFO - connection open
+2025-05-17 11:43:25,110 - websocket_server - INFO - Nhận tin nhắn dạng JSON: {"content":"alo /no_think","session_id":"cf6e5d85-f403-4c4d-8afc-06ff092bdf8c"}
+2025-05-17 11:43:25,110 - websocket_server - INFO - Session ID từ client (sau khi kiểm tra): cf6e5d85-f403-4c4d-8afc-06ff092bdf8c
+2025-05-17 11:43:25,111 - websocket_server - INFO - Tắt chế độ thinking cho câu hỏi: alo /no_think...
+2025-05-17 11:43:25,112 - websocket_server - INFO - Nhận tin nhắn thông thường: alo /no_think, enable_thinking=False
+2025-05-17 11:43:25,112 - websocket_server - INFO - Không có lịch sử tin nhắn cho phiên này
+2025-05-17 11:43:25,113 - chatbot_rag - INFO - Đang phân tích câu hỏi với LLM: alo /no_think, session_id: cf6e5d85-f403-4c4d-8afc-06ff092bdf8c
+2025-05-17 11:43:25,117 - chatbot_rag - WARNING - [analyze_query_with_llm] Không thể import get_session_history từ websocket_server, sử dụng get_chat_history
+2025-05-17 11:43:25,121 - chatbot_rag - INFO - [analyze_query_with_llm] Lấy lịch sử từ get_chat_history: 0 bản ghi
+2025-05-17 11:43:25,121 - chatbot_rag - INFO - [analyze_query_with_llm] Sử dụng lịch sử hội thoại: 0 bản ghi
+2025-05-17 11:43:25,122 - chatbot_rag - INFO - [analyze_query_with_llm] Prompt cuối cùng: Lịch sử tin nhắn:
+
+Câu hỏi người dùng hiện tại: "alo /no_think"
+
+Phân tích câu hỏi và trả về JSON có định dạng:
+{"department": "tên phòng ban hoặc null", "query_type": "department_specific hoặc genera...
+2025-05-17 11:43:25,123 - chatbot_rag - INFO - Kích thước prompt: 486 ký tự
+2025-05-17 11:43:25,124 - chatbot_rag - INFO - Kích thước system prompt: 4181 ký tự
+2025-05-17 11:43:25,124 - chatbot_rag - INFO - Tổng kích thước: 4667 ký tự
+2025-05-17 11:43:25,129 - chatbot_rag - INFO - Đã lưu full prompt vào file: data/logs/llm_full_prompt_20250517_114325.txt
+2025-05-17 11:43:25,130 - chatbot_rag - INFO - System prompt: 
+Bạn là trợ lý AI chuyên phân tích nội dung câu hỏi để xác định:
+1. Phòng ban mà người dùng đang hỏi về (department)
+2. Phân loại câu hỏi là về phòng ban cụ thể hay câu hỏi chung (query_type)
+3. Xác đ...
+2025-05-17 11:43:25,130 - chatbot_rag - INFO - User prompt: Lịch sử tin nhắn:
+
+Câu hỏi người dùng hiện tại: "alo /no_think"
+
+Phân tích câu hỏi và trả về JSON có định dạng:
+{"department": "tên phòng ban hoặc null", "query_type": "department_specific hoặc genera...
+2025-05-17 11:43:25,131 - chatbot_rag - INFO - Gửi truy vấn đến LLM API tại http://localhost:1234/v1/chat/completions với stream=False
+2025-05-17 11:43:38,245 - chatbot_rag - INFO - Mã phản hồi từ API: 200
+2025-05-17 11:43:38,246 - chatbot_rag - INFO - Phản hồi gốc từ LLM API (200 ký tự đầu): <think>
+
+</think>
+
+{"department": "Kinh doanh", "query_type": "department_specific", "error": false}
+2025-05-17 11:43:38,247 - chatbot_rag - INFO - Đã lưu phản hồi đầy đủ vào file: data/logs/llm_response_20250517_114338.txt
+2025-05-17 11:43:38,249 - chatbot_rag - INFO - [analysis_20250517_114338] Đã ghi phản hồi gốc vào: data/logs/analysis_20250517_114338_raw.txt
+2025-05-17 11:43:38,249 - chatbot_rag - INFO - [analysis_20250517_114338] Phản hồi gốc: <think>
+
+</think>
+
+{"department": "Kinh doanh", "query_type": "department_specific", "error": false}...
+2025-05-17 11:43:38,250 - chatbot_rag - WARNING - [analysis_20250517_114338] Phát hiện thẻ <think> trong phản hồi. Xử lý đặc biệt...
+2025-05-17 11:43:38,250 - chatbot_rag - INFO - [analysis_20250517_114338] Đã tìm thấy 1 mẫu JSON tiềm năng trong phản hồi
+2025-05-17 11:43:38,251 - chatbot_rag - INFO - [analysis_20250517_114338] Tìm thấy JSON hợp lệ trong thẻ <think>: {'department': 'Kinh doanh', 'query_type': 'department_specific', 'error': False}
+2025-05-17 11:43:38,251 - websocket_server - INFO - Phân tích câu hỏi: Phòng ban=Kinh doanh, Loại=department_specific, Thinking=False
+2025-05-17 11:43:38,252 - websocket_server - INFO - Xử lý streaming response cho: 'alo /no_think', phòng ban: Kinh doanh, session_id: cf6e5d85-f403-4c4d-8afc-06ff092bdf8c
+2025-05-17 11:43:38,252 - websocket_server - INFO - Session ID nhận được: cf6e5d85-f403-4c4d-8afc-06ff092bdf8c
+2025-05-17 11:43:38,252 - websocket_server - INFO - Phát hiện lệnh /no_think, tắt chế độ thinking cho: alo
+2025-05-17 11:43:38,253 - websocket_server - INFO - Xử lý streaming response. Query: 'alo', Mode thinking: False
+2025-05-17 11:43:38,253 - websocket_server - INFO - Không có lịch sử tin nhắn cho phiên này
+2025-05-17 11:43:38,253 - websocket_server - INFO - Phân tích câu hỏi: Phòng ban=Kinh doanh, Loại=department_specific, Thinking=False
+2025-05-17 11:43:38,254 - websocket_server - INFO - Query thực tế gửi đến mô hình: alo /no_think
+2025-05-17 11:43:38,254 - websocket_server - INFO - Câu hỏi về phòng ban cụ thể: Kinh doanh, chế độ thinking: False
+2025-05-17 11:43:38,254 - chatbot_rag - INFO - Truy vấn Smart RAG - Giai đoạn: None, Phòng ban: Kinh doanh, Session: cf6e5d85-f403-4c4d-8afc-06ff092bdf8c
+2025-05-17 11:43:38,264 - department_info_tool - INFO - Đã tải 11 phòng ban
+2025-05-17 11:43:38,266 - department_info_tool - INFO - Đang trích xuất thông tin cho phòng ban: Kinh doanh
+2025-05-17 11:43:38,267 - department_info_tool - INFO - Đã đọc thành công file C:\Users\thuon\OneDrive\Desktop\test\chatbot_qwen\docker_build\data\departments\kinh_doanh.txt, kích thước: 16485 bytes
+2025-05-17 11:43:38,272 - department_info_tool - INFO - Đã tìm thấy 5 giai đoạn và 24 công việc cho phòng ban Kinh doanh
+2025-05-17 11:43:38,273 - chatbot_rag - INFO - Tạo prompt LLM cho phòng ban: Kinh doanh, session_id: cf6e5d85-f403-4c4d-8afc-06ff092bdf8c
+2025-05-17 11:43:38,274 - chatbot_rag - INFO - Số task: 24
+2025-05-17 11:43:38,274 - chatbot_rag - INFO - Lấy lịch sử hội thoại từ phiên cf6e5d85-f403-4c4d-8afc-06ff092bdf8c
+2025-05-17 11:43:38,275 - chatbot_rag - WARNING - [create_llm_prompt] Không thể import get_session_history từ websocket_server. Thử get_chat_history (cục bộ).
+2025-05-17 11:43:38,276 - chatbot_rag - INFO - [create_llm_prompt] Đã lấy được 0 bản ghi lịch sử từ get_chat_history (cục bộ).
+2025-05-17 11:43:38,280 - chatbot_rag - INFO - Gọi LLM:  tại 
+2025-05-17 11:43:38,283 - chatbot_rag - INFO - Đã lưu prompt vào file: data/logs/prompt_20250517_114338.txt
+2025-05-17 11:43:38,283 - chatbot_rag - INFO - Kích thước prompt: 12219 ký tự
+2025-05-17 11:43:38,284 - chatbot_rag - INFO - Kích thước system prompt: 2631 ký tự
+2025-05-17 11:43:38,284 - chatbot_rag - INFO - Tổng kích thước: 14850 ký tự
+2025-05-17 11:43:38,287 - chatbot_rag - INFO - Đã lưu full prompt vào file: data/logs/llm_full_prompt_20250517_114338.txt
+2025-05-17 11:43:38,287 - chatbot_rag - INFO - System prompt: 
+Bạn là trợ lý AI chuyên về công việc của các phòng ban trong công ty. 
+Nhiệm vụ của bạn là phân tích thông tin về các task trong phòng ban và cung cấp thông tin hữu ích cho người dùng.
+
+Dự án được ch...
+2025-05-17 11:43:38,287 - chatbot_rag - INFO - User prompt: 
+Vai trò của bạn: Trợ lý thông minh cung cấp thông tin về phòng ban và công việc trong công ty.
+
+
+Câu hỏi người dùng hiện tại: "alo /no_think"
+
+Thông tin về phòng ban Kinh doanh:
+Số lượng tasks: 24
+Cá...
+2025-05-17 11:43:38,288 - chatbot_rag - INFO - Gửi truy vấn đến LLM API tại http://localhost:1234/v1/chat/completions với stream=True
+2025-05-17 11:44:21,342 - chatbot_rag - INFO - Mã phản hồi từ API: 200
+2025-05-17 11:44:21,344 - chatbot_rag - INFO - Phản hồi gốc từ LLM API (200 ký tự đầu): <think>
+
+</think>
+
+**Alo!** 🎉  
+Tôi đây, bạn muốn biết gì về phòng ban **Kinh doanh** và các giai đoạn liên quan? Dù là task, mục tiêu hay quy trình, mình sẽ giải thích rõ ràng cho bạn nhé! 💼✨
+2025-05-17 11:44:21,346 - chatbot_rag - INFO - Đã lưu phản hồi đầy đủ vào file: data/logs/llm_response_20250517_114421.txt
+2025-05-17 11:44:21,348 - chatbot_rag - INFO - Đã lưu response vào file: data/logs/response_20250517_114338.txt
+2025-05-17 11:44:21,349 - chatbot_rag - INFO - Thời gian truy vấn LLM: 43.08 giây
+2025-05-17 11:44:21,358 - department_info_tool - INFO - Đang trích xuất thông tin cho phòng ban: Kinh doanh
+2025-05-17 11:44:21,359 - department_info_tool - INFO - Đã đọc thành công file C:\Users\thuon\OneDrive\Desktop\test\chatbot_qwen\docker_build\data\departments\kinh_doanh.txt, kích thước: 16485 bytes
+2025-05-17 11:44:21,363 - department_info_tool - INFO - Đã tìm thấy 5 giai đoạn và 24 công việc cho phòng ban Kinh doanh
+2025-05-17 11:44:21,371 - websocket_server - INFO - Đã trích xuất thinking (0 ký tự) và còn lại 173 ký tự phản hồi
+2025-05-17 11:44:21,372 - websocket_server - INFO - Đã trích xuất phần thinking (0 ký tự) từ phản hồi
+2025-05-17 11:44:21,372 - websocket_server - INFO - Đã lưu hội thoại phòng ban Kinh doanh vào lịch sử của session cf6e5d85-f403-4c4d-8afc-06ff092bdf8c
+2025-05-17 11:45:53,285 - websockets.server - INFO - connection open
+2025-05-17 11:46:04,838 - websocket_server - INFO - Nhận tin nhắn dạng JSON: {"content":"alo /think","session_id":"284b52f9-dae0-4001-98fc-1e425fa03bf9"}
+2025-05-17 11:46:04,839 - websocket_server - INFO - Session ID từ client (sau khi kiểm tra): 284b52f9-dae0-4001-98fc-1e425fa03bf9
+2025-05-17 11:46:04,839 - websocket_server - INFO - Bật chế độ thinking cho câu hỏi: alo /think...
+2025-05-17 11:46:04,839 - websocket_server - INFO - Nhận tin nhắn thông thường: alo /think, enable_thinking=True
+2025-05-17 11:46:04,840 - websocket_server - INFO - Không có lịch sử tin nhắn cho phiên này
+2025-05-17 11:46:04,840 - chatbot_rag - INFO - Đang phân tích câu hỏi với LLM: alo /think, session_id: 284b52f9-dae0-4001-98fc-1e425fa03bf9
+2025-05-17 11:46:04,842 - chatbot_rag - WARNING - [analyze_query_with_llm] Không thể import get_session_history từ websocket_server, sử dụng get_chat_history
+2025-05-17 11:46:04,843 - chatbot_rag - INFO - [analyze_query_with_llm] Lấy lịch sử từ get_chat_history: 0 bản ghi
+2025-05-17 11:46:04,843 - chatbot_rag - INFO - [analyze_query_with_llm] Sử dụng lịch sử hội thoại: 0 bản ghi
+2025-05-17 11:46:04,843 - chatbot_rag - INFO - [analyze_query_with_llm] Prompt cuối cùng: Lịch sử tin nhắn:
+
+Câu hỏi người dùng hiện tại: "alo /think"
+
+Phân tích câu hỏi và trả về JSON có định dạng:
+{"department": "tên phòng ban hoặc null", "query_type": "department_specific hoặc general h...
+2025-05-17 11:46:04,844 - chatbot_rag - INFO - Kích thước prompt: 483 ký tự
+2025-05-17 11:46:04,849 - chatbot_rag - INFO - Kích thước system prompt: 4181 ký tự
+2025-05-17 11:46:04,855 - chatbot_rag - INFO - Tổng kích thước: 4664 ký tự
+2025-05-17 11:46:04,872 - chatbot_rag - INFO - Đã lưu full prompt vào file: data/logs/llm_full_prompt_20250517_114604.txt
+2025-05-17 11:46:04,879 - chatbot_rag - INFO - System prompt: 
+Bạn là trợ lý AI chuyên phân tích nội dung câu hỏi để xác định:
+1. Phòng ban mà người dùng đang hỏi về (department)
+2. Phân loại câu hỏi là về phòng ban cụ thể hay câu hỏi chung (query_type)
+3. Xác đ...
+2025-05-17 11:46:04,886 - chatbot_rag - INFO - User prompt: Lịch sử tin nhắn:
+
+Câu hỏi người dùng hiện tại: "alo /think"
+
+Phân tích câu hỏi và trả về JSON có định dạng:
+{"department": "tên phòng ban hoặc null", "query_type": "department_specific hoặc general h...
+2025-05-17 11:46:04,892 - chatbot_rag - INFO - Gửi truy vấn đến LLM API tại http://localhost:1234/v1/chat/completions với stream=False
+2025-05-17 11:46:23,452 - chatbot_rag - INFO - Mã phản hồi từ API: 200
+2025-05-17 11:46:23,453 - chatbot_rag - INFO - Phản hồi gốc từ LLM API (200 ký tự đầu): <think>
+Okay, let's tackle this query. The user's current message is "alo". First, I need to check the history to see if there was a previous department mentioned. Since the history is empty, there's 
+2025-05-17 11:46:23,455 - chatbot_rag - INFO - Đã lưu phản hồi đầy đủ vào file: data/logs/llm_response_20250517_114623.txt
+2025-05-17 11:46:23,458 - chatbot_rag - INFO - [analysis_20250517_114623] Đã ghi phản hồi gốc vào: data/logs/analysis_20250517_114623_raw.txt
+2025-05-17 11:46:23,458 - chatbot_rag - INFO - [analysis_20250517_114623] Phản hồi gốc: <think>
+Okay, let's tackle this query. The user's current message is "alo". First, I need to check t...
+2025-05-17 11:46:23,459 - chatbot_rag - WARNING - [analysis_20250517_114623] Phát hiện thẻ <think> trong phản hồi. Xử lý đặc biệt...
+2025-05-17 11:46:23,459 - chatbot_rag - INFO - [analysis_20250517_114623] BƯỚC 1: Thử parse toàn bộ chuỗi phản hồi
+2025-05-17 11:46:23,461 - chatbot_rag - INFO - [analysis_20250517_114623] BƯỚC 1: Không phải JSON hợp lệ: Expecting value: line 1 column 1 (char 0)
+2025-05-17 11:46:23,461 - chatbot_rag - INFO - [analysis_20250517_114623] BƯỚC 2: Tìm JSON trong chuỗi phản hồi
+2025-05-17 11:46:23,462 - chatbot_rag - WARNING - [analysis_20250517_114623] BƯỚC 2: Không tìm thấy mẫu JSON nào trong phản hồi
+2025-05-17 11:46:23,463 - chatbot_rag - INFO - [analysis_20250517_114623] BƯỚC 3: Xử lý chuỗi thủ công để trích xuất thông tin
+2025-05-17 11:46:23,480 - department_info_tool - INFO - Đã tải 11 phòng ban
+2025-05-17 11:46:23,482 - department_info_tool - INFO - Đã lấy danh sách 11 phòng ban
+2025-05-17 11:46:23,488 - chatbot_rag - INFO - [analysis_20250517_114623] BƯỚC 3: Kết quả phân tích thủ công: {'department': None, 'query_type': 'general', 'error': False}
+2025-05-17 11:46:23,489 - websocket_server - INFO - Phân tích câu hỏi: Phòng ban=None, Loại=general, Thinking=True
+2025-05-17 11:46:23,489 - websocket_server - INFO - Xử lý streaming response cho: 'alo /think', phòng ban: None, session_id: 284b52f9-dae0-4001-98fc-1e425fa03bf9
+2025-05-17 11:46:23,490 - websocket_server - INFO - Session ID nhận được: 284b52f9-dae0-4001-98fc-1e425fa03bf9
+2025-05-17 11:46:23,492 - websocket_server - INFO - Phát hiện lệnh /think, bật chế độ thinking cho: alo
+2025-05-17 11:46:23,493 - websocket_server - INFO - Xử lý streaming response. Query: 'alo', Mode thinking: True
+2025-05-17 11:46:23,493 - websocket_server - INFO - Không có lịch sử tin nhắn cho phiên này
+2025-05-17 11:46:23,493 - chatbot_rag - INFO - Đang phân tích câu hỏi với LLM: alo, session_id: 284b52f9-dae0-4001-98fc-1e425fa03bf9
+2025-05-17 11:46:23,494 - chatbot_rag - WARNING - [analyze_query_with_llm] Không thể import get_session_history từ websocket_server, sử dụng get_chat_history
+2025-05-17 11:46:23,496 - chatbot_rag - INFO - [analyze_query_with_llm] Lấy lịch sử từ get_chat_history: 0 bản ghi
+2025-05-17 11:46:23,496 - chatbot_rag - INFO - [analyze_query_with_llm] Sử dụng lịch sử hội thoại: 0 bản ghi
+2025-05-17 11:46:23,496 - chatbot_rag - INFO - [analyze_query_with_llm] Prompt cuối cùng: Lịch sử tin nhắn:
+
+Câu hỏi người dùng hiện tại: "alo"
+
+Phân tích câu hỏi và trả về JSON có định dạng:
+{"department": "tên phòng ban hoặc null", "query_type": "department_specific hoặc general hoặc nul...
+2025-05-17 11:46:23,497 - chatbot_rag - INFO - Kích thước prompt: 476 ký tự
+2025-05-17 11:46:23,498 - chatbot_rag - INFO - Kích thước system prompt: 4181 ký tự
+2025-05-17 11:46:23,499 - chatbot_rag - INFO - Tổng kích thước: 4657 ký tự
+2025-05-17 11:46:23,502 - chatbot_rag - INFO - Đã lưu full prompt vào file: data/logs/llm_full_prompt_20250517_114623.txt
+2025-05-17 11:46:23,503 - chatbot_rag - INFO - System prompt: 
+Bạn là trợ lý AI chuyên phân tích nội dung câu hỏi để xác định:
+1. Phòng ban mà người dùng đang hỏi về (department)
+2. Phân loại câu hỏi là về phòng ban cụ thể hay câu hỏi chung (query_type)
+3. Xác đ...
+2025-05-17 11:46:23,504 - chatbot_rag - INFO - User prompt: Lịch sử tin nhắn:
+
+Câu hỏi người dùng hiện tại: "alo"
+
+Phân tích câu hỏi và trả về JSON có định dạng:
+{"department": "tên phòng ban hoặc null", "query_type": "department_specific hoặc general hoặc nul...
+2025-05-17 11:46:23,505 - chatbot_rag - INFO - Gửi truy vấn đến LLM API tại http://localhost:1234/v1/chat/completions với stream=False
+2025-05-17 11:46:33,627 - chatbot_rag - INFO - Mã phản hồi từ API: 200
+2025-05-17 11:46:33,628 - chatbot_rag - INFO - Phản hồi gốc từ LLM API (200 ký tự đầu): <think>
+Okay, let's tackle this query. The user's current message is "alo", which is a casual way of saying "hello" in Vietnamese. The history doesn't mention any previous department or context.
+
+Firs
+2025-05-17 11:46:33,630 - chatbot_rag - INFO - Đã lưu phản hồi đầy đủ vào file: data/logs/llm_response_20250517_114633.txt
+2025-05-17 11:46:33,632 - chatbot_rag - INFO - [analysis_20250517_114633] Đã ghi phản hồi gốc vào: data/logs/analysis_20250517_114633_raw.txt
+2025-05-17 11:46:33,632 - chatbot_rag - INFO - [analysis_20250517_114633] Phản hồi gốc: <think>
+Okay, let's tackle this query. The user's current message is "alo", which is a casual way of...
+2025-05-17 11:46:33,633 - chatbot_rag - WARNING - [analysis_20250517_114633] Phát hiện thẻ <think> trong phản hồi. Xử lý đặc biệt...
+2025-05-17 11:46:33,633 - chatbot_rag - INFO - [analysis_20250517_114633] BƯỚC 1: Thử parse toàn bộ chuỗi phản hồi
+2025-05-17 11:46:33,633 - chatbot_rag - INFO - [analysis_20250517_114633] BƯỚC 1: Không phải JSON hợp lệ: Expecting value: line 1 column 1 (char 0)
+2025-05-17 11:46:33,634 - chatbot_rag - INFO - [analysis_20250517_114633] BƯỚC 2: Tìm JSON trong chuỗi phản hồi
+2025-05-17 11:46:33,634 - chatbot_rag - WARNING - [analysis_20250517_114633] BƯỚC 2: Không tìm thấy mẫu JSON nào trong phản hồi
+2025-05-17 11:46:33,636 - chatbot_rag - INFO - [analysis_20250517_114633] BƯỚC 3: Xử lý chuỗi thủ công để trích xuất thông tin
+2025-05-17 11:46:33,645 - department_info_tool - INFO - Đã tải 11 phòng ban
+2025-05-17 11:46:33,645 - department_info_tool - INFO - Đã lấy danh sách 11 phòng ban
+2025-05-17 11:46:33,647 - chatbot_rag - INFO - [analysis_20250517_114633] BƯỚC 3: Kết quả phân tích thủ công: {'department': None, 'query_type': 'general', 'error': False}
+2025-05-17 11:46:33,648 - websocket_server - INFO - Phân tích câu hỏi: Phòng ban=None, Loại=general, Thinking=True
+2025-05-17 11:46:33,649 - websocket_server - INFO - Query thực tế gửi đến mô hình: alo /think
+2025-05-17 11:46:33,649 - websocket_server - INFO - Câu hỏi chung, chế độ thinking: True
+2025-05-17 11:46:33,651 - chatbot_rag - INFO - Xử lý câu hỏi chung cho session_id: 284b52f9-dae0-4001-98fc-1e425fa03bf9
+2025-05-17 11:46:33,657 - department_info_tool - INFO - Đã tải 11 phòng ban
+2025-05-17 11:46:33,658 - department_info_tool - INFO - Đã lấy danh sách 11 phòng ban
+2025-05-17 11:46:33,660 - chatbot_rag - INFO - Gọi LLM để trả lời câu hỏi chung cho session_id: 284b52f9-dae0-4001-98fc-1e425fa03bf9
+2025-05-17 11:46:33,661 - chatbot_rag - INFO - Đã lưu prompt vào file: data/logs/prompt_general_20250517_114633.txt
+2025-05-17 11:46:33,663 - chatbot_rag - INFO - Kích thước prompt: 1622 ký tự
+2025-05-17 11:46:33,663 - chatbot_rag - INFO - Kích thước system prompt: 1059 ký tự
+2025-05-17 11:46:33,664 - chatbot_rag - INFO - Tổng kích thước: 2681 ký tự
+2025-05-17 11:46:33,665 - chatbot_rag - INFO - Đã lưu full prompt vào file: data/logs/llm_full_prompt_20250517_114633.txt
+2025-05-17 11:46:33,665 - chatbot_rag - INFO - System prompt: 
+Bạn là trợ lý AI chuyên về quy trình và giai đoạn trong công ty.
+
+CÁC PHÒNG BAN THAM GIA THEO GIAI ĐOẠN:
+- MKT-SALES: Marketing, Kinh doanh
+- PROPOSAL: Kinh doanh, Dự toán, Thiết kế, Team dự án
+- CON...
+2025-05-17 11:46:33,666 - chatbot_rag - INFO - User prompt: 
+Câu hỏi: "alo /think"
+
+Đây là câu hỏi chung về quy trình hoặc giai đoạn làm việc.
+
+Thông tin cơ bản:
+### Thông tin tổng quan về quy trình và giai đoạn
+
+#### Giai đoạn chính trong quy trình:
+1. **MKT-...
+2025-05-17 11:46:33,667 - chatbot_rag - INFO - Gửi truy vấn đến LLM API tại http://localhost:1234/v1/chat/completions với stream=True
+2025-05-17 11:46:57,002 - chatbot_rag - INFO - Mã phản hồi từ API: 200
+2025-05-17 11:46:57,003 - chatbot_rag - INFO - Phản hồi gốc từ LLM API (200 ký tự đầu): <think>
+Okay, the user asked "alo /think" which is a casual way of saying "hello" or "what's up?" in Vietnamese. They mentioned it's a general question about the process or stages. I need to respond b
+2025-05-17 11:46:57,005 - chatbot_rag - INFO - Đã lưu phản hồi đầy đủ vào file: data/logs/llm_response_20250517_114657.txt
+2025-05-17 11:46:57,010 - websocket_server - INFO - Đã trích xuất thinking (1472 ký tự) và còn lại 465 ký tự phản hồi
+2025-05-17 11:46:57,011 - websocket_server - INFO - Đã trích xuất phần thinking (1472 ký tự) từ phản hồi
+2025-05-17 11:46:57,012 - websocket_server - INFO - Đã lưu hội thoại chung vào lịch sử của session 284b52f9-dae0-4001-98fc-1e425fa03bf9
+2025-05-17 11:48:34,120 - websocket_server - INFO - Nhận tin nhắn dạng JSON: {"content":"mày là ai /think","session_id":"284b52f9-dae0-4001-98fc-1e425fa03bf9"}
+2025-05-17 11:48:34,121 - websocket_server - INFO - Session ID từ client (sau khi kiểm tra): 284b52f9-dae0-4001-98fc-1e425fa03bf9
+2025-05-17 11:48:34,121 - websocket_server - INFO - Bật chế độ thinking cho câu hỏi: mày là ai /think...
+2025-05-17 11:48:34,121 - websocket_server - INFO - Nhận tin nhắn thông thường: mày là ai /think, enable_thinking=True
+2025-05-17 11:48:34,122 - websocket_server - INFO - Đã thêm 1 tin nhắn gần nhất vào prompt
+2025-05-17 11:48:34,124 - websocket_server - INFO - Đã lưu lịch sử tin nhắn và prompt vào file: data/logs/history_prompt_20250517_114834.txt
+2025-05-17 11:48:34,125 - chatbot_rag - INFO - Đang phân tích câu hỏi với LLM: Lịch sử tin nhắn:
+Người dùng: alo
+
+mày là ai /think, session_id: 284b52f9-dae0-4001-98fc-1e425fa03bf9
+2025-05-17 11:48:34,126 - chatbot_rag - WARNING - [analyze_query_with_llm] Không thể import get_session_history từ websocket_server, sử dụng get_chat_history
+2025-05-17 11:48:34,127 - chatbot_rag - INFO - [analyze_query_with_llm] Lấy lịch sử từ get_chat_history: 0 bản ghi
+2025-05-17 11:48:34,127 - chatbot_rag - INFO - [analyze_query_with_llm] Sử dụng lịch sử hội thoại: 0 bản ghi
+2025-05-17 11:48:34,127 - chatbot_rag - INFO - [analyze_query_with_llm] Prompt cuối cùng: Lịch sử tin nhắn:
+
+Câu hỏi người dùng hiện tại: "Lịch sử tin nhắn:
+Người dùng: alo
+
+mày là ai /think"
+
+Phân tích câu hỏi và trả về JSON có định dạng:
+{"department": "tên phòng ban hoặc null", "query_t...
+2025-05-17 11:48:34,128 - chatbot_rag - INFO - Kích thước prompt: 524 ký tự
+2025-05-17 11:48:34,128 - chatbot_rag - INFO - Kích thước system prompt: 4181 ký tự
+2025-05-17 11:48:34,129 - chatbot_rag - INFO - Tổng kích thước: 4705 ký tự
+2025-05-17 11:48:34,131 - chatbot_rag - INFO - Đã lưu full prompt vào file: data/logs/llm_full_prompt_20250517_114834.txt
+2025-05-17 11:48:34,132 - chatbot_rag - INFO - System prompt: 
+Bạn là trợ lý AI chuyên phân tích nội dung câu hỏi để xác định:
+1. Phòng ban mà người dùng đang hỏi về (department)
+2. Phân loại câu hỏi là về phòng ban cụ thể hay câu hỏi chung (query_type)
+3. Xác đ...
+2025-05-17 11:48:34,132 - chatbot_rag - INFO - User prompt: Lịch sử tin nhắn:
+
+Câu hỏi người dùng hiện tại: "Lịch sử tin nhắn:
+Người dùng: alo
+
+mày là ai /think"
+
+Phân tích câu hỏi và trả về JSON có định dạng:
+{"department": "tên phòng ban hoặc null", "query_t...
+2025-05-17 11:48:34,134 - chatbot_rag - INFO - Gửi truy vấn đến LLM API tại http://localhost:1234/v1/chat/completions với stream=False
+2025-05-17 11:48:52,863 - chatbot_rag - INFO - Mã phản hồi từ API: 200
+2025-05-17 11:48:52,866 - chatbot_rag - INFO - Phản hồi gốc từ LLM API (200 ký tự đầu): <think>
+Okay, let's tackle this query. The user's current question is "Lịch sử tin nhắn: Người dùng: alo mày là ai /think". First, I need to parse the input correctly.
+
+The user is asking about their 
+2025-05-17 11:48:52,870 - chatbot_rag - INFO - Đã lưu phản hồi đầy đủ vào file: data/logs/llm_response_20250517_114852.txt
+2025-05-17 11:48:52,872 - chatbot_rag - INFO - [analysis_20250517_114852] Đã ghi phản hồi gốc vào: data/logs/analysis_20250517_114852_raw.txt
+2025-05-17 11:48:52,873 - chatbot_rag - INFO - [analysis_20250517_114852] Phản hồi gốc: <think>
+Okay, let's tackle this query. The user's current question is "Lịch sử tin nhắn: Người dùng:...
+2025-05-17 11:48:52,873 - chatbot_rag - WARNING - [analysis_20250517_114852] Phát hiện thẻ <think> trong phản hồi. Xử lý đặc biệt...
+2025-05-17 11:48:52,873 - chatbot_rag - INFO - [analysis_20250517_114852] BƯỚC 1: Thử parse toàn bộ chuỗi phản hồi
+2025-05-17 11:48:52,874 - chatbot_rag - INFO - [analysis_20250517_114852] BƯỚC 1: Không phải JSON hợp lệ: Expecting value: line 1 column 1 (char 0)
+2025-05-17 11:48:52,874 - chatbot_rag - INFO - [analysis_20250517_114852] BƯỚC 2: Tìm JSON trong chuỗi phản hồi
+2025-05-17 11:48:52,874 - chatbot_rag - WARNING - [analysis_20250517_114852] BƯỚC 2: Không tìm thấy mẫu JSON nào trong phản hồi
+2025-05-17 11:48:52,875 - chatbot_rag - INFO - [analysis_20250517_114852] BƯỚC 3: Xử lý chuỗi thủ công để trích xuất thông tin
+2025-05-17 11:48:52,879 - department_info_tool - INFO - Đã tải 11 phòng ban
+2025-05-17 11:48:52,880 - department_info_tool - INFO - Đã lấy danh sách 11 phòng ban
+2025-05-17 11:48:52,880 - chatbot_rag - INFO - [analysis_20250517_114852] BƯỚC 3: Kết quả phân tích thủ công: {'department': None, 'query_type': 'general', 'error': False}
+2025-05-17 11:48:52,880 - websocket_server - INFO - Phân tích câu hỏi: Phòng ban=None, Loại=general, Thinking=True
+2025-05-17 11:48:52,881 - websocket_server - INFO - Xử lý streaming response cho: 'mày là ai /think', phòng ban: None, session_id: 284b52f9-dae0-4001-98fc-1e425fa03bf9
+2025-05-17 11:48:52,881 - websocket_server - INFO - Session ID nhận được: 284b52f9-dae0-4001-98fc-1e425fa03bf9
+2025-05-17 11:48:52,881 - websocket_server - INFO - Phát hiện lệnh /think, bật chế độ thinking cho: mày là ai
+2025-05-17 11:48:52,882 - websocket_server - INFO - Xử lý streaming response. Query: 'mày là ai', Mode thinking: True
+2025-05-17 11:48:52,883 - websocket_server - INFO - Đã thêm 1 tin nhắn gần nhất vào prompt
+2025-05-17 11:48:52,885 - websocket_server - INFO - Đã lưu lịch sử tin nhắn và prompt vào file: data/logs/history_prompt_20250517_114852.txt
+2025-05-17 11:48:52,886 - chatbot_rag - INFO - Đang phân tích câu hỏi với LLM: Lịch sử tin nhắn:
+Người dùng: alo
+
+mày là ai, session_id: 284b52f9-dae0-4001-98fc-1e425fa03bf9
+2025-05-17 11:48:52,887 - chatbot_rag - WARNING - [analyze_query_with_llm] Không thể import get_session_history từ websocket_server, sử dụng get_chat_history
+2025-05-17 11:48:52,888 - chatbot_rag - INFO - [analyze_query_with_llm] Lấy lịch sử từ get_chat_history: 0 bản ghi
+2025-05-17 11:48:52,888 - chatbot_rag - INFO - [analyze_query_with_llm] Sử dụng lịch sử hội thoại: 0 bản ghi
+2025-05-17 11:48:52,888 - chatbot_rag - INFO - [analyze_query_with_llm] Prompt cuối cùng: Lịch sử tin nhắn:
+
+Câu hỏi người dùng hiện tại: "Lịch sử tin nhắn:
+Người dùng: alo
+
+mày là ai"
+
+Phân tích câu hỏi và trả về JSON có định dạng:
+{"department": "tên phòng ban hoặc null", "query_type": "...
+2025-05-17 11:48:52,889 - chatbot_rag - INFO - Kích thước prompt: 517 ký tự
+2025-05-17 11:48:52,889 - chatbot_rag - INFO - Kích thước system prompt: 4181 ký tự
+2025-05-17 11:48:52,889 - chatbot_rag - INFO - Tổng kích thước: 4698 ký tự
+2025-05-17 11:48:52,890 - chatbot_rag - INFO - Đã lưu full prompt vào file: data/logs/llm_full_prompt_20250517_114852.txt
+2025-05-17 11:48:52,891 - chatbot_rag - INFO - System prompt: 
+Bạn là trợ lý AI chuyên phân tích nội dung câu hỏi để xác định:
+1. Phòng ban mà người dùng đang hỏi về (department)
+2. Phân loại câu hỏi là về phòng ban cụ thể hay câu hỏi chung (query_type)
+3. Xác đ...
+2025-05-17 11:48:52,891 - chatbot_rag - INFO - User prompt: Lịch sử tin nhắn:
+
+Câu hỏi người dùng hiện tại: "Lịch sử tin nhắn:
+Người dùng: alo
+
+mày là ai"
+
+Phân tích câu hỏi và trả về JSON có định dạng:
+{"department": "tên phòng ban hoặc null", "query_type": "...
+2025-05-17 11:48:52,891 - chatbot_rag - INFO - Gửi truy vấn đến LLM API tại http://localhost:1234/v1/chat/completions với stream=False
+2025-05-17 11:49:02,907 - chatbot_rag - INFO - Mã phản hồi từ API: 200
+2025-05-17 11:49:02,908 - chatbot_rag - INFO - Phản hồi gốc từ LLM API (200 ký tự đầu): <think>
+Okay, let's tackle this query. The user's current message is "Lịch sử tin nhắn: Người dùng: alo mày là ai". First, I need to parse the history and the current question.
+
+Looking at the history
+2025-05-17 11:49:02,915 - chatbot_rag - INFO - Đã lưu phản hồi đầy đủ vào file: data/logs/llm_response_20250517_114902.txt
+2025-05-17 11:49:02,917 - chatbot_rag - INFO - [analysis_20250517_114902] Đã ghi phản hồi gốc vào: data/logs/analysis_20250517_114902_raw.txt
+2025-05-17 11:49:02,917 - chatbot_rag - INFO - [analysis_20250517_114902] Phản hồi gốc: <think>
+Okay, let's tackle this query. The user's current message is "Lịch sử tin nhắn: Người dùng: ...
+2025-05-17 11:49:02,918 - chatbot_rag - WARNING - [analysis_20250517_114902] Phát hiện thẻ <think> trong phản hồi. Xử lý đặc biệt...
+2025-05-17 11:49:02,918 - chatbot_rag - INFO - [analysis_20250517_114902] BƯỚC 1: Thử parse toàn bộ chuỗi phản hồi
+2025-05-17 11:49:02,918 - chatbot_rag - INFO - [analysis_20250517_114902] BƯỚC 1: Không phải JSON hợp lệ: Expecting value: line 1 column 1 (char 0)
+2025-05-17 11:49:02,919 - chatbot_rag - INFO - [analysis_20250517_114902] BƯỚC 2: Tìm JSON trong chuỗi phản hồi
+2025-05-17 11:49:02,919 - chatbot_rag - WARNING - [analysis_20250517_114902] BƯỚC 2: Không tìm thấy mẫu JSON nào trong phản hồi
+2025-05-17 11:49:02,919 - chatbot_rag - INFO - [analysis_20250517_114902] BƯỚC 3: Xử lý chuỗi thủ công để trích xuất thông tin
+2025-05-17 11:49:02,927 - department_info_tool - INFO - Đã tải 11 phòng ban
+2025-05-17 11:49:02,928 - department_info_tool - INFO - Đã lấy danh sách 11 phòng ban
+2025-05-17 11:49:02,928 - chatbot_rag - INFO - [analysis_20250517_114902] BƯỚC 3: Kết quả phân tích thủ công: {'department': None, 'query_type': 'general', 'error': False}
+2025-05-17 11:49:02,929 - websocket_server - INFO - Phân tích câu hỏi: Phòng ban=None, Loại=general, Thinking=True
+2025-05-17 11:49:02,929 - websocket_server - INFO - Query thực tế gửi đến mô hình: mày là ai /think
+2025-05-17 11:49:02,929 - websocket_server - INFO - Câu hỏi chung, chế độ thinking: True
+2025-05-17 11:49:02,929 - chatbot_rag - INFO - Xử lý câu hỏi chung cho session_id: 284b52f9-dae0-4001-98fc-1e425fa03bf9
+2025-05-17 11:49:02,932 - department_info_tool - INFO - Đã tải 11 phòng ban
+2025-05-17 11:49:02,932 - department_info_tool - INFO - Đã lấy danh sách 11 phòng ban
+2025-05-17 11:49:02,933 - chatbot_rag - INFO - Gọi LLM để trả lời câu hỏi chung cho session_id: 284b52f9-dae0-4001-98fc-1e425fa03bf9
+2025-05-17 11:49:02,934 - chatbot_rag - INFO - Đã lưu prompt vào file: data/logs/prompt_general_20250517_114902.txt
+2025-05-17 11:49:02,936 - chatbot_rag - INFO - Kích thước prompt: 1628 ký tự
+2025-05-17 11:49:02,936 - chatbot_rag - INFO - Kích thước system prompt: 1059 ký tự
+2025-05-17 11:49:02,937 - chatbot_rag - INFO - Tổng kích thước: 2687 ký tự
+2025-05-17 11:49:02,938 - chatbot_rag - INFO - Đã lưu full prompt vào file: data/logs/llm_full_prompt_20250517_114902.txt
+2025-05-17 11:49:02,939 - chatbot_rag - INFO - System prompt: 
+Bạn là trợ lý AI chuyên về quy trình và giai đoạn trong công ty.
+
+CÁC PHÒNG BAN THAM GIA THEO GIAI ĐOẠN:
+- MKT-SALES: Marketing, Kinh doanh
+- PROPOSAL: Kinh doanh, Dự toán, Thiết kế, Team dự án
+- CON...
+2025-05-17 11:49:02,939 - chatbot_rag - INFO - User prompt: 
+Câu hỏi: "mày là ai /think"
+
+Đây là câu hỏi chung về quy trình hoặc giai đoạn làm việc.
+
+Thông tin cơ bản:
+### Thông tin tổng quan về quy trình và giai đoạn
+
+#### Giai đoạn chính trong quy trình:
+1. ...
+2025-05-17 11:49:02,940 - chatbot_rag - INFO - Gửi truy vấn đến LLM API tại http://localhost:1234/v1/chat/completions với stream=True
+2025-05-17 11:49:27,720 - chatbot_rag - INFO - Mã phản hồi từ API: 200
+2025-05-17 11:49:27,722 - chatbot_rag - INFO - Phản hồi gốc từ LLM API (200 ký tự đầu): <think>
+Okay, let's see. The user asked "mày là ai" which is a general question about the process or stages. I need to follow the strict rules provided.
+
+First, the instructions say not to create conn
+2025-05-17 11:49:27,724 - chatbot_rag - INFO - Đã lưu phản hồi đầy đủ vào file: data/logs/llm_response_20250517_114927.txt
+2025-05-17 11:49:27,729 - websocket_server - INFO - Đã trích xuất thinking (895 ký tự) và còn lại 1006 ký tự phản hồi
+2025-05-17 11:49:27,729 - websocket_server - INFO - Đã trích xuất phần thinking (895 ký tự) từ phản hồi
+2025-05-17 11:49:27,737 - websocket_server - INFO - Đã lưu hội thoại chung vào lịch sử của session 284b52f9-dae0-4001-98fc-1e425fa03bf9
+2025-05-17 13:36:45,708 - websockets.server - INFO - server closing
+2025-05-17 13:36:45,735 - websockets.server - INFO - server closed
+2025-05-17 13:36:45,777 - websocket_server - INFO - Server bị dừng bởi người dùng

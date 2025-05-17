@@ -1,0 +1,97 @@
+# PHÒNG BAN: Dự toán
+
+## Giai đoạn: PROPOSAL
+
+### Giai đoạn con: Proposal
+
+#### Task: DỰT-001 - Chuẩn bị chốt deal
+##### Thuộc giai đoạn: PROPOSAL
+##### Giai đoạn con: Proposal
+##### Điều kiện tiên quyết: 1. Yêu cầu dự toán chi tiết
+2. Layout 
+3. Triển khai vật liệu, kích thước, chi tiết của 3D/concept
+##### Người phụ trách: TP Dự toán - Đặt hàng
+##### Người thực hiện: NV Dự toán
+##### Mô tả: Thực hiện yêu cầu dự toán chi tiết
+##### Mục tiêu: - Đề xuất phương án thay đổi vật liệu phù hợp theo nhu cầu của KH hoặc cho phù hợp tiến độ KH yêu cầu nhận nhà vào thời điểm nào
+Time trả bài:
+- Khái toán theo combo ABC (dưới 1 tỷ): 2 ngày (nhận triển khai từ team tk song song lúc chốt layout và chưa xong 3D/concept)
+- Dự án cao cấp (trên 1 tỷ, dưới 2 tỷ): 3 ngày
+- Dự án cao cấp (trên 2 tỷ): 3-4 ngày
+##### Đầu ra: Dự toán chi tiết ver 01
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: Sales
+##### Định kỳ thực hiện: N
+##### Gửi kết quả qua: Viber
+
+## Giai đoạn: CONSTRUCTION
+
+### Giai đoạn con: Construction
+
+#### Task: DỰT-002 - Chuẩn bị kick-off nội bộ/ Chuẩn bị họp cập nhật dự án
+##### Thuộc giai đoạn: CONSTRUCTION
+##### Giai đoạn con: Construction
+##### Điều kiện tiên quyết: 1. BOQ
+##### Người phụ trách: TP Dự toán - Đặt hàng
+##### Người thực hiện: NV dự toán
+##### Mô tả: Cập nhật bảng khối lượng công việc
+##### Mục tiêu: Lên kế hoạch thi công
+##### Đầu ra: Bảng khối lượng công việc được cập nhật cuối cùng
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: Chỉ huy trưởng / NV Thiết kế / Giám sát
+##### Định kỳ thực hiện: Khi phát sinh
+##### Gửi kết quả qua: PM
+
+#### Task: DỰT-003 - Xử lý phát sinh thay đổi
+##### Thuộc giai đoạn: CONSTRUCTION
+##### Giai đoạn con: Construction
+##### Điều kiện tiên quyết: 1. Yêu cầu phát sinh của khách hàng
+2. BB thống nhất công việc thay đổi phát sinh (BD) 
+3. Bản vẽ cập nhật thay đổi phát sinh (TK)
+##### Người phụ trách: TP Dự toán - Đặt hàng
+##### Người thực hiện: NV dự toán
+##### Mô tả: - Nhận triển khai công việc từ team Thiết kế
+- Hoàn thành báo giá gửi cho Sale
+##### Mục tiêu: N
+##### Đầu ra: 1. Báo giá thay đổi phát sinh (DT)
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: NV Kinh doanh
+##### Định kỳ thực hiện: N
+##### Gửi kết quả qua: PM/Viber
+
+## Giai đoạn: DEFECT-HANDOVER
+
+### Giai đoạn con: Defect & Handover
+
+#### Task: DỰT-004 - Chuẩn bị hồ sơ Quyết toán
+##### Thuộc giai đoạn: DEFECT-HANDOVER
+##### Giai đoạn con: Defect & Handover
+##### Điều kiện tiên quyết: - Hoàn thành tất cả các công việc tại công trình
+- Check list Defect nội bộ đã hoàn thành
+- Hợp đồng đã ký kết
+##### Người phụ trách: TP Dự toán - Đặt hàng
+##### Người thực hiện: NV Dự toán
+##### Mô tả: Làm form nghiệm thu khối lượng quyết toán phù hợp với loại hình hợp đồng đã ký kết
+- Hợp đồng trọn gói
+- Hợp đồng nghiệm thu khối lượng thực tế
+##### Mục tiêu: Nghiệm thu đúng, đủ khối lượng
+##### Đầu ra: Form nghiệm thu khối lượng quyết toán
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: Giám sát
+##### Định kỳ thực hiện: Khi phát sinh
+##### Gửi kết quả qua: Viber
+
+#### Task: DỰT-005 - Chuẩn bị hồ sơ Quyết toán
+##### Thuộc giai đoạn: DEFECT-HANDOVER
+##### Giai đoạn con: Defect & Handover
+##### Điều kiện tiên quyết: Bảng khối lượng quyết toán Ver 01
+##### Người phụ trách: TP Dự toán - Đặt hàng
+##### Người thực hiện: NV Dự toán
+##### Mô tả: Tổng hợp giá trị khối lượng quyết toán theo khối lượng của hợp đồng
+##### Mục tiêu: Nghiệm thu đúng, đủ khối lượng, giá trị dự án
+##### Đầu ra: Bảng giá trị khối lượng quyết toán
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: Chỉ huy trưởng/NV Kinh doanh
+##### Định kỳ thực hiện: Khi phát sinh
+##### Gửi kết quả qua: PM/Viber
+

@@ -1,0 +1,399 @@
+# PHÒNG BAN: Thi công
+
+## Giai đoạn: CONSTRUCTION
+
+### Giai đoạn con: Construction
+
+#### Task: THI-001 - Quản lý dự án
+##### Thuộc giai đoạn: CONSTRUCTION
+##### Giai đoạn con: Construction
+##### Điều kiện tiên quyết: N
+##### Người phụ trách: Giám đốc Thi công
+##### Người thực hiện: Chỉ huy trưởng/ Giám sát
+##### Mô tả: Quản lý dự án
+##### Mục tiêu: N
+##### Đầu ra: N
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: N
+##### Định kỳ thực hiện: N
+##### Gửi kết quả qua: N
+
+#### Task: THI-002 - Chuẩn bị kick-off nội bộ/ Chuẩn bị họp cập nhật dự án
+##### Thuộc giai đoạn: CONSTRUCTION
+##### Giai đoạn con: Construction
+##### Điều kiện tiên quyết: 1. Final 3D
+2. Final Khối lượng công việc
+3. Kế hoạch đặt hàng
+##### Người phụ trách: Giám đốc Thi công
+##### Người thực hiện: Chỉ huy trưởng /Giám sát
+##### Mô tả: Kế hoạch thi công dự án và các bước phối hợp
+Kế hoạch đặt hàng có leadtime 
+Plan thu tiền dự án
+##### Mục tiêu: Kế hoạch thi công dự án và các bước phối hợp
+##### Đầu ra: 1. Biểu đồ Gantt - bản cập nhật cuối cùng
+2. Kế hoạch đặt hàng có leadtime
+3. Kế hoạch thu dự án
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: GM/CEO
+##### Định kỳ thực hiện: Khi phát sinh
+##### Gửi kết quả qua: Viber
+
+#### Task: THI-003 - Chuẩn bị kick-off nội bộ/ Chuẩn bị họp cập nhật dự án
+##### Thuộc giai đoạn: CONSTRUCTION
+##### Giai đoạn con: Construction
+##### Điều kiện tiên quyết: N
+##### Người phụ trách: Chỉ huy trưởng
+##### Người thực hiện: 2D, Thi công, Thiết kế
+##### Phối hợp với: 2D, Thi công, Thiết kế
+##### Mô tả: Khảo sát mặt bằng
+##### Mục tiêu: N
+##### Đầu ra: Biên bản khảo sát mặt bằng
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: Chỉ huy trưởng
+##### Định kỳ thực hiện: Khi phát sinh
+##### Gửi kết quả qua: PM
+
+#### Task: THI-004 - Chuẩn bị hồ sơ xin phép thi công
+##### Thuộc giai đoạn: CONSTRUCTION
+##### Giai đoạn con: Construction
+##### Điều kiện tiên quyết: N
+##### Người phụ trách: Giám đốc Thi công
+##### Người thực hiện: Chỉ huy trưởng /Giám sát
+##### Mô tả: Chuẩn bị hồ sơ xin phép thi công: Làm việc với khách hàng ký ủy quyền và Cọc phí thi công cho tòa nhà (nếu có)
+##### Mục tiêu: N
+##### Đầu ra: N
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: N
+##### Định kỳ thực hiện: N
+##### Gửi kết quả qua: Viber
+
+#### Task: THI-005 - Xin phép thi công
+##### Thuộc giai đoạn: CONSTRUCTION
+##### Giai đoạn con: Construction
+##### Điều kiện tiên quyết: Bản vẽ xin phép
+##### Người phụ trách: Giám đốc Thi công
+##### Người thực hiện: Chỉ huy trưởng /Giám sát
+##### Mô tả: Nộp hồ sơ xin phép, gồm:
+1. Giấy ủy quyền từ Khách hàng
+2. Bản vẽ xin phép
+3. Đơn đăng ký thi công theo form BQL
+4. Hồ sơ khác theo yêu cầu
+5. Cọc phí thi công (Khách hàng cọc)
+##### Mục tiêu: Có được đồng ý của BQL tòa nhà/ đơn vị phường xã chuyên trách cho phép thi công
+##### Đầu ra: Giấy phép thi công
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: Chỉ huy trưởng
+##### Định kỳ thực hiện: N
+##### Gửi kết quả qua: PM/Viber
+
+#### Task: THI-006 - Nhận mặt bằng
+##### Thuộc giai đoạn: CONSTRUCTION
+##### Giai đoạn con: Construction
+##### Điều kiện tiên quyết: 1. Final 3D
+2. Final Khối lượng công việc
+##### Người phụ trách: Giám đốc Thi công
+##### Người thực hiện: Chỉ huy trưởng /Giám sát
+##### Mô tả: Nhận mặt bằng sẵn sàng thi công với khách hàng
+##### Mục tiêu: N
+##### Đầu ra: Biên bản nhận mặt bằng có chữ ký khách hàng
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: Chỉ huy trưởng
+##### Định kỳ thực hiện: N
+##### Gửi kết quả qua: Viber
+
+#### Task: THI-007 - Khởi công dự án
+##### Thuộc giai đoạn: CONSTRUCTION
+##### Giai đoạn con: Construction
+##### Điều kiện tiên quyết: N
+##### Người phụ trách: Giám đốc Thi công
+##### Người thực hiện: Chỉ huy trưởng /Giám sát
+##### Mô tả: Cúng khởi công
+##### Mục tiêu: N
+##### Đầu ra: Hình ảnh cúng khởi công
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: N
+##### Định kỳ thực hiện: N
+##### Gửi kết quả qua: Viber
+
+#### Task: THI-008 - Yêu cầu đặt hàng
+##### Thuộc giai đoạn: CONSTRUCTION
+##### Giai đoạn con: Construction
+##### Điều kiện tiên quyết: 1. Final 3D
+2. Final Khối lượng công việc
+##### Người phụ trách: Giám đốc Thi công
+##### Người thực hiện: Chỉ huy trưởng /Giám sát
+##### Mô tả: Yêu cầu đặt hàng lần 1
+##### Mục tiêu: Đưa yêu cầu cho Phòng mua hàng thực hiện việc mua vật tư có ưu tiên 1
+##### Đầu ra: Phiếu yêu cầu vật tư
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: NV Mua hàng
+##### Định kỳ thực hiện: N
+##### Gửi kết quả qua: N
+
+#### Task: THI-009 - Yêu cầu đặt hàng và triển khai thi công
+##### Thuộc giai đoạn: CONSTRUCTION
+##### Giai đoạn con: Construction
+##### Điều kiện tiên quyết: 1. Bảng spec vật liệu
+2. Final Khối lượng công việc
+3. Final 3D
+4. Bản vẽ thi công
+##### Người phụ trách: Giám đốc Thi công
+##### Người thực hiện: Chỉ huy trưởng /Giám sát
+##### Mô tả: Chỉ huy trưởng/giám sát: -  Kiểm tra khối lượng, các yêu cầu kỹ thuật, tiến độ…. đúng với yêu cầu của dự án 
+- Nghiệm thu khối lượng, chất lượng với nhà thầu/NCC 
+- Quản lý tiến độ nhà thầu/NCC 
+- Báo cáo công việc đầu ngày và cuối mỗi ngày trên group dự án với Khách hàng
+Thầu phụ/ NCC: 
+- NCC khảo sát, bốc tách khối lượng và báo giá cho DBH 
+- Tuần thủ những yêu cầu về chất lượng, kỹ thuật, tiến độ của dự án 
+Giám sát:
+- Báo cáo công việc đầu ngày và cuối mỗi ngày trên group dự án nội bộ
+- Báo cáo công việc trên PM
+##### Mục tiêu: Triển khai đúng đủ khối lượng, tiến độ phù hợp
+##### Đầu ra: Khối lượng chi tiết đơn đặt hàng với thầu phụ
+Triển khai thực hiện ngoài công trình
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: NV Đặt hàng
+##### Định kỳ thực hiện: N
+##### Gửi kết quả qua: Viber/Zalo
+
+#### Task: THI-010 - Xử lý phát sinh thay đổi
+##### Thuộc giai đoạn: CONSTRUCTION
+##### Giai đoạn con: Construction
+##### Điều kiện tiên quyết: 1. BB thống nhất công việc thay đổi phát sinh (BD)
+##### Người phụ trách: Giám đốc Thi công
+##### Người thực hiện: Chỉ huy trưởng /Giám sát
+##### Mô tả: Phối hợp với các phòng ban liên quan triển khai xử lý phát sinh thay đổi từ khách hàng
+##### Mục tiêu: N
+##### Đầu ra: 1. BB thống nhất công việc thay đổi phát sinh (BD)
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: NV Thiết kế/Dự toán/Mua hàng
+##### Định kỳ thực hiện: N
+##### Gửi kết quả qua: PM
+
+#### Task: THI-011 - Xử lý phát sinh thay đổi
+##### Thuộc giai đoạn: CONSTRUCTION
+##### Giai đoạn con: Construction
+##### Điều kiện tiên quyết: 1.BB thống nhất công việc thay đổi phát sinh (BD) 
+2. Bản vẽ cập nhật thay đổi phát sinh (TK) 
+3. Khối lượng thay đổi phát sinh (DT)
+##### Người phụ trách: Giám đốc Thi công
+##### Người thực hiện: Chỉ huy trưởng /Giám sát
+##### Mô tả: Thực hiện theo quy trình từ bước Yêu cầu đặt hàng
+##### Mục tiêu: N
+##### Đầu ra: Khối lượng chi tiết đơn đặt hàng với thầu phụ
+Triển khai thực hiện ngoài công trình
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: N
+##### Định kỳ thực hiện: N
+##### Gửi kết quả qua: PM/Viber
+
+#### Task: THI-012 - Nghiệm thu giai đoạn với khách hàng
+##### Thuộc giai đoạn: CONSTRUCTION
+##### Giai đoạn con: Construction
+##### Điều kiện tiên quyết: Đồ mộc được tập kết tại site
+##### Người phụ trách: Giám đốc Thi công
+##### Người thực hiện: Chỉ huy trưởng /Giám sát
+##### Mô tả: Nghiệm thu giai đoạn 1: Chụp hình hàng nội thất tập kết tại công trình
+##### Mục tiêu: Thu tiền
+##### Đầu ra: Biên bản nghiệm thu giai đoạn với khách hàng
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: NV Kinh doanh
+##### Định kỳ thực hiện: N
+##### Gửi kết quả qua: PM
+
+## Giai đoạn: DEFECT-HANDOVER
+
+### Giai đoạn con: Defect & Handover
+
+#### Task: THI-013 - Quản lý dự án
+##### Thuộc giai đoạn: DEFECT-HANDOVER
+##### Giai đoạn con: Defect & Handover
+##### Điều kiện tiên quyết: N
+##### Người phụ trách: Giám đốc Thi công
+##### Người thực hiện: Chỉ huy trưởng/ Giám sát
+##### Mô tả: Quản lý dự án
+##### Mục tiêu: N
+##### Đầu ra: N
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: N
+##### Định kỳ thực hiện: N
+##### Gửi kết quả qua: N
+
+#### Task: THI-014 - Nghiệm thu nội bộ
+##### Thuộc giai đoạn: DEFECT-HANDOVER
+##### Giai đoạn con: Defect & Handover
+##### Điều kiện tiên quyết: Công trình hoàn thành 98% khối lượng công việc đã ký kết
+##### Người phụ trách: Chỉ huy trưởng
+##### Người thực hiện: Giám sát
+##### Mô tả: Thông báo ngày nghiệm thu nội bộ trước 03 ngày
+Tổ chức nghiệm thu nội bộ
+##### Mục tiêu: Đảm bảo dự án hoàn thiện tốt nhất
+##### Đầu ra: 1. Biên bản nghiệm thu nội bộ
+2.Defect list nội bộ
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: NV Đặt hàng
+##### Định kỳ thực hiện: Khi dự án đạt 98% khối lượng công việc đã ký kết
+##### Gửi kết quả qua: PM/Viber
+
+#### Task: THI-015 - Defect sau khi nghiệm thu nội bộ
+##### Thuộc giai đoạn: DEFECT-HANDOVER
+##### Giai đoạn con: Defect & Handover
+##### Điều kiện tiên quyết: Defect list nội bộ
+##### Người phụ trách: Chỉ huy trưởng
+##### Người thực hiện: Giám sát
+##### Mô tả: Phối hợp với nhà thầu/nhà cung cấp và phòng đặt hàng để tiến hành defect các hạng mục cần thiết
+##### Mục tiêu: Đảm bảo defect thẩm mỹ tốt nhất và không ảnh hưởng đến tiến độ bàn giao dự án
+##### Đầu ra: Check list Defect nội bộ đã hoàn thành (có hình ảnh trước và sau khi defect)
+Khối lượng QT
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: GM/CEO
+##### Định kỳ thực hiện: Sau khi có defect list nội bộ
+##### Gửi kết quả qua: PM/Viber
+
+#### Task: THI-016 - Nghiệm thu với khách hàng
+##### Thuộc giai đoạn: DEFECT-HANDOVER
+##### Giai đoạn con: Defect & Handover
+##### Điều kiện tiên quyết: Công trình hoàn thành 100% khối lượng công việc đã ký kết
+##### Người phụ trách: Giám sát Thi công
+##### Người thực hiện: Chỉ huy trưởng /Giám sát
+##### Mô tả: Thông báo ngày nghiệm thu khách hàng trước 03 ngày
+Tổ chức nghiệm thu khách hàng
+##### Mục tiêu: Đảm bảo dự án hoàn thiện tốt nhất
+##### Đầu ra: 1. Biên bản nghiệm thu nội bộ
+2.Defect list nội bộ
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: NV Đặt hàng
+##### Định kỳ thực hiện: Khi dự án đạt 98% khối lượng công việc đã ký kết
+##### Gửi kết quả qua: PM/Viber
+
+#### Task: THI-017 - Defect sau khi nghiệm thu với khách hàng
+##### Thuộc giai đoạn: DEFECT-HANDOVER
+##### Giai đoạn con: Defect & Handover
+##### Điều kiện tiên quyết: Defect list nội bộ
+##### Người phụ trách: Chỉ huy trưởng
+##### Người thực hiện: Giám sát
+##### Mô tả: Phối hợp với nhà thầu/nhà cung cấp và phòng đặt hàng để tiến hành defect các hạng mục cần thiết
+##### Mục tiêu: Đảm bảo defect thẩm mỹ tốt nhất và không ảnh hưởng đến tiến độ bàn giao dự án
+##### Đầu ra: Check list Defect với khách hàng đã hoàn thành (có hình ảnh trước và sau khi defect)
+Khối lượng QT
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: GM/CEO
+##### Định kỳ thực hiện: Sau khi có defect list nội bộ
+##### Gửi kết quả qua: PM/Viber
+
+#### Task: THI-018 - Chuẩn bị hồ sơ Quyết toán
+##### Thuộc giai đoạn: DEFECT-HANDOVER
+##### Giai đoạn con: Defect & Handover
+##### Điều kiện tiên quyết: - Form nghiệm thu khối lượng quyết toán
+- Hợp đồng đã ký kết
+##### Người phụ trách: Chỉ huy trưởng
+##### Người thực hiện: Giám sát
+##### Mô tả: Kiểm tra và điền nghiệm thu khối lượng quyết toán phù hợp với loại hình hợp đồng đã ký kết Ver 01 
+Thông báo ngày bàn giao dự án trước 03 ngày
+##### Mục tiêu: Nghiệm thu đúng, đủ khối lượng
+##### Đầu ra: Bảng khối lượng quyết toán Ver 01
+Ngày bàn giao dự án
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: NV Dự toán
+##### Định kỳ thực hiện: Khi phát sinh
+##### Gửi kết quả qua: Viber
+
+#### Task: THI-019 - Hoàn công với BQL tòa nhà
+##### Thuộc giai đoạn: DEFECT-HANDOVER
+##### Giai đoạn con: Defect & Handover
+##### Điều kiện tiên quyết: 1. Bản vẽ hoàn công (Nội bộ)
+2. Đề nghị hoàn tiền ký quỹ
+3. Biên bản nghiệm thu hoàn công
+4. Yêu cầu nghiệm thu hoàn thành trang trí nội thất
+(mục 2-3-4 theo form BQL tòa nhà)
+##### Người phụ trách: Chỉ huy trưởng
+##### Người thực hiện: Giám sát
+##### Mô tả: Nộp hồ sơ hoàn công:
+- Biên bản nghiệm thu hoàn công
+- Đề nghị hoàn tiền kí quỹ
+- Bản vẽ hoàn công
+- Yêu cầu nghiệm thu hoàn thành trang trí nội thất
+##### Mục tiêu: Hoàn tất hồ sơ hoàn công cho khách hàng
+##### Đầu ra: - Hồ sơ hoàn công được duyệt
+- Nhận lại tiền ký quỹ
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: NV Kinh doanh
+##### Định kỳ thực hiện: Khi phát sinh
+##### Gửi kết quả qua: PM/Viber
+
+### Giai đoạn con: After Sales & Maintainance (Bước chuyển tiếp)
+
+#### Task: THI-020 - Nghiệm thu và bàn giao khách hàng
+##### Thuộc giai đoạn: DEFECT-HANDOVER
+##### Giai đoạn con: After Sales & Maintainance (Bước chuyển tiếp)
+##### Điều kiện tiên quyết: Bảng giá trị khối lượng quyết toán Ver 01
+Bản vẽ hoàn công
+##### Người phụ trách: Chỉ huy trưởng
+##### Người thực hiện: Giám sát
+##### Mô tả: - Tổ chức bàn giao cho khách hàng. Thời gian diễn ra đúng hoặc sớm hơn tiến độ đã thống nhất
+- Giải trình khối lượng với khách hàng (nếu cần)
+##### Mục tiêu: Bàn giao sản phẩm hoàn thiện tốt nhất đến với khách hàng
+##### Đầu ra: - Bàn giao dự án 
+- Bảng khối lượng quyết toán Final
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: NV Kinh doanh
+##### Định kỳ thực hiện: Khi phát sinh
+##### Gửi kết quả qua: Viber
+
+## Giai đoạn: AFTERSALE-MAINTENANCE
+
+### Giai đoạn con: After Sales & Maintainance
+
+#### Task: THI-021 - Quản lý dự án
+##### Thuộc giai đoạn: AFTERSALE-MAINTENANCE
+##### Giai đoạn con: After Sales & Maintainance
+##### Điều kiện tiên quyết: N
+##### Người phụ trách: Giám đốc Thi công
+##### Người thực hiện: Chỉ huy trưởng/ Giám sát
+##### Mô tả: Quản lý dự án
+##### Mục tiêu: N
+##### Đầu ra: N
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: N
+##### Định kỳ thực hiện: N
+##### Gửi kết quả qua: N
+
+#### Task: THI-022 - Quyết toán với thầu phụ
+##### Thuộc giai đoạn: AFTERSALE-MAINTENANCE
+##### Giai đoạn con: After Sales & Maintainance
+##### Điều kiện tiên quyết: Biên bản nghiệm thu Khối lượng QT
+##### Người phụ trách: Chỉ huy trưởng
+##### Người thực hiện: Giám sát
+##### Mô tả: Nghiệm thu khối lượng với thầu phụ. Thời gian diễn ra trước hoặc sau khi nghiệm thu bàn giao với khách hàng
+##### Mục tiêu: Nghiệm thu đúng đủ khối lượng cho thầu phụ
+##### Đầu ra: Biên bản nghiệm thu Khối lượng QT thầu phụ có xác nhận của Nhà thầu/Nhà cung cấp, Giám sát và Chỉ huy trưởng Dbhomes ở dự án đó
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: NV Đặt hàng
+##### Định kỳ thực hiện: Khi phát sinh
+##### Gửi kết quả qua: Viber/Lưu trữ trên server
+
+#### Task: THI-023 - Bảo hành
+##### Thuộc giai đoạn: AFTERSALE-MAINTENANCE
+##### Giai đoạn con: After Sales & Maintainance
+##### Điều kiện tiên quyết: - Bản vẽ hoàn công
+- 3D
+- Khối lượng quyết toán
+- Danh sách liên hệ thầu phụ
+- Phiếu bảo hành (bản scan/copy)
+##### Người phụ trách: N
+##### Người thực hiện: N
+##### Mô tả: Bàn giao thông tin dự án cho Team bảo trì
+Đội Bảo trì bảo trì dự án khi có yêu cầu
+##### Mục tiêu: Bàn giao đúng, đủ thông tin dự án cho Đội bảo trì
+##### Đầu ra: Biên bản bào giao:
+- Bản vẽ hoàn công
+- 3D
+- Khối lượng quyết toán
+- Danh sách liên hệ thầu phụ
+- Phiếu bảo hành
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: Bảo Trì
+##### Định kỳ thực hiện: Khi có yêu cầu
+##### Gửi kết quả qua: Viber
+

@@ -1,0 +1,91 @@
+# PHÒNG BAN: Mua hàng
+
+## Giai đoạn: CONSTRUCTION
+
+### Giai đoạn con: Construction
+
+#### Task: MUA-001 - Chuẩn bị kick-off nội bộ/ Chuẩn bị họp cập nhật dự án
+##### Thuộc giai đoạn: CONSTRUCTION
+##### Giai đoạn con: Construction
+##### Điều kiện tiên quyết: 1. Final 3D
+2. Final BOQ
+##### Người phụ trách: TP Dự toán - Đặt hàng
+##### Người thực hiện: NV đặt hàng
+##### Mô tả: Cập nhật kế hoạch đặt hàng
+##### Mục tiêu: Lên kế hoạch đặt hàng đảm bảo đúng tiến độ, trong ngân sách
+##### Đầu ra: Kế hoạch đặt hàng cập nhật cuối cùng
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: Chỉ huy trưởng
+##### Định kỳ thực hiện: Khi phát sinh
+##### Gửi kết quả qua: PM/Viber
+
+#### Task: MUA-002 - Chuẩn bị kick-off nội bộ/ Chuẩn bị họp cập nhật dự án
+##### Thuộc giai đoạn: CONSTRUCTION
+##### Giai đoạn con: Construction
+##### Điều kiện tiên quyết: 1. Final 3D
+2. Final Khối lượng công việc
+##### Người phụ trách: TP Dự toán - Đặt hàng
+##### Người thực hiện: NV đặt hàng
+##### Mô tả: Mẫu đề xuất theo bảng Spec vật liệu
+##### Mục tiêu: Lên kế hoạch đặt hàng đảm bảo đúng tiến độ, trong ngân sách
+##### Đầu ra: Bảng spec vật liệu có thông tin Lead time, mẫu đề xuất cập nhật cuối cùng
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: Chỉ huy trưởng
+##### Định kỳ thực hiện: Khi phát sinh
+##### Gửi kết quả qua: PM/Viber
+
+#### Task: MUA-003 - Triển khai dự án
+##### Thuộc giai đoạn: CONSTRUCTION
+##### Giai đoạn con: Construction
+##### Điều kiện tiên quyết: 1. Final 3D
+2. Final Khối lượng công việc
+##### Người phụ trách: TP Dự toán - Đặt hàng
+##### Người thực hiện: NV đặt hàng
+##### Mô tả: Lấy mẫu vật liệu từ NCC phù hợp
+##### Mục tiêu: Mẫu vật liệu thực tế đáp ứng được tiến độ, ngân sách và thẩm mỹ
+##### Đầu ra: Mẫu vật liệu thực tế đáp ứng được tiến độ, ngân sách và thẩm mỹ
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: Thiết kế
+##### Định kỳ thực hiện: Khi phát sinh
+##### Gửi kết quả qua: Không
+
+#### Task: MUA-004 - Đặt hàng và triển khai thi công
+##### Thuộc giai đoạn: CONSTRUCTION
+##### Giai đoạn con: Construction
+##### Điều kiện tiên quyết: 1. Bảng spec vật liệu
+2. Final Khối lượng công việc
+3. Final 3D
+4. Bản vẽ thi công 
+5. Phiếu yêu cầu vật tư
+##### Người phụ trách: TP Dự toán - Đặt hàng
+##### Người thực hiện: NV Đặt hàng
+##### Mô tả: - Làm rõ điều khoản thanh toán, tiến độ đầu cuối của công trình: Đặt cọc giữ ván (Mộc), và các mã đặc biệt có stock ít + time đặt hàng lâu so với tiến độ từng DA
+- Ra đơn đặt hàng (PO): hoàn thành 7 ngày đối với DA < 500tr, 14 ngày >500tr
+- Hoàn thành trình ký hồ sơ đặt hàng (Đơn đặt hàng, so sánh giá, Đề nghị thanh toán) 
+ NOTE
+Theo dõi tiến độ đặt hàng và kiểm tra chất lượng hàng hóa. Xử lý các vấn đề liên quan đến thầu phụ - Cập nhật tiến độ đặt hàng hằng tuần Kế toán: - Thanh toán các đơn hàng theo tiến độ và Tư vấn về các giải pháp tài chính - Báo cáo những biến động bất thường về chi phí
+##### Mục tiêu: Mua hàng đúng số lượng, tiến độ, giá cả hợp lí, thanh toán tốt
+##### Đầu ra: Đơn đặt hàng, so sánh giá, Đề nghị thanh toán đã thống nhất với nhà thầu//nhà cung cấp
+- Ngày khởi công: Đặt hàng đạt 70% khối lượng
+- Sau khi khởi công 7 ngày: Đặt hàng đạt 100% khối lượng
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: Chỉ huy trưởng/NV Kế toán
+##### Định kỳ thực hiện: N
+##### Gửi kết quả qua: PM/Zalo
+
+#### Task: MUA-005 - Xử lý phát sinh thay đổi
+##### Thuộc giai đoạn: CONSTRUCTION
+##### Giai đoạn con: Construction
+##### Điều kiện tiên quyết: 1.BB thống nhất công việc thay đổi phát sinh (BD) 
+2. Bản vẽ cập nhật thay đổi phát sinh (TK) 
+3. Báo giá thay đổi phát sinh (DT)
+##### Người phụ trách: Trưởng nhóm Mua hàng
+##### Người thực hiện: NV Mua hàng
+##### Mô tả: Thực hiện theo quy trình từ bước Yêu cầu đặt hàng
+##### Mục tiêu: N
+##### Đầu ra: Đơn đặt hàng với thầu phụ
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: N
+##### Định kỳ thực hiện: N
+##### Gửi kết quả qua: PM
+

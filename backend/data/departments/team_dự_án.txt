@@ -1,0 +1,30 @@
+# PHÒNG BAN: Team dự án
+
+## Giai đoạn: CONSTRUCTION
+
+### Giai đoạn con: Construction
+
+#### Task: TEA-001 - Họp Kick-off nội bộ/ Họp cập nhật dự án
+##### Thuộc giai đoạn: CONSTRUCTION
+##### Giai đoạn con: Construction
+##### Điều kiện tiên quyết: 1. Final 3D
+2. Final Khối lượng công việc
+3. Bảng spec vật liệu
+4. Biểu đồ Gantt
+5. Kế hoạch đặt hàng
+##### Người phụ trách: Chỉ huy trưởng
+##### Người thực hiện: Giám sát
+##### Mô tả: - Chốt phương án cập nhật sau cùng
++ Khối lượng dự án
++ Thiết kế  (lưu ý chi tiết khó, quy trình tòa nhà)
++ Spec: long lead, mẫu khó, mockup
++ Tiến độ dự án (3D final (nếu có), bản vẽ thi công (DD),…)
++ Đặt hàng
+- Chốt thời gian định kỳ họp cập nhật dự án
+##### Mục tiêu: Đảm bảo team dự án biết rõ nên làm gì, khi nào để đạt đúng deadline và chất lượng
+##### Đầu ra: Biên bản họp kick off, có deadline và chữ ký xác nhận của từng bộ phận
+##### Thời gian thực hiện: N
+##### Người nhận kết quả: GM/CEO
+##### Định kỳ thực hiện: Khi phát sinh
+##### Gửi kết quả qua: Email/PM/Viber
+
