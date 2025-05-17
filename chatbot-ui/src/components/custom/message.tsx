@@ -13,7 +13,7 @@ export const PreviewMessage = ({ message, socket, sessionId }: { message: messag
   const [showThinking, setShowThinking] = useState(false);
   // Thêm state để theo dõi trạng thái đang tải thinking
   const [isLoadingThinking, setIsLoadingThinking] = useState(false);
-  const [thinkingError, setThinkingError] = useState<string | null>(null);
+  const [_thinkingError, setThinkingError] = useState<string | null>(null);
   const [currentRequestId, setCurrentRequestId] = useState<string | null>(null);
 
   const handleGetThinking = () => {

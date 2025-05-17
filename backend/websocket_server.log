@@ -563,3 +563,127 @@ First, the instructions say not to create conn
 2025-05-17 13:36:45,708 - websockets.server - INFO - server closing
 2025-05-17 13:36:45,735 - websockets.server - INFO - server closed
 2025-05-17 13:36:45,777 - websocket_server - INFO - Server bị dừng bởi người dùng
+2025-05-17 15:31:56,478 - websocket_server - INFO - Khởi động server WebSocket tại 0.0.0.0:8090
+2025-05-17 15:31:56,502 - websockets.server - INFO - server listening on 0.0.0.0:8090
+2025-05-17 15:31:56,502 - websocket_server - INFO - Server WebSocket đang chạy tại ws://0.0.0.0:8090
+2025-05-17 15:31:56,503 - websocket_server - INFO - Đã cấu hình ping_timeout=6000 giây, ping_interval=60 giây
+2025-05-17 15:33:32,560 - websockets.server - INFO - connection open
+2025-05-17 15:33:32,815 - websockets.server - INFO - connection open
+2025-05-17 15:33:35,223 - websocket_server - INFO - Nhận tin nhắn dạng JSON: {"content":"xin chào /no_think","session_id":""}
+2025-05-17 15:33:35,225 - websocket_server - INFO - Session ID không được cung cấp trong tin nhắn JSON, sử dụng current_session_id: 8d24b8d6-267c-479f-afa5-865acbc59572
+2025-05-17 15:33:35,226 - websocket_server - INFO - Session ID từ client (sau khi kiểm tra): 8d24b8d6-267c-479f-afa5-865acbc59572
+2025-05-17 15:33:35,226 - websocket_server - INFO - Tắt chế độ thinking cho câu hỏi: xin chào /no_think...
+2025-05-17 15:33:35,226 - websocket_server - INFO - Nhận tin nhắn thông thường: xin chào /no_think, enable_thinking=False
+2025-05-17 15:33:35,227 - websocket_server - INFO - Không có lịch sử tin nhắn cho phiên này
+2025-05-17 15:33:35,227 - chatbot_rag - INFO - Đang phân tích câu hỏi với LLM: xin chào /no_think, session_id: 8d24b8d6-267c-479f-afa5-865acbc59572
+2025-05-17 15:33:35,278 - chatbot_rag - INFO - [analyze_query_with_llm] Đã lấy được 0 bản ghi lịch sử từ websocket_server cho session 8d24b8d6-267c-479f-afa5-865acbc59572
+2025-05-17 15:33:35,280 - chatbot_rag - INFO - [analyze_query_with_llm] Sử dụng lịch sử hội thoại: 0 bản ghi
+2025-05-17 15:33:35,281 - chatbot_rag - INFO - [analyze_query_with_llm] Prompt cuối cùng: Lịch sử tin nhắn:
+        
+        Câu hỏi người dùng hiện tại: "xin chào /no_think"
+
+        Phân tích câu hỏi và trả về JSON có định dạng:
+        {"department": "tên phòng ban hoặc null", "query_ty...
+2025-05-17 15:33:35,281 - chatbot_rag - INFO - Kích thước prompt: 599 ký tự
+2025-05-17 15:33:35,282 - chatbot_rag - INFO - Kích thước system prompt: 2004 ký tự
+2025-05-17 15:33:35,282 - chatbot_rag - INFO - Tổng kích thước: 2603 ký tự
+2025-05-17 15:33:35,284 - chatbot_rag - INFO - Đã lưu full prompt vào file: data/logs/llm_full_prompt_20250517_153335.txt
+2025-05-17 15:33:35,285 - chatbot_rag - INFO - System prompt: 
+        Bạn là trợ lý AI phân tích câu hỏi để xác định:
+        1. Phòng ban người dùng đang hỏi (department)
+        2. Loại câu hỏi: phòng ban cụ thể hay chung (query_type)
+        3. Nếu câu hỏi đ...
+2025-05-17 15:33:35,286 - chatbot_rag - INFO - User prompt: Lịch sử tin nhắn:
+        
+        Câu hỏi người dùng hiện tại: "xin chào /no_think"
+
+        Phân tích câu hỏi và trả về JSON có định dạng:
+        {"department": "tên phòng ban hoặc null", "query_ty...
+2025-05-17 15:33:35,292 - chatbot_rag - INFO - Gửi truy vấn đến LLM API tại http://192.168.0.43:1234/v1/chat/completions với stream=False
+2025-05-17 15:33:37,370 - chatbot_rag - ERROR - Lỗi khi gọi LLM: HTTPConnectionPool(host='192.168.0.43', port=1234): Max retries exceeded with url: /v1/chat/completions (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000029E1A6BBA10>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2025-05-17 15:33:37,373 - chatbot_rag - INFO - [analysis_20250517_153337] Đã ghi phản hồi gốc vào: data/logs/analysis_20250517_153337_raw.txt
+2025-05-17 15:33:37,374 - chatbot_rag - INFO - [analysis_20250517_153337] Phản hồi gốc: Đã xảy ra lỗi khi xử lý truy vấn: HTTPConnectionPool(host='192.168.0.43', port=1234): Max retries ex...
+2025-05-17 15:33:37,376 - chatbot_rag - INFO - [analysis_20250517_153337] BƯỚC 1: Thử parse toàn bộ chuỗi phản hồi
+2025-05-17 15:33:37,378 - chatbot_rag - INFO - [analysis_20250517_153337] BƯỚC 1: Không phải JSON hợp lệ: Expecting value: line 1 column 1 (char 0)
+2025-05-17 15:33:37,379 - chatbot_rag - INFO - [analysis_20250517_153337] BƯỚC 2: Tìm JSON trong chuỗi phản hồi
+2025-05-17 15:33:37,384 - chatbot_rag - WARNING - [analysis_20250517_153337] BƯỚC 2: Không tìm thấy mẫu JSON nào trong phản hồi
+2025-05-17 15:33:37,385 - chatbot_rag - INFO - [analysis_20250517_153337] BƯỚC 3: Xử lý chuỗi thủ công để trích xuất thông tin
+2025-05-17 15:33:37,406 - department_info_tool - INFO - Đã tải 11 phòng ban
+2025-05-17 15:33:37,407 - department_info_tool - INFO - Đã lấy danh sách 11 phòng ban
+2025-05-17 15:33:37,407 - chatbot_rag - INFO - [analysis_20250517_153337] BƯỚC 3: Kết quả phân tích thủ công: {'department': None, 'query_type': 'general', 'error': False}
+2025-05-17 15:33:37,408 - websocket_server - INFO - Phân tích câu hỏi: Phòng ban=None, Loại=general, Thinking=False
+2025-05-17 15:33:37,408 - websocket_server - INFO - Xử lý streaming response cho: 'xin chào /no_think', phòng ban: None, session_id: 8d24b8d6-267c-479f-afa5-865acbc59572
+2025-05-17 15:33:37,408 - websocket_server - INFO - Session ID nhận được: 8d24b8d6-267c-479f-afa5-865acbc59572
+2025-05-17 15:33:37,412 - websocket_server - INFO - Phát hiện lệnh /no_think, tắt chế độ thinking cho: xin chào
+2025-05-17 15:33:37,413 - websocket_server - INFO - Xử lý streaming response. Query: 'xin chào', Mode thinking: False
+2025-05-17 15:33:37,414 - websocket_server - INFO - Không có lịch sử tin nhắn cho phiên này
+2025-05-17 15:33:37,415 - chatbot_rag - INFO - Đang phân tích câu hỏi với LLM: xin chào, session_id: 8d24b8d6-267c-479f-afa5-865acbc59572
+2025-05-17 15:33:37,415 - chatbot_rag - INFO - [analyze_query_with_llm] Đã lấy được 0 bản ghi lịch sử từ websocket_server cho session 8d24b8d6-267c-479f-afa5-865acbc59572
+2025-05-17 15:33:37,415 - chatbot_rag - INFO - [analyze_query_with_llm] Sử dụng lịch sử hội thoại: 0 bản ghi
+2025-05-17 15:33:37,416 - chatbot_rag - INFO - [analyze_query_with_llm] Prompt cuối cùng: Lịch sử tin nhắn:
+        
+        Câu hỏi người dùng hiện tại: "xin chào"
+
+        Phân tích câu hỏi và trả về JSON có định dạng:
+        {"department": "tên phòng ban hoặc null", "query_type": "depa...
+2025-05-17 15:33:37,417 - chatbot_rag - INFO - Kích thước prompt: 589 ký tự
+2025-05-17 15:33:37,418 - chatbot_rag - INFO - Kích thước system prompt: 2004 ký tự
+2025-05-17 15:33:37,418 - chatbot_rag - INFO - Tổng kích thước: 2593 ký tự
+2025-05-17 15:33:37,421 - chatbot_rag - INFO - Đã lưu full prompt vào file: data/logs/llm_full_prompt_20250517_153337.txt
+2025-05-17 15:33:37,421 - chatbot_rag - INFO - System prompt: 
+        Bạn là trợ lý AI phân tích câu hỏi để xác định:
+        1. Phòng ban người dùng đang hỏi (department)
+        2. Loại câu hỏi: phòng ban cụ thể hay chung (query_type)
+        3. Nếu câu hỏi đ...
+2025-05-17 15:33:37,421 - chatbot_rag - INFO - User prompt: Lịch sử tin nhắn:
+        
+        Câu hỏi người dùng hiện tại: "xin chào"
+
+        Phân tích câu hỏi và trả về JSON có định dạng:
+        {"department": "tên phòng ban hoặc null", "query_type": "depa...
+2025-05-17 15:33:37,422 - chatbot_rag - INFO - Gửi truy vấn đến LLM API tại http://192.168.0.43:1234/v1/chat/completions với stream=False
+2025-05-17 15:33:39,461 - chatbot_rag - ERROR - Lỗi khi gọi LLM: HTTPConnectionPool(host='192.168.0.43', port=1234): Max retries exceeded with url: /v1/chat/completions (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000029E1A6EE5D0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2025-05-17 15:33:39,463 - chatbot_rag - INFO - [analysis_20250517_153339] Đã ghi phản hồi gốc vào: data/logs/analysis_20250517_153339_raw.txt
+2025-05-17 15:33:39,464 - chatbot_rag - INFO - [analysis_20250517_153339] Phản hồi gốc: Đã xảy ra lỗi khi xử lý truy vấn: HTTPConnectionPool(host='192.168.0.43', port=1234): Max retries ex...
+2025-05-17 15:33:39,465 - chatbot_rag - INFO - [analysis_20250517_153339] BƯỚC 1: Thử parse toàn bộ chuỗi phản hồi
+2025-05-17 15:33:39,465 - chatbot_rag - INFO - [analysis_20250517_153339] BƯỚC 1: Không phải JSON hợp lệ: Expecting value: line 1 column 1 (char 0)
+2025-05-17 15:33:39,465 - chatbot_rag - INFO - [analysis_20250517_153339] BƯỚC 2: Tìm JSON trong chuỗi phản hồi
+2025-05-17 15:33:39,466 - chatbot_rag - WARNING - [analysis_20250517_153339] BƯỚC 2: Không tìm thấy mẫu JSON nào trong phản hồi
+2025-05-17 15:33:39,466 - chatbot_rag - INFO - [analysis_20250517_153339] BƯỚC 3: Xử lý chuỗi thủ công để trích xuất thông tin
+2025-05-17 15:33:39,470 - department_info_tool - INFO - Đã tải 11 phòng ban
+2025-05-17 15:33:39,471 - department_info_tool - INFO - Đã lấy danh sách 11 phòng ban
+2025-05-17 15:33:39,471 - chatbot_rag - INFO - [analysis_20250517_153339] BƯỚC 3: Kết quả phân tích thủ công: {'department': None, 'query_type': 'general', 'error': False}
+2025-05-17 15:33:39,472 - websocket_server - INFO - Phân tích câu hỏi: Phòng ban=None, Loại=general, Thinking=False
+2025-05-17 15:33:39,472 - websocket_server - INFO - Query thực tế gửi đến mô hình: xin chào /no_think
+2025-05-17 15:33:39,472 - websocket_server - INFO - Câu hỏi chung, chế độ thinking: False
+2025-05-17 15:33:39,473 - chatbot_rag - INFO - Xử lý câu hỏi chung cho session_id: 8d24b8d6-267c-479f-afa5-865acbc59572
+2025-05-17 15:33:39,476 - department_info_tool - INFO - Đã tải 11 phòng ban
+2025-05-17 15:33:39,477 - department_info_tool - INFO - Đã lấy danh sách 11 phòng ban
+2025-05-17 15:33:39,478 - chatbot_rag - INFO - Gọi LLM để trả lời câu hỏi chung cho session_id: 8d24b8d6-267c-479f-afa5-865acbc59572
+2025-05-17 15:33:39,479 - chatbot_rag - INFO - Đã lưu prompt vào file: data/logs/prompt_general_20250517_153339.txt
+2025-05-17 15:33:39,480 - chatbot_rag - INFO - Kích thước prompt: 1630 ký tự
+2025-05-17 15:33:39,480 - chatbot_rag - INFO - Kích thước system prompt: 1205 ký tự
+2025-05-17 15:33:39,481 - chatbot_rag - INFO - Tổng kích thước: 2835 ký tự
+2025-05-17 15:33:39,482 - chatbot_rag - INFO - Đã lưu full prompt vào file: data/logs/llm_full_prompt_20250517_153339.txt
+2025-05-17 15:33:39,482 - chatbot_rag - INFO - System prompt: 
+Bạn là trợ lý AI chuyên về quy trình và giai đoạn trong công ty.
+
+CÁC PHÒNG BAN THAM GIA THEO GIAI ĐOẠN:
+- MKT-SALES: Marketing, Kinh doanh
+- PROPOSAL: Kinh doanh, Dự toán, Thiết kế, Team dự án
+- CON...
+2025-05-17 15:33:39,483 - chatbot_rag - INFO - User prompt: 
+Câu hỏi: "xin chào /no_think"
+
+Đây là câu hỏi chung về quy trình hoặc giai đoạn làm việc.
+
+Thông tin cơ bản:
+### Thông tin tổng quan về quy trình và giai đoạn
+
+#### Giai đoạn chính trong quy trình:
+1...
+2025-05-17 15:33:39,484 - chatbot_rag - INFO - Gửi truy vấn đến LLM API tại http://192.168.0.43:1234/v1/chat/completions với stream=True
+2025-05-17 15:33:41,526 - chatbot_rag - ERROR - Lỗi khi gọi LLM: HTTPConnectionPool(host='192.168.0.43', port=1234): Max retries exceeded with url: /v1/chat/completions (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000029E1A6EEC10>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2025-05-17 15:33:41,796 - websocket_server - INFO - Đã lưu hội thoại chung vào lịch sử của session 8d24b8d6-267c-479f-afa5-865acbc59572
+2025-05-17 16:37:00,203 - websockets.server - INFO - connection open
+2025-05-17 16:37:00,380 - websockets.server - INFO - connection open

@@ -44,52 +44,39 @@ def create_system_prompt(sub_phase=None, department=None):
     """
     base_prompt = """
 Bạn là trợ lý AI chuyên về công việc của các phòng ban trong công ty. 
-Nhiệm vụ của bạn là phân tích thông tin về các task trong phòng ban và cung cấp thông tin hữu ích cho người dùng.
+Nhiệm vụ: phân tích thông tin về các task trong phòng ban và cung cấp thông tin hữu ích.
 
-Dự án được chia thành các giai đoạn chính (main phases) theo thứ tự cố định:
+DỰ ÁN ĐƯỢC CHIA THÀNH CÁC GIAI ĐOẠN CHÍNH (theo thứ tự cố định):
 1. MKT-SALES: Giai đoạn Marketing và Bán hàng
 2. PROPOSAL: Giai đoạn đề xuất
 3. CONSTRUCTION: Giai đoạn thi công
 4. DEFECT-HANDOVER: Giai đoạn xử lý lỗi và bàn giao
 5. AFTERSALE-MAINTENANCE: Giai đoạn sau bán hàng và bảo trì
 
-Giai đoạn MKT-SALES bao gồm các giai đoạn con (sub-phases) theo thứ tự:
+Giai đoạn MKT-SALES bao gồm các sub-phases theo thứ tự:
 1. Branding MKT: Marketing thương hiệu
 2. Sales Sourcing: Tìm kiếm nguồn bán hàng
 3. Data Qualification: Phân loại dữ liệu
-4. Approach: Tiếp cận
+4. Approach: Tiếp cận (bước chuyển tiếp)
 
-Giai đoạn PROPOSAL bao gồm các giai đoạn con/bước/quy trình con (sub-phases) theo thứ tự:
-1. PROPOSAL
-
-Giai đoạn CONSTRUCTION bao gồm các giai đoạn con/bước/quy trình con (sub-phases) theo thứ tự:
-1. CONSTRUCTION
-
-Giai đoạn DEFECT-HANDOVER bao gồm các giai đoạn con/bước/quy trình con (sub-phases) theo thứ tự:
-1. DEFECT-HANDOVER
-2. AFTERSALE-MAINTENANCE (bước chuyển tiếp)
-
-Giai đoạn AFTERSALE-MAINTENANCE bao gồm các giai đoạn con/bước/quy trình con (sub-phases) theo thứ tự:
-1. AFTERSALE-MAINTENANCE
-2. Done (Kết thúc toàn bộ giai đoạn)
+Các giai đoạn khác có sub-phases tương ứng, với bước chuyển tiếp cuối cùng là Done.
 
 QUY TẮC NGHIÊM NGẶT:
 1. KHÔNG TỰ TẠO mối liên hệ giữa giai đoạn và phòng ban
 2. KHÔNG LIỆT KÊ phòng ban nào tham gia vào giai đoạn nào
 3. CHỈ TẬP TRUNG vào thông tin của một phòng ban cụ thể
-4. KHÔNG ĐỀ CẬP đến mối quan hệ giữa các phòng ban với nhau
-5. Khi được hỏi về mối liên hệ giữa giai đoạn và phòng ban, CHỈ trả lời: "Vui lòng hỏi về một phòng ban cụ thể để biết thêm chi tiết"
+4. KHÔNG ĐỀ CẬP đến mối quan hệ giữa các phòng ban
+5. Khi hỏi về mối liên hệ giữa giai đoạn và phòng ban, CHỈ trả lời: "Vui lòng hỏi về một phòng ban cụ thể để biết thêm chi tiết"
 
-Khi trả lời:
-1. Trả lời ngắn gọn, súc tích nhưng đầy đủ thông tin
-2. Nếu thông tin về phòng ban không được tìm thấy, hãy thông báo cho người dùng và gợi ý các phòng ban có sẵn
-3. Khi liệt kê danh sách task, hãy sắp xếp theo thứ tự giai đoạn và giai đoạn con
-4. Đảm bảo hiển thị đúng thứ tự các sub-phase trong giai đoạn MKT-SALES
-5. Nếu câu hỏi là những câu chào hỏi hoặc không liên quan, hãy trả lời một cách hài hước, cợt nhả, spam icon.
+KHI TRẢ LỜI:
+1. Ngắn gọn, súc tích nhưng đầy đủ thông tin
+2. Nếu không tìm thấy thông tin, thông báo và gợi ý các phòng ban có sẵn
+3. Liệt kê task theo thứ tự giai đoạn và giai đoạn con
+4. Hiển thị đúng thứ tự các sub-phase trong MKT-SALES
+5. Với câu hỏi chào hỏi/không liên quan, trả lời hài hước, cợt nhả, spam icon
 
 Trả lời bằng tiếng Việt, ngay cả khi người dùng hỏi bằng tiếng Anh.
 """
-    
     return base_prompt
 
 def create_llm_prompt(query, dept_info, session_id=None, basic_response=None):
@@ -117,7 +104,7 @@ def create_llm_prompt(query, dept_info, session_id=None, basic_response=None):
         try:
             # Import hàm get_session_history từ websocket_server nếu hàm này tồn tại ở đó
             try:
-                from websocket_server import get_session_history
+                from server import get_session_history
                 history = get_session_history(session_id)
                 logger.info(f"[create_llm_prompt] Đã lấy được {len(history)} bản ghi lịch sử từ websocket_server.get_session_history cho session {session_id}.")
                 if history:
@@ -227,44 +214,35 @@ def create_llm_prompt(query, dept_info, session_id=None, basic_response=None):
     
 
     return f"""
-Vai trò của bạn: Trợ lý thông minh cung cấp thông tin về phòng ban và công việc trong công ty.
+    Vai trò: Trợ lý thông minh cung cấp thông tin về phòng ban và công việc trong công ty.
 
-{conversation_history}
-Câu hỏi người dùng hiện tại: "{query}"
+    {conversation_history}
+    Câu hỏi người dùng: "{query}"
 
-Thông tin về phòng ban {dept_info['department']}:
-Số lượng tasks: {dept_info['task_count']}
-Các giai đoạn: {', '.join(dept_info['phases'])}
+    THÔNG TIN PHÒNG BAN {dept_info['department']}:
+    - Số lượng tasks: {dept_info['task_count']}
+    - Các giai đoạn: {', '.join(dept_info['phases'])}
 
-HƯỚNG DẪN QUAN TRỌNG:
-1. HÃY TRẢ LỜI TRỰC TIẾP câu hỏi của người dùng trước tiên
-2. Sử dụng thông tin về các task làm dữ liệu để hỗ trợ câu trả lời
-3. Tránh chỉ liệt kê công việc mà không trả lời câu hỏi người dùng
-4. LỌC THÔNG TIN dựa trên câu hỏi:
-   - Nếu người dùng hỏi về một giai đoạn cụ thể, CHỈ trả lời về các task thuộc giai đoạn đó
-   - Nếu người dùng hỏi về một giai đoạn con cụ thể, CHỈ trả lời về các task thuộc giai đoạn con đó
-   - Nếu người dùng hỏi về phòng ban nói chung, cung cấp tổng quan và nhóm thông tin theo giai đoạn
-5. XỬ LÝ NHIỀU PHÒNG BAN/GIAI ĐOẠN:
-   - PHẢI GIẢI THÍCH RÕ RÀNG tại sao bạn liệt kê tất cả thông tin (ví dụ: "Tôi liệt kê thông tin của cả hai phòng ban Marketing và Kinh doanh vì câu hỏi của bạn đề cập đến cả hai")
-   - Với câu hỏi có nhiều giai đoạn/giai đoạn con, hãy phân nhóm câu trả lời theo từng giai đoạn để dễ so sánh
-6. LƯU Ý ĐẶC BIỆT:
-   - Phòng ban "Thi công" khác với giai đoạn "CONSTRUCTION (Thi công)" 
-   - Khi người dùng hỏi về "phòng ban Thi công", hãy hiểu là họ đang hỏi về phòng ban, không phải giai đoạn
-   - Chỉ khi người dùng nói rõ "giai đoạn Thi công" hoặc "CONSTRUCTION" mới xem là họ đang hỏi về giai đoạn
-7. Nếu câu hỏi không liên quan đến công việc, hoặc người dùng muốn nhắn tin xã giao, thì hãy trả lời bình thường mà không nhắc đến công việc.
-CHÚ Ý CUỐI CÙNG:
-- HÃY TRẢ LỜI TRỰC TIẾP câu hỏi của người dùng, không chỉ đơn thuần liệt kê công việc
-- Trả lời phải dưới dạng Markdown với định dạng rõ ràng, dễ đọc
-- Trả lời bằng Tiếng Việt, rõ ràng và súc tích
-- Tự phân tích câu hỏi của người dùng để xác định họ đang hỏi về giai đoạn hoặc giai đoạn con nào
-- Nếu người dùng để cập cụ thể về giai đoạn (phase) hoặc quy trình, các bước (sub-phase) thì chỉ liệt kê các task thuộc phase/sub-phase đó. Thông báo rõ không có task trong giai đoạn này, bạn có muốn tìm hiểu ở giai đoạn khác không?
-- Nếu hỏi về mục tiêu, kết quả đầu ra,... trả lời đúng chính xác những thông tin có trong mục tương ứng của mục tiêu, đầu ra,... không tổng hợp, ưu tiên giống với thông tin các task đó.
+    HƯỚNG DẪN QUAN TRỌNG:
+    1. TRẢ LỜI TRỰC TIẾP câu hỏi trước tiên
+    2. Sử dụng thông tin về các task làm dữ liệu hỗ trợ
+    3. Tránh chỉ liệt kê công việc mà không trả lời câu hỏi
+    4. LỌC THÔNG TIN theo câu hỏi:
+    - Nếu hỏi về giai đoạn cụ thể, CHỈ trả lời về tasks thuộc giai đoạn đó
+    - Nếu hỏi về giai đoạn con cụ thể, CHỈ trả lời về tasks thuộc giai đoạn con đó
+    - Nếu hỏi về phòng ban nói chung, cung cấp tổng quan theo giai đoạn
+    5. XỬ LÝ NHIỀU PHÒNG BAN/GIAI ĐOẠN:
+    - GIẢI THÍCH RÕ RÀNG tại sao bạn liệt kê thông tin (nếu câu hỏi đề cập đến nhiều phần)
+    - Phân nhóm câu trả lời theo giai đoạn để dễ so sánh
+    6. LƯU Ý ĐẶC BIỆT:
+    - Phòng ban "Thi công" khác với giai đoạn "CONSTRUCTION"
+    - Với câu hỏi không liên quan đến công việc, trả lời bình thường
+    - Trả lời bằng Markdown, rõ ràng, súc tích, Tiếng Việt
+    - Nếu mục tiêu có "nếu bước không đạt được mục tiêu, quay về task X", PHẢI thông báo rõ ràng
 
-QUAN TRỌNG: Nếu mục tiêu có chứa nội dung (nếu bước không đạt được mục tiêu, quay về task ....) -> phải thông báo rõ ràng: Nếu task này thất bại phải quay về "task_name" đến người dùng cho dù không đề cập đến, đọc thật kỹ để phát hiện cụm từ này. Với những task trong mục tiêu không có đề cập điều này thì vui lòng không thông báo quay về task nào, không được bịa thông tin.
-Thông tin về các task:
-{tasks_json}
-
-"""
+    Thông tin về các task:
+    {tasks_json}
+    """
 
 # Prompt hệ thống cho LLM
 SYSTEM_PROMPT = create_system_prompt()
@@ -1007,7 +985,7 @@ def analyze_query_with_llm(query: str, session_id: Optional[str] = None) -> Dict
             try:
                 # Thử lấy lịch sử từ session_id trong websocket_server
                 try:
-                    from websocket_server import get_session_history
+                    from server import get_session_history
                     chat_history = get_session_history(session_id)
                     logger.info(f"[analyze_query_with_llm] Đã lấy được {len(chat_history)} bản ghi lịch sử từ websocket_server cho session {session_id}")
                 except ImportError:
@@ -1065,68 +1043,51 @@ def analyze_query_with_llm(query: str, session_id: Optional[str] = None) -> Dict
             logger.info(f"[analyze_query_with_llm] Đã lưu lịch sử tin nhắn cho phân tích vào file: {history_log_path}")
         
         system_prompt = """
-Bạn là trợ lý AI chuyên phân tích nội dung câu hỏi để xác định:
-1. Phòng ban mà người dùng đang hỏi về (department)
-2. Phân loại câu hỏi là về phòng ban cụ thể hay câu hỏi chung (query_type)
-3. Xác định nếu câu hỏi đề cập đến nhiều phòng ban cùng lúc (error)
+        Bạn là trợ lý AI phân tích câu hỏi để xác định:
+        1. Phòng ban người dùng đang hỏi (department)
+        2. Loại câu hỏi: phòng ban cụ thể hay chung (query_type)
+        3. Nếu câu hỏi đề cập nhiều phòng ban (error)
 
-### Danh sách phòng ban:
-- 2D
-- Dự toán  
-- Kinh doanh
-- Kế toán
-- Marketing
-- Mua hàng
-- Team dự án
-- Thi công
-- Thiết kế
-- Đặt hàng
+        DANH SÁCH PHÒNG BAN:
+        2D, Dự toán, Kinh doanh, Kế toán, Marketing, Mua hàng, Team dự án, Thi công, Thiết kế, Đặt hàng
 
-### Phân loại câu hỏi (query_type):
-- "department_specific": Câu hỏi liên quan đến một phòng ban cụ thể hoặc tiếp tục hỏi về phòng ban từ câu hỏi trước
-- "general": CHÍNH XÁC LÀ câu hỏi về quy trình chung, giai đoạn chung, không liên quan đến bất kỳ phòng ban nào, và KHÔNG thể sử dụng phòng ban từ câu hỏi trước
+        PHÂN LOẠI CÂU HỎI:
+        - "department_specific": Câu hỏi về phòng ban cụ thể hoặc tiếp tục ngữ cảnh phòng ban trước
+        - "general": Câu hỏi về quy trình chung, không liên quan phòng ban cụ thể
 
-### QUY TẮC QUAN TRỌNG:
-1. Nếu phát hiện câu hỏi hiện tại đề cập đến HAI hay NHIỀU phòng ban cùng lúc:
-   - Đặt department = null
-   - Đặt query_type = null
-   - Đặt error = true
-2. Nếu câu hỏi đề cập đến "Marketing và Bán hàng" cùng lúc, xem nó là đề cập đến giai đoạn "MKT-SALES" chứ không phải phòng ban Marketing và Kinh doanh đồng thời
-3. Quy tắc ưu tiên khi xác định phòng ban: 
-   - HÀNG ĐẦU: Ưu tiên phòng ban được đề cập trực tiếp trong câu hỏi hiện tại
-   - THỨ HAI: Nếu câu hỏi hiện tại KHÔNG đề cập đến phòng ban cụ thể nhưng tiếp tục ngữ cảnh của câu hỏi trước (ví dụ: "bước tiếp theo là gì?", "họ phải làm những gì?"), BẮT BUỘC sử dụng phòng ban gần đây từ lịch sử
-   - THỨ BA: Chỉ phân loại là "general" khi câu hỏi HOÀN TOÀN là về quy trình/giai đoạn chung và KHÔNG liên quan đến phòng ban cụ thể
-4. CẢNH BÁO: Các câu hỏi ngắn gọn như "bước 2 là gì?", "giai đoạn tiếp theo thì sao?", "họ làm gì ở giai đoạn này?" thường là tiếp tục ngữ cảnh câu hỏi trước đó - PHẢI giữ department từ ngữ cảnh trước.
-5. Nếu người dùng đề cập "construction" thì nó là giai đoạn chứ không phải phòng ban thi công, khi nào người dùng nói thi công thì nó mới là phòng ban thi công, hoặc nói rõ giai đoạn thi công, giai đoạn construction thì mới là giai đoạn.
-6. Khi người dùng hỏi về tất cả giai đoạn của tất cả phòng ban/ công ty (DBhomes/DBplus) thì đó là câu hỏi general.
-7. Những từ như "họ", "bộ phận này", "phòng ban đó" trong câu hỏi hiện tại thường ám chỉ phòng ban được nhắc đến trong lịch sử hội thoại gần đây.
-8. LƯU Ý ĐẶC BIỆT VỀ NGÔN NGỮ:
-   - Nếu người dùng hỏi "các bước tiếp theo là gì?", "giai đoạn X thì sao?", "có việc gì trong giai đoạn Y không?" mà không đề cập phòng ban, thì BẮT BUỘC sử dụng phòng ban từ hội thoại gần đây nhất
-   - Nếu câu hỏi dùng từ "họ", "nhân viên", "ở đây", "bộ phận này", thì LUÔN đề cập đến phòng ban đã được nhắc đến trước đó
-9. DBhomes/DBplus là công ty, khi câu hỏi có chứa DBhomes/DBplus thì đó là câu hỏi general.
-### Ví dụ phân loại:
-1. "Phòng abc có những công việc gì?" -> {"department": "abc", "query_type": "department_specific", "error": false}
-2. "Nhiệm vụ của phòng kế toán và phòng marketing" -> {"department": null, "query_type": null, "error": true}
-3. "Có bao nhiêu giai đoạn trong quy trình?" -> {"department": null, "query_type": "general", "error": false}
-4. "Các giai đoạn con của MKT-SALES là gì?" -> {"department": null, "query_type": "general", "error": false}
-5. "Sale trong giai đoạn Construction" -> {"department": "Kinh doanh", "query_type": "department_specific", "error": false}
-6. "Bước 2 là làm gì?" (sau khi hỏi về Kinh doanh) -> {"department": "Kinh doanh", "query_type": "department_specific", "error": false}
-7. "Họ làm gì tiếp theo?" (sau khi hỏi về Marketing) -> {"department": "Marketing", "query_type": "department_specific", "error": false}
+        QUY TẮC QUAN TRỌNG:
+        1. Nếu phát hiện HAI/NHIỀU phòng ban cùng lúc: department=null, query_type=null, error=true
+        2. "Marketing và Bán hàng" = giai đoạn "MKT-SALES", không phải hai phòng ban riêng biệt
+        3. Thứ tự ưu tiên xác định phòng ban:
+        - HÀNG ĐẦU: Phòng ban được đề cập trực tiếp trong câu hỏi hiện tại
+        - THỨ HAI: Phòng ban từ ngữ cảnh trước nếu câu hỏi tiếp tục ngữ cảnh
+        - THỨ BA: General chỉ khi hoàn toàn không liên quan đến phòng ban cụ thể
+        4. Câu hỏi ngắn ("bước tiếp theo", "họ làm gì") PHẢI giữ department từ ngữ cảnh trước
+        5. "Construction" = giai đoạn; "Thi công" = phòng ban
+        6. Câu hỏi về DBhomes/DBplus (công ty) = general
+        7. Từ "họ", "bộ phận này", "phòng ban đó" = tiếp tục dùng phòng ban đã nhắc trước đó
 
-"""
-        
+        VÍ DỤ PHÂN LOẠI:
+        1. "Phòng abc có công việc gì?" → {"department": "abc", "query_type": "department_specific", "error": false}
+        2. "Nhiệm vụ của phòng kế toán và marketing" → {"department": null, "query_type": null, "error": true}
+        3. "Có bao nhiêu giai đoạn trong quy trình?" → {"department": null, "query_type": "general", "error": false}
+        4. "Bước 2 là gì?" (sau khi hỏi về Kinh doanh) → {"department": "Kinh doanh", "query_type": "department_specific", "error": false}
+
+        PHẢI TRẢ VỀ JSON: {"department": "tên/null", "query_type": "loại/null", "error": true/false}
+        """
+                
         # Tạo prompt cho LLM - nhấn mạnh việc chỉ trả về JSON
         prompt = f"""Lịch sử tin nhắn:
-{context}{recent_chat_context}
-Câu hỏi người dùng hiện tại: "{query}"
+        {context}{recent_chat_context}
+        Câu hỏi người dùng hiện tại: "{query}"
 
-Phân tích câu hỏi và trả về JSON có định dạng:
-{{"department": "tên phòng ban hoặc null", "query_type": "department_specific hoặc general hoặc null", "error": true hoặc false}}
+        Phân tích câu hỏi và trả về JSON có định dạng:
+        {{"department": "tên phòng ban hoặc null", "query_type": "department_specific hoặc general hoặc null", "error": true hoặc false}}
 
-Nếu câu hỏi hiện tại là tiếp nối câu hỏi trước và không đề cập rõ phòng ban, hãy sử dụng phòng ban từ lịch sử hội thoại gần đây.
+        Nếu câu hỏi hiện tại là tiếp nối câu hỏi trước và không đề cập rõ phòng ban, hãy sử dụng phòng ban từ lịch sử hội thoại gần đây.
 
-QUAN TRỌNG NHẤT: NẾU Lịch sử tin nhắn không đề cập đến phòng ban nào, hoăc câu hỏi không liên quan đến quy trình, phòng ban thì bắt buộc phải là câu hỏi type general.
-"""
+        QUAN TRỌNG NHẤT: NẾU Lịch sử tin nhắn không đề cập đến phòng ban nào, hoăc câu hỏi không liên quan đến quy trình, phòng ban thì bắt buộc phải là câu hỏi type general.
+        """
         
         # Log lịch sử hội thoại và prompt được gửi
         logger.info(f"[analyze_query_with_llm] Sử dụng lịch sử hội thoại: {len(chat_history)} bản ghi")

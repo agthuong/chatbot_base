@@ -31,6 +31,13 @@ export function Chat() {
 
   const messageHandlerRef = useRef<((event: MessageEvent) => void) | null>(null);
 
+  // State để lưu trữ thinking cho tin nhắn hiện tại
+  let thinkingContent = "";
+  // Biến để theo dõi xem đã nhận được token đầu tiên hay chưa
+  let receivedFirstToken = false;
+  // Biến để theo dõi xem đã tạo tin nhắn assistant mới chưa
+  const createdAssistantMessageRef = useRef(false);
+
   // Xử lý chuyển đổi session
   const handleSessionChange = (sessionId: string) => {
     if (sessionId === currentSessionId) return;
@@ -383,12 +390,8 @@ async function handleSubmit(text?: string) {
     
   setQuestion("");
 
-    // State để lưu trữ thinking cho tin nhắn hiện tại
-    let thinkingContent = "";
-    // Biến để theo dõi xem đã nhận được token đầu tiên hay chưa
-    let receivedFirstToken = false;
-    // Biến để theo dõi xem đã tạo tin nhắn assistant mới chưa
-    let createdAssistantMessage = false;
+    // Đánh dấu đã tạo tin nhắn assistant
+    createdAssistantMessageRef.current = true;
 
   try {
     const messageHandler = (event: MessageEvent) => {
@@ -660,7 +663,7 @@ async function handleSubmit(text?: string) {
           }));
           
           // Đánh dấu đã tạo tin nhắn assistant
-          createdAssistantMessage = true;
+          createdAssistantMessageRef.current = true;
           
           return newMessages;
         }
@@ -681,7 +684,7 @@ async function handleSubmit(text?: string) {
       <Header socket={socket} onSessionChange={handleSessionChange}/>
       <div className="flex flex-col min-w-0 gap-6 flex-1 overflow-y-scroll pt-4" ref={messagesContainerRef}>
         {messages.length == 0 && <Overview />}
-        {messages.map((message, index) => (
+        {messages.map((message, _index) => (
           <PreviewMessage
             key={message.id}
             message={message}
