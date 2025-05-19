@@ -1,28 +1,28 @@
-version: '3.8'
+  version: '3.8'
 
-services:
-  backend:
-    build: ./backend
-    container_name: ui-chatbot-backend
-    ports:
-      - "8005:8000"
-    volumes:
-      - ./backend:/app
-    environment:
-      - ENVIRONMENT=development
-    networks:
-      - ui-chatbot-network
+  services:
+    backend:
+      build: ./backend
+      container_name: ui-chatbot-backend
+      ports:
+        - "8090:8090"
+      volumes:
+        - ./backend:/app
+      environment:
+        - ENVIRONMENT=development
+      networks:
+        - ui-chatbot-network
 
-  frontend:
-    build: ./chatbot-ui
-    container_name: ui-chatbot-frontend
-    ports:
-      - "8501:80"
-    depends_on:
-      - backend
-    networks:
-      - ui-chatbot-network
+    frontend:
+      build: ./chatbot-ui
+      container_name: ui-chatbot-frontend
+      ports:
+        - "8005:80"
+      depends_on:
+        - backend
+      networks:
+        - ui-chatbot-network
 
-networks:
-  ui-chatbot-network:
-    driver: bridge 
+  networks:
+    ui-chatbot-network:
+      driver: bridge 

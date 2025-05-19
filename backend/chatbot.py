@@ -46,20 +46,32 @@ def create_system_prompt(sub_phase=None, department=None):
 Bạn là trợ lý AI chuyên về công việc của các phòng ban trong công ty. 
 Nhiệm vụ: phân tích thông tin về các task trong phòng ban và cung cấp thông tin hữu ích.
 
-DỰ ÁN ĐƯỢC CHIA THÀNH CÁC GIAI ĐOẠN CHÍNH (theo thứ tự cố định):
+Dự án được chia thành các giai đoạn chính (main phases) theo thứ tự cố định:
 1. MKT-SALES: Giai đoạn Marketing và Bán hàng
 2. PROPOSAL: Giai đoạn đề xuất
 3. CONSTRUCTION: Giai đoạn thi công
 4. DEFECT-HANDOVER: Giai đoạn xử lý lỗi và bàn giao
 5. AFTERSALE-MAINTENANCE: Giai đoạn sau bán hàng và bảo trì
 
-Giai đoạn MKT-SALES bao gồm các sub-phases theo thứ tự:
+Giai đoạn MKT-SALES bao gồm các giai đoạn con (sub-phases) theo thứ tự:
 1. Branding MKT: Marketing thương hiệu
 2. Sales Sourcing: Tìm kiếm nguồn bán hàng
 3. Data Qualification: Phân loại dữ liệu
-4. Approach: Tiếp cận (bước chuyển tiếp)
+4. Approach: Tiếp cận
 
-Các giai đoạn khác có sub-phases tương ứng, với bước chuyển tiếp cuối cùng là Done.
+Giai đoạn PROPOSAL bao gồm các giai đoạn con/bước/quy trình con (sub-phases) theo thứ tự:
+1. PROPOSAL
+
+Giai đoạn CONSTRUCTION bao gồm các giai đoạn con/bước/quy trình con (sub-phases) theo thứ tự:
+1. CONSTRUCTION
+
+Giai đoạn DEFECT-HANDOVER bao gồm các giai đoạn con/bước/quy trình con (sub-phases) theo thứ tự:
+1. DEFECT-HANDOVER
+2. AFTERSALE-MAINTENANCE (bước chuyển tiếp)
+
+Giai đoạn AFTERSALE-MAINTENANCE bao gồm các giai đoạn con/bước/quy trình con (sub-phases) theo thứ tự:
+1. AFTERSALE-MAINTENANCE
+2. Done (Kết thúc toàn bộ giai đoạn)
 
 QUY TẮC NGHIÊM NGẶT:
 1. KHÔNG TỰ TẠO mối liên hệ giữa giai đoạn và phòng ban
@@ -145,14 +157,6 @@ def create_llm_prompt(query, dept_info, session_id=None, basic_response=None):
                 timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
                 history_log_path = f"data/logs/chatbot_history_prompt_{timestamp}.txt"
                 os.makedirs(os.path.dirname(history_log_path), exist_ok=True)
-                
-                with open(history_log_path, 'w', encoding='utf-8') as f:
-                    f.write(f"=== LỊCH SỬ TIN NHẮN CHO SESSION {session_id} ===\n\n")
-                    f.write(f"{conversation_history.replace('\\n', '\n')}\n\n")
-                    f.write(f"=== CÂU HỎI HIỆN TẠI ===\n\n")
-                    f.write(f"{query}\n\n")
-                    f.write(f"=== PHÒNG BAN ===\n\n")
-                    f.write(f"{dept_info['department']}\n\n")
                 
                 logger.info(f"[create_llm_prompt] Đã lưu lịch sử tin nhắn vào file: {history_log_path}")
                 logger.info(f"[create_llm_prompt] Đã thêm {len(recent_history)} hội thoại vào prompt cho session {session_id}")
@@ -403,20 +407,6 @@ def handle_general_query(query: str, use_llm=True, session_id: Optional[str] = N
 4. **DEFECT-HANDOVER**: {phases_info['DEFECT-HANDOVER']['description']}
 5. **AFTERSALE-MAINTENANCE**: {phases_info['AFTERSALE-MAINTENANCE']['description']}
 
-#### Giai đoạn con:
-- **MKT-SALES**: {", ".join(phases_info['MKT-SALES']['sub_phases'])}
-- **PROPOSAL**: {", ".join(phases_info['PROPOSAL']['sub_phases'])}
-- **CONSTRUCTION**: {", ".join(phases_info['CONSTRUCTION']['sub_phases'])}
-- **DEFECT-HANDOVER**: {", ".join(phases_info['DEFECT-HANDOVER']['sub_phases'])}
-- **AFTERSALE-MAINTENANCE**: {", ".join(phases_info['AFTERSALE-MAINTENANCE']['sub_phases'])}
-
-#### Các phòng ban tham gia theo giai đoạn:
-- **MKT-SALES**: {", ".join(phases_info['MKT-SALES']['departments'])}
-- **PROPOSAL**: {", ".join(phases_info['PROPOSAL']['departments'])}
-- **CONSTRUCTION**: {", ".join(phases_info['CONSTRUCTION']['departments'])}
-- **DEFECT-HANDOVER**: {", ".join(phases_info['DEFECT-HANDOVER']['departments'])}
-- **AFTERSALE-MAINTENANCE**: {", ".join(phases_info['AFTERSALE-MAINTENANCE']['departments'])}
-
 #### Danh sách phòng ban:
 Công ty có {len(departments)} phòng ban: {", ".join(departments)}
 
@@ -431,18 +421,11 @@ Ví dụ: "Phòng Kinh doanh làm gì trong giai đoạn PROPOSAL?" hoặc "Phò
     system_prompt = f"""
 Bạn là trợ lý AI chuyên về quy trình và giai đoạn trong công ty.
 
-CÁC PHÒNG BAN THAM GIA THEO GIAI ĐOẠN:
-- MKT-SALES: {", ".join(phases_info['MKT-SALES']['departments'])}
-- PROPOSAL: {", ".join(phases_info['PROPOSAL']['departments'])}
-- CONSTRUCTION: {", ".join(phases_info['CONSTRUCTION']['departments'])}
-- DEFECT-HANDOVER: {", ".join(phases_info['DEFECT-HANDOVER']['departments'])}
-- AFTERSALE-MAINTENANCE: {", ".join(phases_info['AFTERSALE-MAINTENANCE']['departments'])}
-
 DANH SÁCH PHÒNG BAN:
 {chr(10).join([f"- {dept}" for dept in departments])}
 
 QUY TẮC NGHIÊM NGẶT:
-1. KHÔNG TỰ TẠO mối liên hệ giữa các phòng ban
+1. KHÔNG TỰ TẠO mối liên hệ giữa các phòng ban và giai đoạn.
 2. CHỈ TẬP TRUNG mô tả giai đoạn và nêu phòng ban nào phụ trách
 3. LUÔN LUÔN KẾT THÚC câu trả lời bằng gợi ý: "Để biết chi tiết công việc cụ thể, vui lòng hỏi về một phòng ban cụ thể, ví dụ: Phòng X làm gì trong giai đoạn Y?"
 
@@ -462,9 +445,8 @@ Câu hỏi: "{query}"
 Thông tin cơ bản:
 {basic_response}
 
-KHÔNG TỰ TẠO MỐI LIÊN HỆ GIỮA GIAI ĐOẠN VÀ PHÒNG BAN.
-Không giải thích phòng ban nào làm việc trong giai đoạn nào.
-Chỉ trả lời về cấu trúc giai đoạn và quy trình.
+
+Nếu câu hỏi hoàn toàn không liên quan đến công việc, mà người dùng muốn nói chuyện thông thường, không nhắc đến công việc trong câu trả lời và trả lời lại một cách hài hước, cợt nhả, spam icon với người dùng.
 """
     
     try:
@@ -1045,7 +1027,7 @@ def analyze_query_with_llm(query: str, session_id: Optional[str] = None) -> Dict
         system_prompt = """
         Bạn là trợ lý AI phân tích câu hỏi để xác định:
         1. Phòng ban người dùng đang hỏi (department)
-        2. Loại câu hỏi: phòng ban cụ thể hay chung (query_type)
+        2. Loại câu hỏi: phòng ban cụ thể hay general (query_type)
         3. Nếu câu hỏi đề cập nhiều phòng ban (error)
 
         DANH SÁCH PHÒNG BAN:
@@ -1221,18 +1203,7 @@ def analyze_query_with_llm(query: str, session_id: Optional[str] = None) -> Dict
                     logger.info(f"[{analysis_id}] BƯỚC 3: Tìm thấy phòng ban trong câu hỏi: {department}")
                     break
             
-            # Nếu không tìm thấy phòng ban trong câu hỏi, xem xét lấy từ lịch sử
-            if not department and last_department:
-                # Nếu câu hỏi ngắn hoặc có vẻ là tiếp tục cuộc hội thoại trước
-                short_queries = ["họ", "bộ phận này", "phòng ban đó", "tiếp theo", "bước tiếp theo", "giai đoạn này"]
-                if any(term in query.lower() for term in short_queries) or len(query.split()) < 10:
-                    department = last_department
-                    logger.info(f"[{analysis_id}] BƯỚC 3: Sử dụng phòng ban từ ngữ cảnh hội thoại: {department}")
-            
-            # Xác định loại câu hỏi
-            general_terms = ["quy trình", "giai đoạn chung", "tất cả phòng ban", "công ty", "dự án", "phòng ban nào"]
-            query_type = "general" if (not department and any(term in query.lower() for term in general_terms)) else "department_specific"
-            
+
             # Nếu có department nhưng query_type là general, thì sửa lại
             if department and query_type == "general":
                 query_type = "department_specific"

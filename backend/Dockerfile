@@ -4,7 +4,11 @@ WORKDIR /app
 
 # Cài đặt các dependencies cần thiết
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Cài torch GPU (CUDA 11.8) từ PyTorch index (ổn định hơn PyPI)
+
+RUN pip install --no-cache-dir --timeout=1000000 -r requirements.txt
+
+
 
 # Copy toàn bộ source code
 COPY . .
@@ -13,7 +17,7 @@ COPY . .
 ENV ENVIRONMENT=development
 
 # Expose port
-EXPOSE 8000
+EXPOSE 8090
 
 # Khởi động server
-CMD ["python", "server.py"] 
+CMD ["python", "server.py"]

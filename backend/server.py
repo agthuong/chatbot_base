@@ -59,7 +59,7 @@ except ImportError:
 # Cấu hình LLM
 LLM_CFG = {
     'model': 'qwen3-8b',
-    'model_server': 'http://localhost:1234/v1'
+    'model_server': 'http://192.168.1.4:1234/v1'
 }
 
 # Nhập DepartmentInfoTool

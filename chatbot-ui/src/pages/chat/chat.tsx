@@ -10,8 +10,8 @@ import { Button } from "@/components/ui/button";
 import { BrainCircuit } from "lucide-react";
 
 // Tạo WebSocket kết nối
-const socket = new WebSocket("ws://10.172.4.35:8090"); //change to your websocket endpoint
-
+const socket = new WebSocket(`${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.hostname}:8090/ws`);
+//const socket = new WebSocket("ws://localhost:8090");
 // Định nghĩa kiểu dữ liệu cho lịch sử tin nhắn theo phiên
 interface SessionMessagesMap {
   [sessionId: string]: message[];
