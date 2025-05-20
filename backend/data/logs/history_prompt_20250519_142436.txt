@@ -1,0 +1,18 @@
+=== LỊCH SỬ TIN NHẮN CHO SESSION df4d9d0d-0ac0-4319-9828-51b9d555fcf0 ===
+
+Lịch sử tin nhắn:
+Người dùng: giai đoạn tiếp theo làm gì
+Người dùng: giai đoạn tiếp theo là sao
+
+
+=== PROMPT GỐC ===
+
+Một căn chung cư 76 mét vuông thì làm nội thất khoảng bao nhiêu tiền?
+
+=== PROMPT ĐẦY ĐỦ ===
+
+Lịch sử tin nhắn:
+Người dùng: giai đoạn tiếp theo làm gì
+Người dùng: giai đoạn tiếp theo là sao
+
+Một căn chung cư 76 mét vuông thì làm nội thất khoảng bao nhiêu tiền?

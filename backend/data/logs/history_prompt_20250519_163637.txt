@@ -1,0 +1,16 @@
+=== LỊCH SỬ TIN NHẮN CHO SESSION 07839642-ae58-44b2-ab77-c7072ba5d730 ===
+
+Lịch sử tin nhắn:
+Người dùng: phòng IT tham gia giai đoạn nào
+
+
+=== PROMPT GỐC ===
+
+team kinh doanh tham gia giai đoạn nào /no_think
+
+=== PROMPT ĐẦY ĐỦ ===
+
+Lịch sử tin nhắn:
+Người dùng: phòng IT tham gia giai đoạn nào
+
+team kinh doanh tham gia giai đoạn nào /no_think

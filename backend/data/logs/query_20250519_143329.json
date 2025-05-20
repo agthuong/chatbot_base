@@ -1,0 +1,9 @@
+{
+  "timestamp": "2025-05-19T14:33:29.645857",
+  "query": "nếu team kinh doanh không ký được với hợp đồng thì sao /no_think",
+  "sub_phase": null,
+  "department": "Kinh doanh",
+  "session_id": "df4d9d0d-0ac0-4319-9828-51b9d555fcf0",
+  "response": "<think>\n\n</think>\n\nNếu team kinh doanh không ký được hợp đồng, thì theo thông tin về các task trong giai đoạn **PROPOSAL**, có một số bước và hành động cụ thể cần thực hiện:\n\n---\n\n### 🔁 **Quay lại task KIN-010 (Họp 01 - KH)**\n\nNếu **KIN-012** không đạt được mục tiêu (không ký được hợp đồng), thì **quay về task KIN-010**, tức là:\n\n> \"Họp 01 - KH\" – nơi team kinh doanh sẽ:\n- Giới thiệu quy trình DBH\n- Trình bày 2 views\n- Khai thác yêu cầu chi tiết của khách hàng\n- Ghi nhận ý kiến và điều chỉnh phương án để tăng khả năng ký hợp đồng\n\n---\n\n### 📌 **Lưu ý**\nTừ thông tin có sẵn, nếu không đạt được mục tiêu ở bước **KIN-012 (Họp 02+ - KH)**, thì sẽ **quay về KIN-010** – đây là quy trình lặp lại để tiếp tục làm việc với khách hàng và điều chỉnh phương án.\n\n---\n\n### ✅ Tóm tắt:\n> Nếu team kinh doanh không ký được hợp đồng (tại KIN-012), họ sẽ **quay về KIN-010** (Họp 01 - KH) để tiếp tục đàm phán và điều chỉnh phương án.",
+  "query_time": 21.13662052154541
+}

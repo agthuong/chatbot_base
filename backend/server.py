@@ -58,8 +58,8 @@ except ImportError:
 
 # Cấu hình LLM
 LLM_CFG = {
-    'model': 'qwen3-8b',
-    'model_server': 'http://192.168.1.4:1234/v1'
+    'model': 'qwen3-30b-a3b',
+    'model_server': 'http://192.168.0.43:1234/v1'
 }
 
 # Nhập DepartmentInfoTool
@@ -862,13 +862,18 @@ async def handle_action(websocket, action, data):
             # Đảm bảo luôn có ít nhất một phiên
             if not sessions:
                 current_session_id = create_session("Phiên mặc định")
+                logger.info(f"Không có phiên nào, tạo phiên mặc định: {current_session_id}")
+            else:
+                logger.info(f"Có {len(sessions)} phiên, phiên hiện tại: {current_session_id}")
             
+            # Tạo phản hồi với đầy đủ thông tin
             response = {
                 "action": "get_sessions_response",
                 "status": "success",
                 "sessions": get_sessions(),
                 "current_session_id": current_session_id
             }
+            logger.info(f"Gửi danh sách {len(get_sessions())} phiên cho client")
             await websocket.send(json.dumps(response))
             
         elif action == "create_session":
@@ -908,12 +913,25 @@ async def handle_action(websocket, action, data):
             if session_id and session_id in sessions:
                 current_session_id = session_id
                 
+                # Lấy lịch sử của phiên mới để gửi cùng phản hồi
+                history = get_session_history(session_id)
+                
                 response = {
                     "action": "switch_session_response",
                     "status": "success",
-                    "session_id": session_id
+                    "session_id": session_id,
+                    "history": history  # Gửi lịch sử tin nhắn của phiên mới
                 }
                 await websocket.send(json.dumps(response))
+                
+                # Thông báo cho tất cả clients về việc phiên được cập nhật
+                session_updated = {
+                    "action": "session_updated",
+                    "status": "success",
+                    "current_session_id": current_session_id,
+                    "history": history
+                }
+                await websocket.send(json.dumps(session_updated))
             else:
                 response = {
                     "action": "switch_session_response",
@@ -927,12 +945,26 @@ async def handle_action(websocket, action, data):
             if session_id and session_id in sessions:
                 new_session_id = delete_session(session_id)
                 
+                # Lấy lịch sử của phiên mới (nếu có)
+                history = get_session_history(new_session_id) if new_session_id else []
+                
                 response = {
                     "action": "delete_session_response",
                     "status": "success",
-                    "new_session_id": new_session_id
+                    "new_session_id": new_session_id,
+                    "history": history  # Gửi lịch sử tin nhắn của phiên mới
                 }
                 await websocket.send(json.dumps(response))
+                
+                # Thông báo cho tất cả clients về việc phiên được cập nhật
+                if new_session_id:
+                    session_updated = {
+                        "action": "session_updated",
+                        "status": "success",
+                        "current_session_id": new_session_id,
+                        "history": history
+                    }
+                    await websocket.send(json.dumps(session_updated))
             else:
                 response = {
                     "action": "delete_session_response",
@@ -994,6 +1026,15 @@ async def handle_action(websocket, action, data):
                     "session_id": session_id
                 }
                 await websocket.send(json.dumps(response))
+                
+                # Thông báo cho tất cả clients về việc phiên được cập nhật
+                session_updated = {
+                    "action": "session_updated",
+                    "status": "success",
+                    "current_session_id": session_id,
+                    "history": []  # Lịch sử đã bị xóa
+                }
+                await websocket.send(json.dumps(session_updated))
             else:
                 response = {
                     "action": "clear_history_response",
@@ -1026,6 +1067,20 @@ async def handle_message(websocket):
     # Đảm bảo luôn có ít nhất một phiên
     if not sessions:
         current_session_id = create_session("Phiên mặc định")
+    
+    # Gửi dữ liệu khởi tạo cho client khi kết nối mới được thiết lập
+    try:
+        init_data = {
+            "action": "init_session_data",
+            "status": "success",
+            "sessions": get_sessions(),
+            "current_session_id": current_session_id,
+            "history": get_session_history(current_session_id) if current_session_id else []
+        }
+        await websocket.send(json.dumps(init_data))
+        logger.info(f"Đã gửi dữ liệu khởi tạo với current_session_id: {current_session_id}")
+    except Exception as e:
+        logger.error(f"Lỗi khi gửi dữ liệu khởi tạo: {str(e)}", exc_info=True)
     
     try:
         async for message in websocket:

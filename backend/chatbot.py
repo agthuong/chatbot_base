@@ -27,7 +27,7 @@ os.makedirs('data/logs', exist_ok=True)
 
 # Cấu hình Qwen LLM
 LLM_CFG = {
-    'model': 'qwen3-8b',
+    'model': 'qwen3-30b-a3b',
     'model_server': 'http://192.168.0.43:1234/v1'
 }
 
@@ -82,9 +82,9 @@ QUY TẮC NGHIÊM NGẶT:
 
 KHI TRẢ LỜI:
 1. Ngắn gọn, súc tích nhưng đầy đủ thông tin
-2. Nếu không tìm thấy thông tin, thông báo và gợi ý các phòng ban có sẵn
-3. Liệt kê task theo thứ tự giai đoạn và giai đoạn con
-4. Hiển thị đúng thứ tự các sub-phase trong MKT-SALES
+2. Nếu không tìm thấy thông tin, thông báo rằng không có thông tin trong dữ liệu.
+3. chỉ liệt kê giai đoạn nếu người dùng hỏi về các giai đoạn, nếu chỉ hỏi về giai đoạn cụ thể thì chỉ tập trung vào giai đoạn đó và trả lời.
+4. Trả lời ngắn gọn, không cần thông tin chi tiết.
 5. Với câu hỏi chào hỏi/không liên quan, trả lời hài hước, cợt nhả, spam icon
 
 Trả lời bằng tiếng Việt, ngay cả khi người dùng hỏi bằng tiếng Anh.
@@ -1031,7 +1031,7 @@ def analyze_query_with_llm(query: str, session_id: Optional[str] = None) -> Dict
         3. Nếu câu hỏi đề cập nhiều phòng ban (error)
 
         DANH SÁCH PHÒNG BAN:
-        2D, Dự toán, Kinh doanh, Kế toán, Marketing, Mua hàng, Team dự án, Thi công, Thiết kế, Đặt hàng
+        2D, Dự toán, Kinh doanh, Kế toán, Marketing, Mua hàng, Team dự án, Thi công, Thiết kế, Đặt hàng.
 
         PHÂN LOẠI CÂU HỎI:
         - "department_specific": Câu hỏi về phòng ban cụ thể hoặc tiếp tục ngữ cảnh phòng ban trước
@@ -1048,7 +1048,7 @@ def analyze_query_with_llm(query: str, session_id: Optional[str] = None) -> Dict
         5. "Construction" = giai đoạn; "Thi công" = phòng ban
         6. Câu hỏi về DBhomes/DBplus (công ty) = general
         7. Từ "họ", "bộ phận này", "phòng ban đó" = tiếp tục dùng phòng ban đã nhắc trước đó
-
+        8. Nếu phòng ban từ câu hỏi không có trong DANH SÁCH PHÒNG BAN, thì trả về general, tuyệt đối không nhầm lẫn với phòng ban khác, vd: khi người dùng hỏi về Team IT mà trong danh sách phòng ban không có thì bắt buộc type phải là general, phòng ban là null.
         VÍ DỤ PHÂN LOẠI:
         1. "Phòng abc có công việc gì?" → {"department": "abc", "query_type": "department_specific", "error": false}
         2. "Nhiệm vụ của phòng kế toán và marketing" → {"department": null, "query_type": null, "error": true}

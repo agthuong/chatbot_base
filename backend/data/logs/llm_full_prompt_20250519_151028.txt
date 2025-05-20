@@ -1,0 +1,252 @@
+=== SYSTEM PROMPT ===
+
+
+Bạn là trợ lý AI chuyên về công việc của các phòng ban trong công ty. 
+Nhiệm vụ: phân tích thông tin về các task trong phòng ban và cung cấp thông tin hữu ích.
+
+Dự án được chia thành các giai đoạn chính (main phases) theo thứ tự cố định:
+1. MKT-SALES: Giai đoạn Marketing và Bán hàng
+2. PROPOSAL: Giai đoạn đề xuất
+3. CONSTRUCTION: Giai đoạn thi công
+4. DEFECT-HANDOVER: Giai đoạn xử lý lỗi và bàn giao
+5. AFTERSALE-MAINTENANCE: Giai đoạn sau bán hàng và bảo trì
+
+Giai đoạn MKT-SALES bao gồm các giai đoạn con (sub-phases) theo thứ tự:
+1. Branding MKT: Marketing thương hiệu
+2. Sales Sourcing: Tìm kiếm nguồn bán hàng
+3. Data Qualification: Phân loại dữ liệu
+4. Approach: Tiếp cận
+
+Giai đoạn PROPOSAL bao gồm các giai đoạn con/bước/quy trình con (sub-phases) theo thứ tự:
+1. PROPOSAL
+
+Giai đoạn CONSTRUCTION bao gồm các giai đoạn con/bước/quy trình con (sub-phases) theo thứ tự:
+1. CONSTRUCTION
+
+Giai đoạn DEFECT-HANDOVER bao gồm các giai đoạn con/bước/quy trình con (sub-phases) theo thứ tự:
+1. DEFECT-HANDOVER
+2. AFTERSALE-MAINTENANCE (bước chuyển tiếp)
+
+Giai đoạn AFTERSALE-MAINTENANCE bao gồm các giai đoạn con/bước/quy trình con (sub-phases) theo thứ tự:
+1. AFTERSALE-MAINTENANCE
+2. Done (Kết thúc toàn bộ giai đoạn)
+
+QUY TẮC NGHIÊM NGẶT:
+1. KHÔNG TỰ TẠO mối liên hệ giữa giai đoạn và phòng ban
+2. KHÔNG LIỆT KÊ phòng ban nào tham gia vào giai đoạn nào
+3. CHỈ TẬP TRUNG vào thông tin của một phòng ban cụ thể
+4. KHÔNG ĐỀ CẬP đến mối quan hệ giữa các phòng ban
+5. Khi hỏi về mối liên hệ giữa giai đoạn và phòng ban, CHỈ trả lời: "Vui lòng hỏi về một phòng ban cụ thể để biết thêm chi tiết"
+
+KHI TRẢ LỜI:
+1. Ngắn gọn, súc tích nhưng đầy đủ thông tin
+2. Nếu không tìm thấy thông tin, thông báo rằng không có thông tin trong dữ liệu.
+3. chỉ liệt kê giai đoạn nếu người dùng hỏi về các giai đoạn, nếu chỉ hỏi về giai đoạn cụ thể thì chỉ tập trung vào giai đoạn đó và trả lời.
+4. Trả lời ngắn gọn, không cần thông tin chi tiết.
+5. Với câu hỏi chào hỏi/không liên quan, trả lời hài hước, cợt nhả, spam icon
+
+Trả lời bằng tiếng Việt, ngay cả khi người dùng hỏi bằng tiếng Anh.
+
+
+=== USER PROMPT ===
+
+
+    Vai trò: Trợ lý thông minh cung cấp thông tin về phòng ban và công việc trong công ty.
+
+    
+    Câu hỏi người dùng: "vậy team kinh doanh không hoàn thành công viêc thì có bị đánh không /no_think"
+
+    THÔNG TIN PHÒNG BAN Kinh doanh:
+    - Số lượng tasks: 24
+    - Các giai đoạn: MKT-SALES, PROPOSAL, CONSTRUCTION, DEFECT-HANDOVER, AFTERSALE-MAINTENANCE
+
+    HƯỚNG DẪN QUAN TRỌNG:
+    1. TRẢ LỜI TRỰC TIẾP câu hỏi trước tiên
+    2. Sử dụng thông tin về các task làm dữ liệu hỗ trợ
+    3. Tránh chỉ liệt kê công việc mà không trả lời câu hỏi
+    4. LỌC THÔNG TIN theo câu hỏi:
+    - Nếu hỏi về giai đoạn cụ thể, CHỈ trả lời về tasks thuộc giai đoạn đó
+    - Nếu hỏi về giai đoạn con cụ thể, CHỈ trả lời về tasks thuộc giai đoạn con đó
+    - Nếu hỏi về phòng ban nói chung, cung cấp tổng quan theo giai đoạn
+    5. XỬ LÝ NHIỀU PHÒNG BAN/GIAI ĐOẠN:
+    - GIẢI THÍCH RÕ RÀNG tại sao bạn liệt kê thông tin (nếu câu hỏi đề cập đến nhiều phần)
+    - Phân nhóm câu trả lời theo giai đoạn để dễ so sánh
+    6. LƯU Ý ĐẶC BIỆT:
+    - Phòng ban "Thi công" khác với giai đoạn "CONSTRUCTION"
+    - Với câu hỏi không liên quan đến công việc, trả lời bình thường
+    - Trả lời bằng Markdown, rõ ràng, súc tích, Tiếng Việt
+    - Nếu mục tiêu có "nếu bước không đạt được mục tiêu, quay về task X", PHẢI thông báo rõ ràng
+
+    Thông tin về các task:
+    [
+  {
+    "id": "KIN-001",
+    "name": "Tìm kiếm cơ hội bán hàng",
+    "phase": "MKT-SALES",
+    "sub_phase": "Sales Sourcing",
+    "full_details": "Đầu ra: Dataset\n\nMô tả: Hợp tác với Cộng tác viên\n\nMục tiêu: Data khách tiềm năng"
+  },
+  {
+    "id": "KIN-002",
+    "name": "Tìm kiếm cơ hội bán hàng",
+    "phase": "MKT-SALES",
+    "sub_phase": "Sales Sourcing",
+    "full_details": "Đầu ra: Dataset\n\nMô tả: Hợp tác với Đối tác chiến lược\n\nMục tiêu: Data khách tiềm năng"
+  },
+  {
+    "id": "KIN-003",
+    "name": "Xác định cơ hội bán hàng",
+    "phase": "MKT-SALES",
+    "sub_phase": "Data Qualification",
+    "full_details": "Đầu ra: Danh sách khách hàng tiềm năng (Customer Big Database) được phân nhóm(0) Lên Proposal (1) Cần ưu tiên khai thác (2) Tiềm năng gần (3) Tiềm năng xa (4) Đóng case do đã có nhà thầu/ Đã làm xong (5) Ngưng - khác\n\nMô tả: Khai thác grounding dataset\n\nMục tiêu: Xác định cơ hội bán hàng theo ưu tiên tiềm năng"
+  },
+  {
+    "id": "KIN-004",
+    "name": "Lọc cơ hội bán hàng theo ưu tiên",
+    "phase": "MKT-SALES",
+    "sub_phase": "Approach",
+    "full_details": "Đầu ra: 1. Potential Customer Info Checklist - 01\n\n2. Danh sách khách tiềm năng (Customer Big Database) - chuyển nhóm\n\nMô tả: Tiếp cận khách hàng xác định tiềm năng\n\nMục tiêu: Hình thành giao dịch bán hàng bước 1"
+  },
+  {
+    "id": "KIN-005",
+    "name": "Lọc cơ hội bán hàng theo ưu tiên",
+    "phase": "MKT-SALES",
+    "sub_phase": "Approach",
+    "full_details": "Đầu ra: 1. Potential Customer Info Checklist - 02\n\n2. Danh sách khách tiềm năng (Customer Big Database) - chuyển nhóm\n\nMô tả: Khai thác thông tin chuẩn bị cho giao dịch bán hàng\n\nMục tiêu: Hình thành giao dịch bán hàng bước 2"
+  },
+  {
+    "id": "KIN-006",
+    "name": "Lọc cơ hội bán hàng theo ưu tiên",
+    "phase": "MKT-SALES",
+    "sub_phase": "Approach",
+    "full_details": "Đầu ra: 1. Potential Customer Info Checklist - 03\n\n2. Danh sách khách tiềm năng (Customer Big Database) - chuyển nhóm \n\n3. Khái toán sơ bộ\n\nMô tả: Xác nhận thông tin để hình thành giao dịch bán hàng\n\nMục tiêu: Hình thành giao dịch bán hàng bước 3"
+  },
+  {
+    "id": "KIN-007",
+    "name": "Chuẩn bị buổi họp 01 - KH",
+    "phase": "MKT-SALES",
+    "sub_phase": "Approach (Bước chuyển tiếp)",
+    "full_details": "Đầu ra: 1. Briefing thông tin khách hàng\n\n2. Khái toán có sai lệch giá trị chênh lệch 20%\n\n3. Yêu cầu phòng Thiết kế phong cách thiết kế với  2 views/ + layout toàn nhà\n\nMô tả: Briefing thông tin khách hàng\n\nKhái toán sơ bộ\n\nYêu cầu ra Bộ hình ảnh chuẩn bị cho Buổi họp chính thức 01 với khách hàng ver 01\n\nMục tiêu: N"
+  },
+  {
+    "id": "KIN-008",
+    "name": "Quản lí dự án",
+    "phase": "PROPOSAL",
+    "sub_phase": "Proposal",
+    "full_details": "Đầu ra: N\n\nMô tả: Quản lí dự án\n\nMục tiêu: N"
+  },
+  {
+    "id": "KIN-009",
+    "name": "Chuẩn bị buổi họp 01 - KH",
+    "phase": "PROPOSAL",
+    "sub_phase": "Proposal",
+    "full_details": "Đầu ra: Pre-Meet Toolkit 01\n\nMô tả: Chuẩn bị đầy đủ thông tin họp buổi 01 với KH (nếu bước KIN-009 không đạt được mục tiêu, quay về task KIN-008)\n\nMục tiêu: Chuẩn bị thông tin nội bộ/ thu thập tối đa thông tin có thể để làm việc với khách hàng buổi gặp mặt 01 (nếu bước KIN-009 không đạt được mục tiêu, quay về task KIN-008)"
+  },
+  {
+    "id": "KIN-010",
+    "name": "Họp 01 - KH",
+    "phase": "PROPOSAL",
+    "sub_phase": "Proposal",
+    "full_details": "Đầu ra: Breifing cập nhật\nHợp đồng Thiết kế (nếu có)\n\nMô tả: 1. Giới thiệu quy trình DBH \n2. Trình bày 2 views\n3. Khai thác yêu cầu chi tiết của khách hàng về vật liệu, tiến độ, ngân sách, phong cách - Có biểu mẫu- xác nhận bởi khách hàng\n\nMục tiêu: Các yếu tố then chốt về mặt giá/ kỹ thuật/ thiết kế để deal thành công\nKý hợp đồng thiết kế để xác lập mối quan hệ giữa DBH và khách hàng (nếu cần thiết)"
+  },
+  {
+    "id": "KIN-011",
+    "name": "Chuẩn bị chốt deal",
+    "phase": "PROPOSAL",
+    "sub_phase": "Proposal",
+    "full_details": "Đầu ra: Hợp đồng Ver + ĐNTT ver 01\n\nMô tả: Soạn thảo hợp đồng ver 01\n\nMục tiêu: N"
+  },
+  {
+    "id": "KIN-012",
+    "name": "Họp 02+ - KH",
+    "phase": "PROPOSAL",
+    "sub_phase": "Proposal",
+    "full_details": "Đầu ra: Final Proposal:\n1. Final 3D\n2. Final BOQ\n3. Hợp đồng đã ký kết\n4. Tiền tạm ứng đợt 1\n5. Chuyển board dự án qua Construction\n\nMô tả: Họp với khách lần chính thức 02++ (nếu bước KIN-012 không đạt được mục tiêu, quay về task KIN-0010)\n\nMục tiêu: 1. Tư vấn và định hướng khách hàng theo phương án tốt nhất\n2. Giải đáp thắc mắc, tư vấn giải pháp.\n3. Trình hợp đồng lần 1++ - thương lượng\n(nếu bước KIN-012 không đạt được mục tiêu, quay về task KIN-010)"
+  },
+  {
+    "id": "KIN-013",
+    "name": "Họp 02++ - KH",
+    "phase": "PROPOSAL",
+    "sub_phase": "Proposal (Bước chuyển tiếp)",
+    "full_details": "Đầu ra: Final Proposal:\n1. 3D được duyệt\n2. BOQ được duyệt\n3. Hợp đồng đã ký kết\n4. Tiền tạm ứng đợt 1\n5. Chuyển board dự án qua Construction\n\nMô tả: Họp với khách lần chính thức để ký hợp đồng\n\nMục tiêu: Ký hợp đồng"
+  },
+  {
+    "id": "KIN-014",
+    "name": "Chuyển giao toàn bộ thông tin cho Team Dự Án",
+    "phase": "CONSTRUCTION",
+    "sub_phase": "Construction",
+    "full_details": "Đầu ra: Tình trạng dự án\n1. BOQ được duyệt \n2. Thiết kế 3D được duyệt\n3. Hợp đồng Thiết kế và thi công\n4. Mẫu mã được duyệt (nếu có)\n\nMô tả: Chuyển giao toàn bộ thông tin cho Team Dự Án, bao gồm:\n1. BOQ được duyệt \n2. Thiết kế 3D được duyệt\n3. Hợp đồng Thiết kế và thi công\n\nMục tiêu: Team dự án nắm được đầy đủ thông tin dự án để triển khai thi công"
+  },
+  {
+    "id": "KIN-015",
+    "name": "Xử lý phát sinh thay đổi",
+    "phase": "CONSTRUCTION",
+    "sub_phase": "Construction",
+    "full_details": "Đầu ra: 1. BB thống nhất công việc thay đổi phát sinh (BD)\n\nMô tả: Nhận yêu cầu phát sinh thay đổi\n\nMục tiêu: N"
+  },
+  {
+    "id": "KIN-016",
+    "name": "Xử lý phát sinh thay đổi",
+    "phase": "CONSTRUCTION",
+    "sub_phase": "Construction",
+    "full_details": "Đầu ra: Phụ lục hợp đồng Ver + ĐNTT ver 01\n\nMô tả: Soạn thảo phụ lục hợp đồng ver 01\n\nMục tiêu: N"
+  },
+  {
+    "id": "KIN-017",
+    "name": "Xử lý phát sinh thay đổi",
+    "phase": "CONSTRUCTION",
+    "sub_phase": "Construction",
+    "full_details": "Đầu ra: 1. Bản vẽ cập nhật thay đổi phát sinh (TK) \n2. Báo giá thay đổi phát sinh (DT) \n3. Phụ lục hợp đồng \n4. ĐNTT và thu phí tạm ứng phụ lục (nếu có)\n\nMô tả: Chốt phát sinh với khách hàng\n\nMục tiêu: N"
+  },
+  {
+    "id": "KIN-018",
+    "name": "Nghiệm thu giai đoạn với khách hàng",
+    "phase": "CONSTRUCTION",
+    "sub_phase": "Construction",
+    "full_details": "Đầu ra: Sale Admin\n\nMô tả: Đề nghị thanh toán đợt\n\nMục tiêu: Nhận thanh toán đợt đúng, đủ"
+  },
+  {
+    "id": "KIN-019",
+    "name": "Nghiệm thu giai đoạn với khách hàng",
+    "phase": "CONSTRUCTION",
+    "sub_phase": "Construction",
+    "full_details": "Đầu ra: Ủy nhiệm chi từ khách hàng\n\nMô tả: Thu phí thanh toán đợt\n\nMục tiêu: Nhận thanh toán đợt đúng, đủ"
+  },
+  {
+    "id": "KIN-020",
+    "name": "Nghiệm thu nội bộ",
+    "phase": "DEFECT-HANDOVER",
+    "sub_phase": "Defect & Handover",
+    "full_details": "Đầu ra: 1. Biên bản nghiệm thu nội bộ\n2.Defect list nội bộ\n\nMô tả: Kiểm tra công năng, thẩm mỹ của sản phẩm tại công trình\n\nMục tiêu: Đảm bảo dự án hoàn thiện tốt nhất"
+  },
+  {
+    "id": "KIN-021",
+    "name": "Nghiệm thu với khách hàng",
+    "phase": "DEFECT-HANDOVER",
+    "sub_phase": "Defect & Handover",
+    "full_details": "Đầu ra: 1. Biên bản nghiệm thu khách hàng\n2.Defect list khách hàng\n\nMô tả: Nhận thông tin defect và thay đổi từ khách hàng\n\nMục tiêu: Đảm bảo dự án hoàn thiện tốt nhất"
+  },
+  {
+    "id": "KIN-022",
+    "name": "Chuẩn bị hồ sơ Quyết toán",
+    "phase": "DEFECT-HANDOVER",
+    "sub_phase": "Defect & Handover",
+    "full_details": "Đầu ra: Ngày bàn giao đã thống nhất với khách hàng\n\nMô tả: Hẹn lịch bào giao với khách hàng\n\nMục tiêu: Chốt ngày bàn giao với khách hàng theo thực tế"
+  },
+  {
+    "id": "KIN-023",
+    "name": "Nghiệm thu và bàn giao khách hàng",
+    "phase": "DEFECT-HANDOVER",
+    "sub_phase": "After Sales & Maintainance (Bước chuyển tiếp)",
+    "full_details": "Đầu ra: - Biên bản nghiệm thu hoàn thành và đưa vào sử dụng\n- Bảng khối lượng quyết toán Final\n- Đề nghị thanh toán đợt cuối\n- Xuất hóa đơn tài chính (nếu có)\n- Phiếu bảo hành\n\nMô tả: - Tổng hợp thông tin, up lênServer\n- Cập nhật các thông tin thay đổi/ chỉnhsửa\n- Giải trình hồ sơ với khách hàng (nếu cần)\n\nMục tiêu: Bàn giao sản phẩm hoàn thiện tốt nhất đến với khách hàng"
+  },
+  {
+    "id": "KIN-024",
+    "name": "Đóng dự án",
+    "phase": "AFTERSALE-MAINTENANCE",
+    "sub_phase": "Done (Bước cuối cùng của 5 giai đoạn)",
+    "full_details": "Đầu ra: N\n\nMô tả: Chuyển Board dự án trên PM\n\nMục tiêu: Đóng dự án"
+  }
+]
+    
+

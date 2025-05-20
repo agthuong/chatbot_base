@@ -1,0 +1,18 @@
+=== LỊCH SỬ TIN NHẮN CHO SESSION 24b839e6-ab34-450d-9677-1764d39252f5 ===
+
+Lịch sử tin nhắn:
+Người dùng: team IT tham gia dự án nào không
+Người dùng: vậy khi nào team IT tham gia dự án
+
+
+=== PROMPT GỐC ===
+
+cho tôi biết kinh doanh tham gia giai đoạn nào /no_think
+
+=== PROMPT ĐẦY ĐỦ ===
+
+Lịch sử tin nhắn:
+Người dùng: team IT tham gia dự án nào không
+Người dùng: vậy khi nào team IT tham gia dự án
+
+cho tôi biết kinh doanh tham gia giai đoạn nào /no_think

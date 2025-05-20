@@ -1,0 +1,111 @@
+/* Định nghĩa biến CSS */
+:root {
+  --primary: hsl(222.2, 47.4%, 11.2%);
+  --primary-rgb: 22, 47, 90;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary: hsl(210, 40%, 98%);
+    --primary-rgb: 236, 245, 255;
+  }
+}
+
+/* Định dạng cho từ khóa đặc biệt */
+.highlight-keyword {
+  background-color: rgba(var(--primary-rgb), 0.1);
+  color: hsl(var(--primary));
+  padding: 0 0.25rem;
+  border-radius: 0.25rem;
+  font-weight: bold;
+}
+
+/* CSS cho từng loại từ khóa cụ thể */
+.keyword-mkt-sales {
+  background-color: rgba(59, 130, 246, 0.1); /* blue-500 with 10% opacity */
+  color: #3b82f6; /* blue-500 */
+}
+
+.keyword-proposal {
+  background-color: rgba(16, 185, 129, 0.1); /* green-500 with 10% opacity */
+  color: #10b981; /* green-500 */
+}
+
+.keyword-construction {
+  background-color: rgba(245, 158, 11, 0.1); /* amber-500 with 10% opacity */
+  color: #f59e0b; /* amber-500 */
+}
+
+.keyword-defect-handover {
+  background-color: rgba(239, 68, 68, 0.1); /* red-500 with 10% opacity */
+  color: #ef4444; /* red-500 */
+}
+
+.keyword-aftersale-maintenance {
+  background-color: rgba(139, 92, 246, 0.1); /* purple-500 with 10% opacity */
+  color: #8b5cf6; /* purple-500 */
+}
+
+/* Dark mode adjustments */
+.dark .highlight-keyword {
+  background-color: rgba(var(--primary-rgb), 0.2);
+}
+
+/* CSS cho số được nhấn mạnh */
+.highlight-number {
+  font-weight: bold;
+  color: hsl(var(--primary));
+}
+
+/* Đảm bảo các từ khóa được hiển thị đúng trong các môi trường khác nhau */
+:is(.prose, .markdown) strong {
+  font-weight: 600;
+}
+
+:is(.prose, .markdown) strong:is([data-keyword]) {
+  background-color: rgba(var(--primary-rgb), 0.1);
+  padding: 0 0.25rem;
+  border-radius: 0.25rem;
+  font-weight: bold;
+}
+
+/* Đặc biệt cho từ khóa được hiển thị bằng dấu ** */
+.markdown :where(strong) {
+  font-weight: 600;
+}
+
+/* Từ khóa ở trong Markdown */
+.markdown .special-keyword {
+  background-color: rgba(var(--primary-rgb), 0.1);
+  padding: 0 0.25rem;
+  border-radius: 0.25rem;
+  font-weight: bold;
+  color: hsl(var(--primary));
+}
+
+/* Giảm khoảng cách trong tin nhắn */
+.message-content p {
+  margin-bottom: 0.75rem;
+}
+
+.message-content p:last-child {
+  margin-bottom: 0;
+}
+
+.message-content ul,
+.message-content ol {
+  margin-top: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Đảm bảo các từ khóa trong HTML cũng được định dạng đúng */
+strong.highlight-keyword {
+  display: inline-block;
+  background-color: rgba(var(--primary-rgb), 0.1);
+  color: var(--primary);
+  padding: 0 0.25rem;
+  border-radius: 0.25rem;
+  font-weight: 600;
+  margin: 0 0.1rem;
+} 

@@ -1,0 +1,9 @@
+{
+  "timestamp": "2025-05-19T15:10:43.204714",
+  "query": "vậy team kinh doanh không hoàn thành công viêc thì có bị đánh không /no_think",
+  "sub_phase": null,
+  "department": "Kinh doanh",
+  "session_id": "2180ddf0-1536-4193-8fc4-2457575f5714",
+  "response": "<think>\n\n</think>\n\nVâng, team kinh doanh có thể bị đánh nếu không hoàn thành công việc. Trong dữ liệu, có nhiều task liên quan đến quy trình bán hàng và quản lý dự án, bao gồm cả các bước chuyển tiếp và điều kiện quay lại task nếu không đạt mục tiêu.\n\nTuy nhiên, thông tin cụ thể về hình thức \"đánh\" (như phạt, đánh giá, hoặc xử lý) **không được nêu rõ trong dữ liệu**. Do đó, bạn cần tham khảo quy định nội bộ của công ty để biết chính xác cách xử lý khi không hoàn thành nhiệm vụ.",
+  "query_time": 14.92047905921936
+}

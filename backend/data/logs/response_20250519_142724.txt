@@ -1,0 +1,63 @@
+<think>
+
+</think>
+
+**Vai trò: Trợ lý thông minh cung cấp thông tin về phòng ban và công việc trong công ty.**
+
+---
+
+### 🎯 **Câu hỏi người dùng:** "team kinh doanh thì làm gì"
+
+**Trả lời:**  
+Team Kinh doanh (Sales) có vai trò chính là tìm kiếm, tiếp cận, và phát triển cơ hội bán hàng để đưa vào quy trình xử lý của công ty. Dưới đây là các nhiệm vụ cụ thể mà team Kinh doanh thực hiện theo từng giai đoạn:
+
+---
+
+## 📌 **Giai đoạn MKT-SALES (Marketing & Bán hàng)**
+
+### 1. **Sales Sourcing - Tìm kiếm cơ hội bán hàng**
+- **KIN-001**: Hợp tác với Cộng tác viên để thu thập dữ liệu khách tiềm năng.
+- **KIN-002**: Hợp tác với Đối tác chiến lược để thu thập dữ liệu khách tiềm năng.
+
+### 2. **Data Qualification - Phân loại dữ liệu**
+- **KIN-003**: Xác định cơ hội bán hàng theo mức độ ưu tiên (nhóm 0 đến 5).
+
+### 3. **Approach - Tiếp cận**
+- **KIN-004**: Lọc cơ hội theo ưu tiên, tạo danh sách khách tiềm năng.
+- **KIN-005**: Tương tự KIN-004 nhưng với thông tin khác.
+- **KIN-006**: Lọc cơ hội, xác định tiềm năng và khái toán sơ bộ.
+- **KIN-007**: Chuẩn bị buổi họp 01 - KH: Briefing thông tin khách hàng, khái toán, yêu cầu thiết kế.
+
+---
+
+## 📌 **Giai đoạn PROPOSAL (Đề xuất)**
+
+### 1. **Proposal - Đề xuất**
+- **KIN-008**: Quản lý dự án.
+- **KIN-009**: Chuẩn bị buổi họp 01 - KH: Tạo Pre-Meet Toolkit 01.
+- **KIN-010**: Họp 01 - KH: Trình bày 2 views, thu thập yêu cầu chi tiết của khách hàng.
+- **KIN-011**: Chuẩn bị chốt deal: Soạn thảo hợp đồng ver 01.
+- **KIN-012**: Họp 02+ - KH: Trình bày bản đề xuất cuối cùng và ký kết hợp đồng.
+
+---
+
+## 📌 **Giai đoạn CONSTRUCTION (Thi công)**
+
+Team Kinh doanh không trực tiếp tham gia vào giai đoạn thi công, nhưng họ sẽ chuyển giao dự án sang phòng Thi công sau khi đã hoàn tất các bước trong giai đoạn PROPOSAL.
+
+---
+
+## 📌 **Giai đoạn DEFECT-HANDOVER & AFTERSALE-MAINTENANCE (Xử lý lỗi và bảo trì)**
+
+Team Kinh doanh không tham gia trực tiếp vào những giai đoạn này, nhưng họ có thể hỗ trợ trong việc xử lý phản hồi khách hàng hoặc các vấn đề phát sinh sau khi bàn giao.
+
+---
+
+### ✅ **Tóm lại:**
+Team Kinh doanh làm nhiệm vụ:
+- Tìm kiếm cơ hội bán hàng (MKT-SALES).
+- Tiếp cận, lọc và xác định tiềm năng khách hàng.
+- Chuẩn bị hồ sơ, họp với khách hàng, đề xuất giải pháp.
+- Chốt deal và chuyển giao dự án cho phòng Thi công.
+
+Nếu bạn muốn biết thêm về vai trò của các phòng ban khác, hãy hỏi nhé! 😄

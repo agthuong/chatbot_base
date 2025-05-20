@@ -1,0 +1,13 @@
+<think>
+
+</think>
+
+**Kinh doanh tham gia các giai đoạn sau:**
+
+- **MKT-SALES**
+- **PROPOSAL**
+- **CONSTRUCTION**
+- **DEFECT-HANDOVER**
+- **AFTERSALE-MAINTENANCE**
+
+Tổng số tasks của Kinh doanh: **24**.

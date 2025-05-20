@@ -1,0 +1,6 @@
+<think>
+Okay, let's break this down. The user's current question is "Lịch sử tin nhắn: Người dùng: phòng IT tham gia giai đoạn nào team kinh doanh tham gia giai đoạn nào". So first, I need to parse what the user is asking here.
+
+Looking at the history, there are two parts: "phòng IT tham gia giai đoạn nào" and "team kinh doanh tham gia giai đoạn nào". The user is asking about which stages each department (IT and Business team) participates in. 
+
+First, check if the departments mentioned are in the list provided. The departments listed are 2D, Dự toán, Kinh doanh, Kế toán, Marketing, Mua hàng, Team dự án, Thi công, Thiết kế, Đặt hàng. "Phòng IT" isn't in that list. According to rule 8, if the department mentioned isn't in the list, it

@@ -1,0 +1,20 @@
+=== LỊCH SỬ TIN NHẮN CHO SESSION 2180ddf0-1536-4193-8fc4-2457575f5714 ===
+
+Lịch sử tin nhắn:
+Người dùng: xin chào
+Người dùng: môt miếng dất ở thủ thim nhiêu tiền
+Người dùng: vậy m biết gì
+
+
+=== PROMPT GỐC ===
+
+vậy team kinh doanh không ký được với hợp đồng thì sao
+
+=== PROMPT ĐẦY ĐỦ ===
+
+Lịch sử tin nhắn:
+Người dùng: xin chào
+Người dùng: môt miếng dất ở thủ thim nhiêu tiền
+Người dùng: vậy m biết gì
+
+vậy team kinh doanh không ký được với hợp đồng thì sao

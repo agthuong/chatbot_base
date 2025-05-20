@@ -1,0 +1,12 @@
+<think>
+
+</think>
+
+**Trả lời ngắn gọn:**
+
+Team 2D trong giai đoạn **CONSTRUCTION** có 2 task, bao gồm:
+- Chuẩn bị kick-off nội bộ/ Chuẩn bị họp cập nhật dự án (khảo sát mặt bằng)
+- Chuẩn bị kick-off nội bộ/ Chuẩn bị họp cập nhật dự án (vẽ bản vẽ xin phép)
+
+Trong giai đoạn **DEFECT-HANDOVER**, team 2D có 1 task:
+- Chuẩn bị hồ sơ Quyết toán (điều chỉnh bản vẽ hoàn công)

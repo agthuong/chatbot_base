@@ -1,0 +1,16 @@
+=== LỊCH SỬ TIN NHẮN CHO SESSION df4d9d0d-0ac0-4319-9828-51b9d555fcf0 ===
+
+Lịch sử tin nhắn:
+Người dùng: giai đoạn tiếp theo làm gì
+
+
+=== PROMPT GỐC ===
+
+giai đoạn tiếp theo là sao
+
+=== PROMPT ĐẦY ĐỦ ===
+
+Lịch sử tin nhắn:
+Người dùng: giai đoạn tiếp theo làm gì
+
+giai đoạn tiếp theo là sao

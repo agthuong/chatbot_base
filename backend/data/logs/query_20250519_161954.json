@@ -1,0 +1,9 @@
+{
+  "timestamp": "2025-05-19T16:19:54.972897",
+  "query": "cho tôi biết kinh doanh tham gia giai đoạn nào /no_think",
+  "sub_phase": null,
+  "department": "Kinh doanh",
+  "session_id": "24b839e6-ab34-450d-9677-1764d39252f5",
+  "response": "<think>\n\n</think>\n\n**Kinh doanh tham gia các giai đoạn sau:**\n\n- **MKT-SALES**\n- **PROPOSAL**\n- **CONSTRUCTION**\n- **DEFECT-HANDOVER**\n- **AFTERSALE-MAINTENANCE**\n\nTổng số tasks của Kinh doanh: **24**.",
+  "query_time": 8.682992935180664
+}

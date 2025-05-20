@@ -1,0 +1,5 @@
+<think>
+
+</think>
+
+{"department": "IT", "query_type": "department_specific", "error": false}

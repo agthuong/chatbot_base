@@ -1,0 +1,6 @@
+{
+  "timestamp": "2025-05-19T16:36:54.029839",
+  "query": "team kinh doanh tham gia giai đoạn nào /no_think",
+  "response": "<think>\n\n</think>\n\nTeam kinh doanh tham gia vào các giai đoạn:  \n- **MKT-SALES**  \n- **PROPOSAL**  \n- **AFTERSALE-MAINTENANCE**\n\nĐể biết chi tiết công việc cụ thể, vui lòng hỏi về một phòng ban cụ thể, ví dụ: Phòng Kinh doanh làm gì trong giai đoạn PROPOSAL? 😄",
+  "session_id": "07839642-ae58-44b2-ab77-c7072ba5d730"
+}

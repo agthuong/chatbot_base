@@ -1,0 +1,6 @@
+<think>
+Okay, let's break this down. The user's current question is about the cost of interior design for a 76 square meter apartment. I need to determine if it's department-specific or general.
+
+First, looking at the history: the previous messages were "giai đoạn tiếp theo làm gì" and "giai đoạn tiếp theo là sao", which translate to questions about the next stage. But there's no mention of any specific department here. The current question is about interior design costs, which might relate to a department like Thiết kế or Thi công. However, the user didn't explicitly name a department. 
+
+According to rule 3, if the current question doesn't mention a department, we check the context. But in this case, the previous questions were about stages, not departments. So there's no department context to carry over. The current question is general because it's asking about costs without specifying a department. Also, "nội thất"

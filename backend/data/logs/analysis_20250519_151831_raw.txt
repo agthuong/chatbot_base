@@ -1,0 +1,6 @@
+<think>
+Okay, let's break this down. The user's current question is "vậy khi nào team IT tham gia dự án". Looking at the history, the previous message was "team IT tham gia dự án nào không". So the user is following up on the previous question about which projects the IT team is involved in.
+
+First, I need to determine the department. The current question mentions "team IT", but according to the list provided, the departments are 2D, Dự toán, Kinh doanh, Kế toán, Marketing, Mua hàng, Team dự án, Thi công, Thiết kế, Đặt hàng. "Team IT" isn't in that list. The closest might be "Team dự án", but the user specifically said "team IT". Since "team IT" isn't a listed department, according to rule 8, if the department isn't in the list, it's general. 
+
+Next, query type. The previous question

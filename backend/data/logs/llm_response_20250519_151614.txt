@@ -1,0 +1,4 @@
+<think>
+Okay, let's tackle this query. The user is asking, "phòng IT tham gia giai đoạn nào." First, I need to determine the department mentioned. The term "phòng IT" translates to "IT Department." But looking at the list of departments provided: 2D, Dự toán, Kinh doanh, Kế toán, Marketing, Mua hàng, Team dự án, Thi công, Thiết kế, Đặt hàng. None of these are "IT." So, "phòng IT" isn't in the list.
+
+According to rule 8, if the department mentioned isn't in the provided list, we have to set the department to null and the query type to general. The user is asking about which stages the IT department participates in, but since "IT" isn't a valid department here, it's considered a general question. Also, there's no mention of any specific department in the history, so we can't infer a

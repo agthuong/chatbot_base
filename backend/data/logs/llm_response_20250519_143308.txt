@@ -1,0 +1,7 @@
+<think>
+
+</think>
+
+```json
+{"department": "Kinh doanh", "query_type": "department_specific", "error": false}
+```

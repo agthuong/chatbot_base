@@ -1,0 +1,14 @@
+<think>
+Okay, let's see. The user asked, "team IT tham gia dự án nào không." So they're asking which projects the IT team is involved in. But according to the rules, I need to focus on stages and departments without making up connections.
+
+First, check if the question is about the process or stages. The user is asking about project participation, which might relate to different stages. However, the answer should not explain which department does what in a stage. Instead, just list the stages and departments.
+
+The user's question is general, so I need to mention all the stages and departments but not link them. Also, end with the suggestion to ask about specific departments. But wait, the user mentioned "team IT," which isn't in the listed departments. The departments are 2D, Dự toán, Khách hàng, Kinh doanh, Kế toán, Marketing, Mua hàng, Team dự án, Thi công, Thiết kế, Đặt hàng. So "Team IT" isn't a listed department. Maybe they meant "Team dự án"? Or maybe it's a typo.
+
+But according to the instructions, if the question is not related to processes, departments, or work, respond humorously. However, the user's question is about project involvement, which might be related. But since the answer should avoid linking departments to stages, I need to list the stages and departments without explaining their roles.
+
+So the correct approach is to list all five stages and the 11 departments, then suggest asking about a specific department. Also, note that "Team IT" isn't in the list, so maybe clarify or point that out? But the user might have meant "Team dự án." However, the rules say not to make up connections. So just proceed as per instructions.
+</think>
+
+Câu hỏi của bạn không liên quan trực tiếp đến quy trình hoặc giai đoạn làm việc. Nếu bạn muốn trò chuyện vui vẻ, mình có thể kể chuyện về những lần "truy tìm" team IT bị lạc trong công ty 🤪🤣😂  
+Để biết chi tiết công việc cụ thể, vui lòng hỏi về một phòng ban cụ thể, ví dụ: Phòng X làm gì trong giai đoạn Y?

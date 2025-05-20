@@ -1,0 +1,22 @@
+=== LỊCH SỬ TIN NHẮN CHO SESSION df4d9d0d-0ac0-4319-9828-51b9d555fcf0 ===
+
+Lịch sử tin nhắn:
+Người dùng: giai đoạn tiếp theo làm gì
+Người dùng: giai đoạn tiếp theo là sao
+Người dùng: Một căn chung cư 76 mét vuông thì làm nội thất khoảng bao nhiêu tiền?
+Người dùng: Tôi là nhân viên 2D, hãy hướng dẫn tôi làm việc
+
+
+=== PROMPT GỐC ===
+
+team kinh doanh thì làm gì /no_think
+
+=== PROMPT ĐẦY ĐỦ ===
+
+Lịch sử tin nhắn:
+Người dùng: giai đoạn tiếp theo làm gì
+Người dùng: giai đoạn tiếp theo là sao
+Người dùng: Một căn chung cư 76 mét vuông thì làm nội thất khoảng bao nhiêu tiền?
+Người dùng: Tôi là nhân viên 2D, hãy hướng dẫn tôi làm việc
+
+team kinh doanh thì làm gì /no_think

@@ -1,0 +1,6 @@
+<think>
+Okay, let's break this down. The user's current question is "vậy m biết gì", which translates to "so what do you know?" in English. Looking at the history, the user first said "xin chào" (hello) and then asked about the price of a piece of land in Thủ Thiêm. The assistant hasn't responded yet.
+
+The task is to determine the department, query type, and error status. According to the rules, if the current question is a continuation but doesn't mention a specific department, we use the previous context. However, in this case, the user's first message was about land price, which might relate to real estate or sales. But none of the departments listed include real estate. The available departments are 2D, Dự toán, Kinh doanh, Kế toán, Marketing, Mua hàng, Team dự án, Thi công, Thiết kế, Đặt hàng.
+
+The user's question is a follow-up

@@ -8,6 +8,9 @@ import { MessageActions } from '@/components/custom/actions';
 import { Loader2, AlertTriangle, Eye, EyeOff } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
+// Thêm CSS cho các từ khóa đặc biệt
+import './message.css';
+
 export const PreviewMessage = ({ message, socket, sessionId }: { message: message; socket?: WebSocket; sessionId?: string; }) => {
   // Thêm state để kiểm soát hiển thị thinking
   const [showThinking, setShowThinking] = useState(false);
@@ -15,10 +18,23 @@ export const PreviewMessage = ({ message, socket, sessionId }: { message: messag
   const [isLoadingThinking, setIsLoadingThinking] = useState(false);
   const [_thinkingError, setThinkingError] = useState<string | null>(null);
   const [currentRequestId, setCurrentRequestId] = useState<string | null>(null);
+  // Thêm state nội bộ để lưu nội dung tin nhắn
+  const [messageContent, setMessageContent] = useState<string>(message.content || '');
+  const [messageThinking, setMessageThinking] = useState<string | null | undefined>(message.thinking);
+
+  // Cập nhật state nội bộ khi prop message thay đổi
+  useEffect(() => {
+    if (message.content !== messageContent) {
+      setMessageContent(message.content || '');
+    }
+    if (message.thinking !== messageThinking) {
+      setMessageThinking(message.thinking);
+    }
+  }, [message.content, message.thinking]);
 
   const handleGetThinking = () => {
     // Nếu đã có thinking và không đang tải, chỉ toggle hiển thị
-    if (message.thinking && !isLoadingThinking) {
+    if (messageThinking && !isLoadingThinking) {
       setShowThinking(!showThinking);
       return;
     }
@@ -59,7 +75,9 @@ export const PreviewMessage = ({ message, socket, sessionId }: { message: messag
             
             // Xử lý phản hồi thinking
             if (data.thinking) {
+              // Cập nhật cả trong message và state nội bộ
               message.thinking = data.thinking;
+              setMessageThinking(data.thinking);
               setShowThinking(true);
             } else if (data.error) {
               setThinkingError(data.error);
@@ -92,13 +110,14 @@ export const PreviewMessage = ({ message, socket, sessionId }: { message: messag
       // Gửi yêu cầu lấy thinking
       const thinkingRequest: WebSocketAction = {
         action: "get_thinking",
-        query: message.content,
+        query: messageContent, // Sử dụng messageContent thay vì message.content
         session_id: sessionId,
         request_id: requestId
       };
       
       // Gửi yêu cầu
       socket.send(JSON.stringify(thinkingRequest));
+      console.log("Đã gửi yêu cầu lấy thinking với ID:", requestId);
     } else {
       // Socket chưa sẵn sàng
       setThinkingError("Kết nối WebSocket không khả dụng. Vui lòng làm mới trang.");
@@ -134,7 +153,7 @@ export const PreviewMessage = ({ message, socket, sessionId }: { message: messag
     >
       <div
         className={cx(
-          'group-data-[role=user]/message:bg-zinc-700 dark:group-data-[role=user]/message:bg-muted group-data-[role=user]/message:text-white flex gap-4 group-data-[role=user]/message:px-3 w-full group-data-[role=user]/message:w-fit group-data-[role=user]/message:ml-auto group-data-[role=user]/message:max-w-2xl group-data-[role=user]/message:py-2 rounded-xl',
+          'group-data-[role=user]/message:bg-zinc-700 dark:group-data-[role=user]/message:bg-muted group-data-[role=user]/message:text-white flex gap-3 group-data-[role=user]/message:px-3 w-full group-data-[role=user]/message:w-fit group-data-[role=user]/message:ml-auto group-data-[role=user]/message:max-w-2xl group-data-[role=user]/message:py-2 rounded-xl',
           'group-data-[role=assistant]/message:bg-white dark:group-data-[role=assistant]/message:bg-zinc-800 group-data-[role=assistant]/message:text-gray-800 dark:group-data-[role=assistant]/message:text-gray-200 group-data-[role=assistant]/message:px-3 group-data-[role=assistant]/message:py-2 rounded-xl'
         )}
       >
@@ -146,11 +165,11 @@ export const PreviewMessage = ({ message, socket, sessionId }: { message: messag
 
         <div className="flex flex-col w-full">
           {message.role === 'assistant' && (
-            <div className="mb-2 flex items-center justify-between">
+            <div className="mb-1 flex items-center justify-between">
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="text-xs flex items-center gap-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                className="text-xs flex items-center gap-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 h-7 px-2"
                 onClick={handleGetThinking}
                 disabled={isLoadingThinking}
               >
@@ -159,7 +178,7 @@ export const PreviewMessage = ({ message, socket, sessionId }: { message: messag
                     <Loader2 className="h-3 w-3 animate-spin mr-1" />
                     Đang phân tích...
                   </>
-                ) : showThinking && message.thinking ? (
+                ) : showThinking && messageThinking ? (
                   <>
                     <EyeOff size={14} /> Ẩn phân tích
                   </>
@@ -172,24 +191,34 @@ export const PreviewMessage = ({ message, socket, sessionId }: { message: messag
             </div>
           )}
 
-          {message.thinking && message.thinking.trim() !== '' && message.role === 'assistant' && showThinking && (
+          {messageThinking && messageThinking.trim() !== '' && message.role === 'assistant' && showThinking && (
             <motion.div 
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="mb-3 p-3 bg-gray-100 dark:bg-zinc-800 rounded-md border border-gray-200 dark:border-zinc-700"
+              className="mb-2 p-2 bg-gray-100 dark:bg-zinc-800 rounded-md border border-gray-200 dark:border-zinc-700"
             >
               <div className="text-sm text-gray-700 dark:text-gray-300">
                 <div className="font-semibold mb-1">💭 Phân tích:</div>
-                <Markdown>{message.thinking}</Markdown>
+                <Markdown>{messageThinking}</Markdown>
               </div>
             </motion.div>
           )}
 
-          {message.content && (
-            <div className="flex flex-col gap-4 text-left w-full">
-              <div className={message.role === 'assistant' ? 'prose prose-sm sm:prose dark:prose-invert prose-h2:mt-4 prose-h2:mb-3 max-w-none message-content' : ''}>
-                <Markdown>{message.content}</Markdown>
+          {messageContent && (
+            <div className="flex flex-col gap-2 text-left w-full">
+              <div className={message.role === 'assistant' 
+                ? 'prose prose-sm sm:prose dark:prose-invert prose-h2:mt-3 prose-h2:mb-2 max-w-none message-content break-words whitespace-pre-wrap'
+                : 'break-words whitespace-pre-wrap'
+              }>
+                {message.isWarning ? (
+                  <div className="flex items-start gap-2 text-amber-600 dark:text-amber-400">
+                    <AlertTriangle size={18} className="mt-1 shrink-0" />
+                    <p>{messageContent}</p>
+                  </div>
+                ) : (
+                  <Markdown>{messageContent}</Markdown>
+                )}
               </div>
             </div>
           )}

@@ -1,0 +1,5 @@
+<think>
+
+</think>
+
+{"department": "null", "query_type": "general", "error": false}

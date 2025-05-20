@@ -19,6 +19,35 @@ export function SessionManager({ socket, onSessionChange }: SessionManagerProps)
   const [creatingSession, setCreatingSession] = useState<boolean>(false);
 
   useEffect(() => {
+    // Log trạng thái WebSocket khi component mount
+    console.log("SessionManager: Trạng thái WebSocket khi mount:", 
+      socket.readyState === WebSocket.CONNECTING ? "CONNECTING" :
+      socket.readyState === WebSocket.OPEN ? "OPEN" :
+      socket.readyState === WebSocket.CLOSING ? "CLOSING" :
+      socket.readyState === WebSocket.CLOSED ? "CLOSED" : "UNKNOWN"
+    );
+    
+    // Đặt timeout để tắt trạng thái loading nếu không nhận được phản hồi
+    const loadingTimeout = setTimeout(() => {
+      if (loading) {
+        console.warn("SessionManager: Timeout - không nhận được phản hồi từ server");
+        setLoading(false);
+        // Nếu không có phiên nào, hiển thị thông báo cho người dùng
+        if (sessions.length === 0) {
+          setSessions([
+            {
+              id: "local-default",
+              name: "Phiên mới (offline)",
+              created_at: new Date().toISOString(),
+              message_count: 0
+            }
+          ]);
+          // Đặt ID phiên mặc định
+          setCurrentSessionId("local-default");
+        }
+      }
+    }, 5000); // Timeout sau 5 giây
+    
     const handleMessage = (event: MessageEvent) => {
       try {
         const data = JSON.parse(event.data);
@@ -27,6 +56,11 @@ export function SessionManager({ socket, onSessionChange }: SessionManagerProps)
           setSessions(data.sessions || []);
           setCurrentSessionId(data.current_session_id || '');
           setLoading(false);
+          
+          // Lưu session_id hiện tại vào localStorage
+          if (data.current_session_id) {
+            localStorage.setItem('currentSessionId', data.current_session_id);
+          }
         } 
         else if (data.action === 'create_session_response' && data.status === 'success') {
           // Refresh session list after creating a new session
@@ -36,6 +70,9 @@ export function SessionManager({ socket, onSessionChange }: SessionManagerProps)
           onSessionChange(data.session_id);
           setCreatingSession(false);
           setNewSessionName('');
+          
+          // Lưu session_id mới vào localStorage
+          localStorage.setItem('currentSessionId', data.session_id);
         }
         else if (data.action === 'delete_session_response' && data.status === 'success') {
           // Refresh session list after deleting a session
@@ -44,6 +81,9 @@ export function SessionManager({ socket, onSessionChange }: SessionManagerProps)
           if (data.new_session_id) {
             setCurrentSessionId(data.new_session_id);
             onSessionChange(data.new_session_id);
+            
+            // Cập nhật localStorage
+            localStorage.setItem('currentSessionId', data.new_session_id);
           }
         }
         else if (data.action === 'rename_session_response' && data.status === 'success') {
@@ -54,6 +94,9 @@ export function SessionManager({ socket, onSessionChange }: SessionManagerProps)
         }
         else if (data.action === 'switch_session_response' && data.status === 'success') {
           setCurrentSessionId(data.session_id);
+          
+          // Lưu session_id mới vào localStorage
+          localStorage.setItem('currentSessionId', data.session_id);
         }
         // Xử lý thông điệp init_session_data
         else if (data.action === 'init_session_data' && data.status === 'success') {
@@ -63,6 +106,11 @@ export function SessionManager({ socket, onSessionChange }: SessionManagerProps)
           setLoading(false);
           // Thông báo thay đổi phiên hiện tại cho component cha
           onSessionChange(data.current_session_id);
+          
+          // Lưu session_id hiện tại vào localStorage
+          if (data.current_session_id) {
+            localStorage.setItem('currentSessionId', data.current_session_id);
+          }
         }
         // Xử lý thông điệp sessions_updated
         else if (data.action === 'sessions_updated' && data.status === 'success') {
@@ -77,14 +125,48 @@ export function SessionManager({ socket, onSessionChange }: SessionManagerProps)
 
     socket.addEventListener('message', handleMessage);
 
-    // Initial fetch of sessions if socket is open
+    // Khôi phục session từ localStorage khi kết nối WebSocket được thiết lập
+    const handleSocketOpen = () => {
+      console.log("SessionManager: WebSocket đã kết nối, khôi phục phiên từ localStorage");
+      
+      // Luôn gửi yêu cầu get_sessions để lấy danh sách phiên từ server
+      const getSessionsAction: WebSocketAction = { action: 'get_sessions' };
+      socket.send(JSON.stringify(getSessionsAction));
+      console.log("SessionManager: Đã gửi yêu cầu get_sessions");
+      
+      const savedSessionId = localStorage.getItem('currentSessionId');
+      
+      if (savedSessionId) {
+        console.log("SessionManager: Phát hiện phiên đã lưu trong localStorage:", savedSessionId);
+        
+        // Chuyển đến phiên đã lưu
+        const switchAction: WebSocketAction = { 
+          action: 'switch_session',
+          session_id: savedSessionId
+        };
+        socket.send(JSON.stringify(switchAction));
+        
+        // Lấy lịch sử của phiên
+        const getHistoryAction: WebSocketAction = { 
+          action: 'get_history',
+          session_id: savedSessionId
+        };
+        socket.send(JSON.stringify(getHistoryAction));
+      }
+    };
+
+    // Đăng ký event handler cho sự kiện 'open'
+    socket.addEventListener('open', handleSocketOpen);
+    
+    // Nếu socket đã mở, gọi handleSocketOpen ngay lập tức
     if (socket.readyState === WebSocket.OPEN) {
-      const action: WebSocketAction = { action: 'get_sessions' };
-      socket.send(JSON.stringify(action));
+      handleSocketOpen();
     }
 
     return () => {
       socket.removeEventListener('message', handleMessage);
+      socket.removeEventListener('open', handleSocketOpen);
+      clearTimeout(loadingTimeout); // Xóa timeout khi component unmount
     };
   }, [socket, onSessionChange]);
 

@@ -1,0 +1,6 @@
+<think>
+Okay, let's tackle this. The user's current question is "xin chào", which means "Hello" in Vietnamese. I need to analyze this based on the given rules.
+
+First, check if there's any department mentioned. The user just said hello, so no specific department is referenced here. The history doesn't have any previous mentions of departments either. 
+
+Next, determine the query type. Since the question is a greeting and doesn't ask about any specific department or general process, it's not a department-specific question. But is it a general question? The rules say that if the question isn't related to a department or process, it should be general. However, "xin chào" is just a greeting, which might not fit into either category. Wait, the instructions mention that if the question doesn't relate to processes or departments, it's considered general. But a greeting might be outside of that. However, according to the example 3, a question about the
