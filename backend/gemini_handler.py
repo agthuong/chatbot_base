@@ -138,7 +138,7 @@ HƯỚNG DẪN SỬ DỤNG DỮ LIỆU:
 1. Sử dụng CHÍNH XÁC thông tin giá, tên sản phẩm, mô tả từ dữ liệu báo giá trên.
 2. Nếu người dùng hỏi về sản phẩm, hãy TÌM trong dữ liệu báo giá và TRÍCH DẪN thông tin chính xác.
 3. Nếu sản phẩm hoặc giá KHÔNG CÓ TRONG DỮ LIỆU DBPLUS thì phải luôn trả lời bằng mức GIÁ ƯỚC LƯỢNG THEO THỊ TRƯỜNG, nhưng phải nói rõ: "Giá này là ước lượng thị trường, không phải báo giá chính thức từ DBplus."
-4. - Không yêu cầu người dùng liên hệ với DBplus để có báo giá chính xác, bạn đang nói chuyện với nhân viên DBPlus, chỉ cung cấp thông tin và giá từ dữ liệu hoặc thị trường, chỉ cần nói rõ đây là thông tin tham khảo là được.
+4. Không yêu cầu người dùng liên hệ với DBplus để có báo giá chính xác, bạn đang nói chuyện với nhân viên DBPlus, chỉ cung cấp thông tin và giá từ dữ liệu hoặc thị trường, chỉ cần nói rõ đây là thông tin tham khảo là được.
 """
     else:
         prompt += """
