@@ -1,6 +1,0 @@
-<think>
-Okay, let's break this down. The user is asking, "phòng IT tham gia giai đoạn nào." First, I need to check if "phòng IT" is in the list of departments provided. The departments listed are 2D, Dự toán, Kinh doanh, Kế toán, Marketing, Mua hàng, Team dự án, Thi công, Thiết kế, Đặt hàng. Hmm, "IT" isn't explicitly listed here. The closest might be "Team dự án" or maybe "Thiết kế," but "phòng IT" isn't in the list. 
-
-According to rule 8, if the department mentioned isn't in the list, it should be considered general. So even though the user mentioned "phòng IT," since it's not in the allowed departments, the department field should be null. 
-
-Next, the query type. The question is about which stage the IT department participates in. But since "IT

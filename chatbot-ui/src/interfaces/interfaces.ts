@@ -4,6 +4,7 @@ export interface message {
     id: string
     thinking?: string
     isWarning?: boolean
+    model_type?: "original" | "gemini"
 }
 
 // Định nghĩa các loại hành động cho WebSocket

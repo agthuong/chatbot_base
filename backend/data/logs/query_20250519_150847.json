@@ -1,9 +1,0 @@
-{
-  "timestamp": "2025-05-19T15:08:47.230852",
-  "query": "vậy giai đoạn 1 họ làm gì /no_think",
-  "sub_phase": null,
-  "department": "Kinh doanh",
-  "session_id": "2180ddf0-1536-4193-8fc4-2457575f5714",
-  "response": "<think>\n\n</think>\n\nGiai đoạn 1 là **MKT-SALES**. Trong giai đoạn này, phòng ban Kinh doanh thực hiện các công việc liên quan đến tìm kiếm và xác định cơ hội bán hàng.\n\nCác task chính trong giai đoạn này bao gồm:\n\n- Tìm kiếm cơ hội bán hàng (thông qua Cộng tác viên/Đối tác chiến lược)\n- Xác định cơ hội bán hàng theo ưu tiên tiềm năng\n- Lọc cơ hội bán hàng theo ưu tiên\n- Chuẩn bị buổi họp với khách hàng\n\nTổng cộng có **7 task** trong giai đoạn **MKT-SALES**.",
-  "query_time": 15.71453595161438
-}

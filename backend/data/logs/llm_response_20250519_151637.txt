@@ -1,7 +1,0 @@
-<think>
-Okay, let's see. The user is asking about which stages the IT department participates in. But according to the rules, I can't create connections between departments and stages. I need to just list the stages and mention the departments responsible. Wait, but the user is specifically asking about IT. However, looking at the list of departments provided, there's no IT department mentioned. The departments are 2D, Dự toán, Khách hàng, Kinh doanh, Kế toán, Marketing, Mua hàng, Team dự án, Thi công, Thiết kế, Đặt hàng. So IT isn't one of them. Therefore, I should inform the user that IT isn't in the list and suggest they ask about the existing departments. Also, need to end with the suggestion to ask about a specific department. And if the question is unrelated, respond humorously. Since this is related to the process, but the department isn't there, I need to point that out.
-</think>
-
-Phòng **IT** không nằm trong danh sách các phòng ban được liệt kê. Danh sách phòng ban hiện tại bao gồm: 2D, Dự toán, Khách hàng, Kinh doanh, Kế toán, Marketing, Mua hàng, Team dự án, Thi công, Thiết kế, Đặt hàng.  
-
-Để biết chi tiết công việc cụ thể, vui lòng hỏi về một phòng ban cụ thể, ví dụ: Phòng X làm gì trong giai đoạn Y? 😊

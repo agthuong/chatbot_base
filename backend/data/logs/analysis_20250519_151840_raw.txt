@@ -1,6 +1,0 @@
-<think>
-Okay, let's break this down. The user's current question is "vậy khi nào team IT tham gia dự án". Looking at the history, the previous message was "team IT tham gia dự án nào không". So the user is following up on the previous question about which projects the IT team is involved in.
-
-First, I need to identify the department. The term "team IT" is mentioned, but according to the list of departments provided, there's no "IT" department. The available departments are 2D, Dự toán, Kinh doanh, Kế toán, Marketing, Mua hàng, Team dự án, Thi công, Thiết kế, Đặt hàng. Since "Team IT" isn't in the list, I should treat it as a general query. 
-
-Next, the query type. The user is asking about when the IT team joins a project, which relates to a specific process or timeline. However, since "team IT

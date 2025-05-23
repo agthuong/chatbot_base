@@ -91,7 +91,7 @@ export const ChatInput = ({ question, setQuestion, onSubmit, isLoading }: ChatIn
         />
 
         <Button 
-            className="rounded-full p-1.5 h-fit absolute bottom-2 right-2 m-0.5 border dark:border-zinc-600"
+            className="rounded-full p-1.5 h-fit absolute bottom-2 right-2 m-0.5 border border-blue-500 bg-blue-500 text-white hover:bg-blue-600 hover:border-blue-600 dark:bg-blue-600 dark:text-white dark:border-blue-400"
             onClick={() => onSubmit(question)}
             disabled={question.length === 0}
         >

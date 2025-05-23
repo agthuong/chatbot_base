@@ -1,9 +1,0 @@
-{
-  "timestamp": "2025-05-19T14:26:32.527003",
-  "query": "Tôi là nhân viên 2D, hãy hướng dẫn tôi làm việc /no_think",
-  "sub_phase": null,
-  "department": "2D",
-  "session_id": "df4d9d0d-0ac0-4319-9828-51b9d555fcf0",
-  "response": "<think>\n\n</think>\n\nChào bạn! 👋  \nDưới đây là hướng dẫn cụ thể cho vai trò **2D** trong các giai đoạn mà bạn tham gia:\n\n---\n\n### 🧭 Giai đoạn **CONSTRUCTION**\n- **Sub-phase**: Construction  \n  - **Task 2D-001**: Chuẩn bị kick-off nội bộ/ Chuẩn bị họp cập nhật dự án  \n    - Đầu ra: Biên bản khảo sát mặt bằng  \n    - Mô tả: Khảo sát mặt bằng  \n    - Mục tiêu: N  \n\n  - **Task 2D-002**: Chuẩn bị kick-off nội bộ/ Chuẩn bị họp cập nhật dự án  \n    - Đầu ra: Bản vẽ xin phép  \n    - Mô tả: Vẽ bản vẽ xin phép  \n    - Mục tiêu: N  \n\n---\n\n### 🧭 Giai đoạn **DEFECT-HANDOVER**\n- **Sub-phase**: Defect & Handover  \n  - **Task 2D-003**: Chuẩn bị hồ sơ Quyết toán  \n    - Đầu ra: Bản vẽ hoàn công  \n    - Mô tả: Điều chỉnh bản vẽ xin phép theo thực tế để làm bản vẽ hoàn công  \n    - Mục tiêu: Hoàn công với tòa nhà  \n\n---\n\nNếu bạn cần hướng dẫn cụ thể hơn về từng task hoặc có bất kỳ câu hỏi nào, cứ bảo mình nhé! 😄",
-  "query_time": 15.965492010116577
-}

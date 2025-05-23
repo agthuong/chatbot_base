@@ -108,4 +108,59 @@ strong.highlight-keyword {
   border-radius: 0.25rem;
   font-weight: 600;
   margin: 0 0.1rem;
+}
+
+.message-content.prose p {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+.message-content.prose ul, .message-content.prose ol {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+  padding-left: 1.2em;
+}
+.message-content.prose li {
+  margin-bottom: 0.05em;
+}
+
+/* Đảm bảo khôi phục lại list-style cho các danh sách */
+.message-content ul {
+  list-style: none; /* Bỏ style mặc định */
+  padding-left: 1.5em !important;
+  margin: 0.5em 0;
+}
+
+.message-content ol {
+  list-style-type: decimal !important;
+  padding-left: 1.5em !important;
+  margin: 0.5em 0;
+}
+
+/* Thêm dấu gạch ngang cho các mục danh sách không có thứ tự */
+.message-content ul li {
+  position: relative;
+  padding-left: 0.25em;
+  margin: 0.25em 0;
+  display: list-item !important;
+}
+
+.message-content ul li::before {
+  content: "-";
+  position: absolute;
+  left: -1em;
+  color: currentColor;
+}
+
+/* Đảm bảo khoảng cách giữa các đoạn văn ngắn hơn */
+.message-content p {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+.message-content ul, .message-content ol {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+  padding-left: 1.2em;
+}
+.message-content li {
+  margin-bottom: 0.05em;
 } 

@@ -1,6 +1,0 @@
-<think>
-Okay, let's tackle this query. The user's current question is "vậy m biết gì", which translates to "so what do you know?" in English. Looking at the history, the user first said "xin chào" (hello) and then asked about the price of a plot of land in Thu Thiem. The assistant hasn't responded yet.
-
-First, I need to determine if there's any department mentioned. The user's question is a follow-up asking what the assistant knows. However, the previous messages don't mention any specific department. The user is asking for information about the price of land, which isn't directly related to any particular department listed (like Kinh doanh, Kế toán, etc.). 
-
-According to the rules, if there's no explicit department mentioned and the question isn't about a specific process, it should be considered general. Also, since the user is asking for information without pointing to a specific department, the department field should be

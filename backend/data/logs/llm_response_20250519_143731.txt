@@ -1,7 +1,0 @@
-<think>
-
-</think>
-
-```json
-{"department": "Thi công", "query_type": "department_specific", "error": false}
-```

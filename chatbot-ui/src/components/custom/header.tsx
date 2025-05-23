@@ -6,7 +6,7 @@ import { SessionManager } from "./SessionManager";
 import { AnimatePresence, motion } from "framer-motion";
 
 interface HeaderProps {
-  socket: WebSocket;
+  socket?: WebSocket;
   onSessionChange: (sessionId: string) => void;
 }
 
@@ -22,6 +22,7 @@ export const Header: React.FC<HeaderProps> = ({ socket, onSessionChange }) => {
             size="icon" 
             onClick={() => setShowSidebar(!showSidebar)}
             aria-label="Toggle menu"
+            className="bg-white text-black border-gray-300 dark:bg-[#222] dark:text-white dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <Menu className="h-5 w-5" />
           </Button>
@@ -39,7 +40,7 @@ export const Header: React.FC<HeaderProps> = ({ socket, onSessionChange }) => {
       <AnimatePresence>
         {showSidebar && (
           <motion.div 
-            className="fixed inset-0 bg-black/40 z-40 lg:hidden"
+            className="fixed inset-0 bg-black/40 dark:bg-white/10 z-40 lg:hidden"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -52,7 +53,7 @@ export const Header: React.FC<HeaderProps> = ({ socket, onSessionChange }) => {
       <AnimatePresence>
         {showSidebar && (
           <motion.div 
-            className="fixed inset-y-0 left-0 w-80 bg-background border-r z-50 p-4 overflow-y-auto"
+            className="fixed inset-y-0 left-0 w-80 bg-background dark:bg-[#18181b] border-r z-50 p-4 overflow-y-auto"
             initial={{ x: "-100%" }}
             animate={{ x: 0 }}
             exit={{ x: "-100%" }}
@@ -65,18 +66,21 @@ export const Header: React.FC<HeaderProps> = ({ socket, onSessionChange }) => {
                 size="icon" 
                 onClick={() => setShowSidebar(false)}
                 aria-label="Close menu"
+                className="bg-white text-black border-gray-300 dark:bg-[#222] dark:text-white dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <X className="h-5 w-5" />
               </Button>
             </div>
 
-            <SessionManager 
-              socket={socket} 
-              onSessionChange={(sessionId) => {
-                onSessionChange(sessionId);
-                setShowSidebar(false);
-              }} 
-            />
+            {socket && (
+              <SessionManager 
+                socket={socket} 
+                onSessionChange={(sessionId) => {
+                  onSessionChange(sessionId);
+                  setShowSidebar(false);
+                }} 
+              />
+            )}
           </motion.div>
         )}
       </AnimatePresence>

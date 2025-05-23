@@ -1,5 +1,0 @@
-<think>
-
-</think>
-
-{"department": "Team IT", "query_type": "department_specific", "error": false}

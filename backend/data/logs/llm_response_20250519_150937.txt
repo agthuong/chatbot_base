@@ -1,7 +1,0 @@
-<think>
-
-</think>
-
-```json
-{"department": "2D", "query_type": "department_specific", "error": false}
-```
