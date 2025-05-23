@@ -1,8 +1,61 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Session, WebSocketAction } from '../../interfaces/interfaces';
 import { Button } from '@/components/ui/button';
-import { Plus, Trash2, Edit, Check, X } from 'lucide-react';
+import { Plus, Trash2, Edit, Check, X, RefreshCw } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+
+// Custom hook quản lý session tối ưu
+function useSessions(socket: WebSocket | null) {
+  const [sessions, setSessions] = useState<Session[]>([]);
+  const [currentSessionId, setCurrentSessionId] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(true);
+  const lastFetchRef = useRef<number>(0);
+
+  // Lắng nghe message từ server
+  useEffect(() => {
+    if (!socket) return;
+    const handleMessage = (event: MessageEvent) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.action === 'get_sessions_response' && data.status === 'success') {
+          setSessions(data.sessions || []);
+          setCurrentSessionId(data.current_session_id || '');
+          setLoading(false);
+          lastFetchRef.current = Date.now();
+        }
+        // ... các action khác nếu cần
+      } catch {}
+    };
+    socket.addEventListener('message', handleMessage);
+    return () => socket.removeEventListener('message', handleMessage);
+  }, [socket]);
+
+  // Hàm refresh session, chỉ gửi nếu đã lâu không cập nhật
+  const refreshSessions = useCallback(() => {
+    if (!socket || socket.readyState !== WebSocket.OPEN) return;
+    // Nếu đã lấy trong 5s gần nhất thì không gửi lại
+    if (Date.now() - lastFetchRef.current < 5000) return;
+    setLoading(true);
+    socket.send(JSON.stringify({ action: 'get_sessions' }));
+  }, [socket]);
+
+  // Gọi refreshSessions khi socket open lần đầu
+  useEffect(() => {
+    if (!socket) return;
+    const handleOpen = () => refreshSessions();
+    socket.addEventListener('open', handleOpen);
+    if (socket.readyState === WebSocket.OPEN) refreshSessions();
+    return () => socket.removeEventListener('open', handleOpen);
+  }, [socket, refreshSessions]);
+
+  return {
+    sessions,
+    currentSessionId,
+    loading,
+    refreshSessions,
+    setCurrentSessionId
+  };
+}
 
 interface SessionManagerProps {
   socket: WebSocket;
@@ -10,183 +63,70 @@ interface SessionManagerProps {
 }
 
 export function SessionManager({ socket, onSessionChange }: SessionManagerProps) {
-  const [sessions, setSessions] = useState<Session[]>([]);
-  const [currentSessionId, setCurrentSessionId] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(true);
+  const {
+    sessions,
+    currentSessionId,
+    loading,
+    refreshSessions,
+    setCurrentSessionId,
+  } = useSessions(socket);
   const [editingSessionId, setEditingSessionId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState<string>('');
   const [newSessionName, setNewSessionName] = useState<string>('');
   const [creatingSession, setCreatingSession] = useState<boolean>(false);
+  const [actionLoading, setActionLoading] = useState<boolean>(false);
 
+  // Lắng nghe các action create/delete/rename để refresh lại session
   useEffect(() => {
-    // Log trạng thái WebSocket khi component mount
-    console.log("SessionManager: Trạng thái WebSocket khi mount:", 
-      socket.readyState === WebSocket.CONNECTING ? "CONNECTING" :
-      socket.readyState === WebSocket.OPEN ? "OPEN" :
-      socket.readyState === WebSocket.CLOSING ? "CLOSING" :
-      socket.readyState === WebSocket.CLOSED ? "CLOSED" : "UNKNOWN"
-    );
-    
-    // Đặt timeout để tắt trạng thái loading nếu không nhận được phản hồi
-    const loadingTimeout = setTimeout(() => {
-      if (loading) {
-        console.warn("SessionManager: Timeout - không nhận được phản hồi từ server");
-        setLoading(false);
-        // Nếu không có phiên nào, hiển thị thông báo cho người dùng
-        if (sessions.length === 0) {
-          setSessions([
-            {
-              id: "local-default",
-              name: "Phiên mới (offline)",
-              created_at: new Date().toISOString(),
-              message_count: 0
-            }
-          ]);
-          // Đặt ID phiên mặc định
-          setCurrentSessionId("local-default");
-        }
-      }
-    }, 5000); // Timeout sau 5 giây
-    
+    if (!socket) return;
     const handleMessage = (event: MessageEvent) => {
       try {
         const data = JSON.parse(event.data);
-        
-        if (data.action === 'get_sessions_response' && data.status === 'success') {
-          setSessions(data.sessions || []);
-          setCurrentSessionId(data.current_session_id || '');
-          setLoading(false);
-          
-          // Lưu session_id hiện tại vào localStorage
-          if (data.current_session_id) {
-            localStorage.setItem('currentSessionId', data.current_session_id);
-          }
-        } 
-        else if (data.action === 'create_session_response' && data.status === 'success') {
-          // Refresh session list after creating a new session
-          const action: WebSocketAction = { action: 'get_sessions' };
-          socket.send(JSON.stringify(action));
-          setCurrentSessionId(data.session_id);
-          onSessionChange(data.session_id);
+        if ([
+          'create_session_response',
+          'delete_session_response',
+          'rename_session_response',
+          'switch_session_response',
+        ].includes(data.action) && data.status === 'success') {
+          refreshSessions();
+          setActionLoading(false);
           setCreatingSession(false);
-          setNewSessionName('');
-          
-          // Lưu session_id mới vào localStorage
-          localStorage.setItem('currentSessionId', data.session_id);
-        }
-        else if (data.action === 'delete_session_response' && data.status === 'success') {
-          // Refresh session list after deleting a session
-          const action: WebSocketAction = { action: 'get_sessions' };
-          socket.send(JSON.stringify(action));
-          if (data.new_session_id) {
+          setEditingSessionId(null);
+          if (data.session_id) {
+            setCurrentSessionId(data.session_id);
+            onSessionChange(data.session_id);
+          } else if (data.new_session_id) {
             setCurrentSessionId(data.new_session_id);
             onSessionChange(data.new_session_id);
-            
-            // Cập nhật localStorage
-            localStorage.setItem('currentSessionId', data.new_session_id);
           }
         }
-        else if (data.action === 'rename_session_response' && data.status === 'success') {
-          // Refresh session list after renaming a session
-          const action: WebSocketAction = { action: 'get_sessions' };
-          socket.send(JSON.stringify(action));
-          setEditingSessionId(null);
-        }
-        else if (data.action === 'switch_session_response' && data.status === 'success') {
-          setCurrentSessionId(data.session_id);
-          
-          // Lưu session_id mới vào localStorage
-          localStorage.setItem('currentSessionId', data.session_id);
-        }
-        // Xử lý thông điệp init_session_data
-        else if (data.action === 'init_session_data' && data.status === 'success') {
-          console.log("SessionManager: Nhận dữ liệu khởi tạo phiên", data);
-          setSessions(data.sessions || []);
-          setCurrentSessionId(data.current_session_id || '');
-          setLoading(false);
-          // Thông báo thay đổi phiên hiện tại cho component cha
-          onSessionChange(data.current_session_id);
-          
-          // Lưu session_id hiện tại vào localStorage
-          if (data.current_session_id) {
-            localStorage.setItem('currentSessionId', data.current_session_id);
-          }
-        }
-        // Xử lý thông điệp sessions_updated
-        else if (data.action === 'sessions_updated' && data.status === 'success') {
-          console.log("SessionManager: Cập nhật danh sách phiên", data);
-          setSessions(data.sessions || []);
-          setCurrentSessionId(data.current_session_id || '');
-        }
-      } catch (error) {
-        // Ignore non-JSON messages
-      }
+      } catch {}
     };
-
     socket.addEventListener('message', handleMessage);
-
-    // Khôi phục session từ localStorage khi kết nối WebSocket được thiết lập
-    const handleSocketOpen = () => {
-      console.log("SessionManager: WebSocket đã kết nối, khôi phục phiên từ localStorage");
-      
-      // Luôn gửi yêu cầu get_sessions để lấy danh sách phiên từ server
-      const getSessionsAction: WebSocketAction = { action: 'get_sessions' };
-      socket.send(JSON.stringify(getSessionsAction));
-      console.log("SessionManager: Đã gửi yêu cầu get_sessions");
-      
-      const savedSessionId = localStorage.getItem('currentSessionId');
-      
-      if (savedSessionId) {
-        console.log("SessionManager: Phát hiện phiên đã lưu trong localStorage:", savedSessionId);
-        
-        // Chuyển đến phiên đã lưu
-        const switchAction: WebSocketAction = { 
-          action: 'switch_session',
-          session_id: savedSessionId
-        };
-        socket.send(JSON.stringify(switchAction));
-        
-        // Lấy lịch sử của phiên
-        const getHistoryAction: WebSocketAction = { 
-          action: 'get_history',
-          session_id: savedSessionId
-        };
-        socket.send(JSON.stringify(getHistoryAction));
-      }
-    };
-
-    // Đăng ký event handler cho sự kiện 'open'
-    socket.addEventListener('open', handleSocketOpen);
-    
-    // Nếu socket đã mở, gọi handleSocketOpen ngay lập tức
-    if (socket.readyState === WebSocket.OPEN) {
-      handleSocketOpen();
-    }
-
-    return () => {
-      socket.removeEventListener('message', handleMessage);
-      socket.removeEventListener('open', handleSocketOpen);
-      clearTimeout(loadingTimeout); // Xóa timeout khi component unmount
-    };
-  }, [socket, onSessionChange]);
+    return () => socket.removeEventListener('message', handleMessage);
+  }, [socket, refreshSessions, onSessionChange, setCurrentSessionId]);
 
   const handleCreateSession = () => {
     setCreatingSession(true);
   };
 
   const confirmCreateSession = () => {
-    const action: WebSocketAction = { 
+    if (!newSessionName.trim()) return;
+    setActionLoading(true);
+    const action: WebSocketAction = {
       action: 'create_session',
-      session_name: newSessionName.trim() || undefined
+      session_name: newSessionName.trim(),
     };
     socket.send(JSON.stringify(action));
+    setNewSessionName('');
   };
 
   const handleSwitchSession = (sessionId: string) => {
     if (sessionId === currentSessionId) return;
-    const action: WebSocketAction = { 
+    setActionLoading(true);
+    const action: WebSocketAction = {
       action: 'switch_session',
-      session_id: sessionId
+      session_id: sessionId,
     };
     socket.send(JSON.stringify(action));
     onSessionChange(sessionId);
@@ -195,9 +135,10 @@ export function SessionManager({ socket, onSessionChange }: SessionManagerProps)
   const handleDeleteSession = (sessionId: string, event: React.MouseEvent) => {
     event.stopPropagation();
     if (window.confirm('Bạn có chắc chắn muốn xóa cuộc hội thoại này?')) {
-      const action: WebSocketAction = { 
+      setActionLoading(true);
+      const action: WebSocketAction = {
         action: 'delete_session',
-        session_id: sessionId
+        session_id: sessionId,
       };
       socket.send(JSON.stringify(action));
     }
@@ -216,10 +157,11 @@ export function SessionManager({ socket, onSessionChange }: SessionManagerProps)
   const handleConfirmRename = (sessionId: string, event: React.MouseEvent) => {
     event.stopPropagation();
     if (editingName.trim()) {
-      const action: WebSocketAction = { 
+      setActionLoading(true);
+      const action: WebSocketAction = {
         action: 'rename_session',
         session_id: sessionId,
-        new_name: editingName.trim()
+        new_name: editingName.trim(),
       };
       socket.send(JSON.stringify(action));
     } else {
@@ -235,21 +177,22 @@ export function SessionManager({ socket, onSessionChange }: SessionManagerProps)
         month: '2-digit',
         year: 'numeric',
         hour: '2-digit',
-        minute: '2-digit'
+        minute: '2-digit',
       });
     } catch (e) {
       return dateString;
     }
   };
 
-  if (loading) {
-    return <div className="p-4 text-center">Đang tải...</div>;
-  }
-
   return (
     <div className="flex flex-col h-full">
-      <div className="p-4 border-b">
+      <div className="p-4 border-b flex items-center justify-between">
         <h2 className="text-lg font-bold mb-2">Quản lý hội thoại</h2>
+        <Button onClick={refreshSessions} size="icon" variant="ghost" title="Làm mới danh sách" className="ml-2">
+          <RefreshCw className={loading ? 'animate-spin' : ''} />
+        </Button>
+      </div>
+      <div className="p-4">
         {creatingSession ? (
           <div className="flex flex-col gap-2">
             <Input
@@ -257,9 +200,15 @@ export function SessionManager({ socket, onSessionChange }: SessionManagerProps)
               onChange={(e) => setNewSessionName(e.target.value)}
               placeholder="Tên hội thoại mới"
               className="w-full"
+              disabled={actionLoading}
             />
             <div className="flex gap-2">
-              <Button onClick={confirmCreateSession} size="sm" className="flex-1">
+              <Button 
+                onClick={confirmCreateSession} 
+                size="sm" 
+                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-500 dark:hover:bg-blue-400 dark:text-white" 
+                disabled={actionLoading}
+              >
                 <Check className="h-4 w-4 mr-1" />
                 Tạo mới
               </Button>
@@ -268,6 +217,7 @@ export function SessionManager({ socket, onSessionChange }: SessionManagerProps)
                 size="sm" 
                 variant="outline" 
                 className="flex-1"
+                disabled={actionLoading}
               >
                 <X className="h-4 w-4 mr-1" />
                 Hủy
@@ -275,15 +225,20 @@ export function SessionManager({ socket, onSessionChange }: SessionManagerProps)
             </div>
           </div>
         ) : (
-          <Button onClick={handleCreateSession} className="w-full">
+          <Button 
+            onClick={handleCreateSession} 
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-500 dark:hover:bg-blue-400 dark:text-white" 
+            disabled={actionLoading}
+          >
             <Plus className="h-4 w-4 mr-1" />
             Tạo hội thoại mới
           </Button>
         )}
       </div>
-      
       <div className="flex-1 overflow-y-auto">
-        {sessions.length === 0 ? (
+        {loading ? (
+          <div className="p-4 text-center text-gray-500">Đang tải...</div>
+        ) : sessions.length === 0 ? (
           <div className="p-4 text-center text-slate-500">
             Không có hội thoại nào
           </div>
@@ -307,6 +262,7 @@ export function SessionManager({ socket, onSessionChange }: SessionManagerProps)
                       onClick={(e) => e.stopPropagation()}
                       autoFocus
                       className="w-full"
+                      disabled={actionLoading}
                     />
                   ) : (
                     <div>
@@ -317,7 +273,6 @@ export function SessionManager({ socket, onSessionChange }: SessionManagerProps)
                     </div>
                   )}
                 </div>
-                
                 <div className="flex items-center gap-1">
                   {editingSessionId === session.id ? (
                     <>
@@ -326,6 +281,7 @@ export function SessionManager({ socket, onSessionChange }: SessionManagerProps)
                         variant="ghost"
                         className="h-8 w-8"
                         onClick={(e) => handleConfirmRename(session.id, e)}
+                        disabled={actionLoading}
                       >
                         <Check className="h-4 w-4" />
                       </Button>
@@ -334,6 +290,7 @@ export function SessionManager({ socket, onSessionChange }: SessionManagerProps)
                         variant="ghost"
                         className="h-8 w-8"
                         onClick={handleCancelRename}
+                        disabled={actionLoading}
                       >
                         <X className="h-4 w-4" />
                       </Button>
@@ -343,16 +300,18 @@ export function SessionManager({ socket, onSessionChange }: SessionManagerProps)
                       <Button
                         size="icon"
                         variant="ghost"
-                        className="h-8 w-8 text-slate-500 hover:text-slate-900"
+                        className="h-8 w-8 hover:text-slate-900"
                         onClick={(e) => handleStartRename(session.id, session.name, e)}
+                        disabled={actionLoading}
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
                       <Button
                         size="icon"
                         variant="ghost"
-                        className="h-8 w-8 text-red-500 hover:text-red-700"
+                        className="h-8 w-8 hover:text-red-700"
                         onClick={(e) => handleDeleteSession(session.id, e)}
+                        disabled={actionLoading}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>

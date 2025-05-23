@@ -7,6 +7,7 @@ import { message, WebSocketAction } from "@/interfaces/interfaces"
 import { MessageActions } from '@/components/custom/actions';
 import { Loader2, AlertTriangle, Eye, EyeOff } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import ReactMarkdown from 'react-markdown';
 
 // Thêm CSS cho các từ khóa đặc biệt
 import './message.css';
@@ -128,7 +129,7 @@ export const PreviewMessage = ({ message, socket, sessionId }: { message: messag
   if (message.isWarning) {
     return (
       <motion.div
-        className="w-full mx-auto max-w-3xl px-4 group/message"
+        className="w-full mx-auto px-0 group/message"
         initial={{ y: 5, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         data-role={message.role}
@@ -146,15 +147,17 @@ export const PreviewMessage = ({ message, socket, sessionId }: { message: messag
   // Xử lý cho tin nhắn thông thường
   return (
     <motion.div
-      className="w-full mx-auto max-w-4xl px-4 group/message"
+      className="w-full mx-auto px-0 group/message"
       initial={{ y: 5, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       data-role={message.role}
     >
       <div
         className={cx(
-          'group-data-[role=user]/message:bg-zinc-700 dark:group-data-[role=user]/message:bg-muted group-data-[role=user]/message:text-white flex gap-3 group-data-[role=user]/message:px-3 w-full group-data-[role=user]/message:w-fit group-data-[role=user]/message:ml-auto group-data-[role=user]/message:max-w-2xl group-data-[role=user]/message:py-2 rounded-xl',
-          'group-data-[role=assistant]/message:bg-white dark:group-data-[role=assistant]/message:bg-zinc-800 group-data-[role=assistant]/message:text-gray-800 dark:group-data-[role=assistant]/message:text-gray-200 group-data-[role=assistant]/message:px-3 group-data-[role=assistant]/message:py-2 rounded-xl'
+          // USER: Light mode nền xám nhạt, chữ đen; dark mode nền tối, chữ trắng
+          'group-data-[role=user]/message:bg-gray-100 group-data-[role=user]/message:text-black dark:group-data-[role=user]/message:bg-zinc-700 dark:group-data-[role=user]/message:text-white flex gap-3 group-data-[role=user]/message:px-3 w-full group-data-[role=user]/message:w-fit group-data-[role=user]/message:ml-auto group-data-[role=user]/message:max-w-xl group-data-[role=user]/message:py-2 rounded-xl',
+          // ASSISTANT: Light mode nền trắng, chữ xám; dark mode nền tối, chữ xám
+          'group-data-[role=assistant]/message:bg-white group-data-[role=assistant]/message:text-gray-800 dark:group-data-[role=assistant]/message:bg-zinc-800 dark:group-data-[role=assistant]/message:text-gray-200 group-data-[role=assistant]/message:px-3 group-data-[role=assistant]/message:py-2 rounded-xl'
         )}
       >
         {message.role === 'assistant' && (
@@ -171,7 +174,8 @@ export const PreviewMessage = ({ message, socket, sessionId }: { message: messag
                 size="sm" 
                 className="text-xs flex items-center gap-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 h-7 px-2"
                 onClick={handleGetThinking}
-                disabled={isLoadingThinking}
+                disabled={isLoadingThinking || message.model_type === "gemini"}
+                style={{ display: message.model_type === "gemini" ? 'none' : 'flex' }}
               >
                 {isLoadingThinking ? (
                   <>
@@ -208,7 +212,7 @@ export const PreviewMessage = ({ message, socket, sessionId }: { message: messag
           {messageContent && (
             <div className="flex flex-col gap-2 text-left w-full">
               <div className={message.role === 'assistant' 
-                ? 'prose prose-sm sm:prose dark:prose-invert prose-h2:mt-3 prose-h2:mb-2 max-w-none message-content break-words whitespace-pre-wrap'
+                ? 'w-full break-words whitespace-pre-wrap message-content' // Loại bỏ max-w-prose, prose
                 : 'break-words whitespace-pre-wrap'
               }>
                 {message.isWarning ? (
@@ -217,7 +221,7 @@ export const PreviewMessage = ({ message, socket, sessionId }: { message: messag
                     <p>{messageContent}</p>
                   </div>
                 ) : (
-                  <Markdown>{messageContent}</Markdown>
+                  <ReactMarkdown className="w-full break-words whitespace-pre-wrap message-content dark:prose-invert">{messageContent}</ReactMarkdown>
                 )}
               </div>
             </div>
@@ -295,7 +299,7 @@ export const ThinkingMessage = () => {
 
   return (
     <motion.div
-      className="w-full mx-auto max-w-3xl px-4 group/message"
+      className="w-full mx-auto px-0 group/message"
       initial={{ y: 5, opacity: 0 }}
       animate={{ y: 0, opacity: 1, transition: { delay: 0.2 } }}
       data-role={role}

@@ -1,7 +1,13 @@
 import { motion } from 'framer-motion';
-import { MessageCircle, BotIcon } from 'lucide-react';
+import { MessageCircle, BotIcon, Briefcase } from 'lucide-react';
 
-export const Overview = () => {
+interface OverviewProps {
+  modelType: "original" | "gemini";
+}
+
+export const Overview = ({ modelType }: OverviewProps) => {
+  const isGemini = modelType === "gemini";
+
   return (
     <motion.div
       key="overview"
@@ -11,25 +17,35 @@ export const Overview = () => {
       exit={{ opacity: 0, scale: 0.98 }}
       transition={{ delay: 0.75 }}
     >
-      <div className="bg-zinc-900 rounded-2xl py-10 px-6 flex flex-col items-center gap-6 shadow-lg">
-        <div className="flex items-center gap-3 text-white">
-          <BotIcon size={40} />
+      <div className="bg-card rounded-2xl py-10 px-6 flex flex-col items-center gap-6 shadow-lg text-card-foreground">
+        <div className="flex items-center gap-3">
+          {isGemini ? <Briefcase size={40} /> : <BotIcon size={40} />}
           <span className="text-2xl font-semibold">+</span>
           <MessageCircle size={40} />
         </div>
 
-        <h1 className="text-2xl font-bold text-white">Welcome to <span className="text-blue-400">DBplus</span></h1>
+        <h1 className="text-2xl font-bold">Welcome to <span className="text-blue-500 dark:text-blue-400">DBplus</span></h1>
 
-        <p className="text-base text-gray-300 leading-relaxed">
-          <strong className="text-white">
-            Để hỗ trợ bạn tốt hơn, vui lòng cung cấp cho mình
-          </strong>
-        </p>
-        <p className="text-base text-gray-300 leading-relaxed">
-          <strong className="text-white">
-            thông tin về phòng ban của bạn nhé.
-          </strong>
-        </p>
+        {isGemini ? (
+          <p className="text-base leading-relaxed">
+            <strong>
+              Mình là trợ lý Sale AI của DBplus. Mình có thể giúp gì cho bạn?
+            </strong>
+          </p>
+        ) : (
+          <>
+            <p className="text-base leading-relaxed">
+              <strong>
+                Để hỗ trợ bạn tốt hơn, vui lòng cung cấp cho mình
+              </strong>
+            </p>
+            <p className="text-base leading-relaxed">
+              <strong>
+                thông tin về phòng ban của bạn nhé.
+              </strong>
+            </p>
+          </>
+        )}
       </div>
     </motion.div>
   );

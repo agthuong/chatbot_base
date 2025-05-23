@@ -109,6 +109,17 @@
   .markdown {
     font-family: var(--font-vietnamese), 'geist', sans-serif;
   }
+  
+  /* Đảm bảo văn bản markdown được hiển thị nguyên văn */
+  .whitespace-pre-wrap {
+    white-space: pre-wrap !important;
+  }
+  
+  /* Nhưng danh sách vẫn cần white-space: normal */
+  .whitespace-pre-wrap ul,
+  .whitespace-pre-wrap ol {
+    white-space: normal !important;
+  }
 }
 
 /* Thêm kiểu dáng cho bảng */
@@ -167,4 +178,30 @@
 /* Cải thiện hiển thị bảng trong message */
 .message-content .prose table {
   max-width: 100%;
+}
+
+/* Lớp cơ bản cho hiển thị */
+.visible {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Reset cho tất cả các kiểu danh sách trong ứng dụng của chúng ta */
+.prose ul, .prose ol {
+  /* Các thuộc tính cụ thể được xác định trong message.css */
+  display: block !important;
+}
+
+.prose ul li, .prose ol li {
+  display: list-item !important;
+}
+
+/* Đặc biệt cho message-content - ghi đè các style cơ bản */
+.message-content ul {
+  list-style: none !important;
+}
+
+.message-content ol {
+  list-style-type: decimal !important;
 }

@@ -11,6 +11,7 @@ interface ChatInputProps {
     setQuestion: (question: string) => void;
     onSubmit: (text?: string) => void;
     isLoading: boolean;
+    modelType: "original" | "gemini";
 }
 
 const suggestedActions = [
@@ -26,12 +27,12 @@ const suggestedActions = [
     },
 ];
 
-export const ChatInput = ({ question, setQuestion, onSubmit, isLoading }: ChatInputProps) => {
+export const ChatInput = ({ question, setQuestion, onSubmit, isLoading, modelType }: ChatInputProps) => {
     const [showSuggestions, setShowSuggestions] = useState(true);
 
     return(
     <div className="relative w-full flex flex-col gap-4">
-        {showSuggestions && (
+        {showSuggestions && modelType !== "gemini" && (
             <div className="hidden md:grid sm:grid-cols-2 gap-2 w-full">
                 {suggestedActions.map((suggestedAction, index) => (
                     <motion.div
@@ -91,7 +92,7 @@ export const ChatInput = ({ question, setQuestion, onSubmit, isLoading }: ChatIn
         />
 
         <Button 
-            className="rounded-full p-1.5 h-fit absolute bottom-2 right-2 m-0.5 border dark:border-zinc-600"
+            className="rounded-full p-1.5 h-fit absolute bottom-2 right-2 m-0.5 border border-blue-500 bg-blue-500 text-white hover:bg-blue-600 hover:border-blue-600 dark:bg-blue-600 dark:text-white dark:border-blue-400"
             onClick={() => onSubmit(question)}
             disabled={question.length === 0}
         >

@@ -1,9 +1,0 @@
-{
-  "timestamp": "2025-05-19T15:09:45.494094",
-  "query": "ukm, team 2D làm gì trong giai đoạn thi công /no_think",
-  "sub_phase": null,
-  "department": "2D",
-  "session_id": "2180ddf0-1536-4193-8fc4-2457575f5714",
-  "response": "<think>\n\n</think>\n\n**Trả lời ngắn gọn:**\n\nTeam 2D trong giai đoạn **CONSTRUCTION** có 2 task, bao gồm:\n- Chuẩn bị kick-off nội bộ/ Chuẩn bị họp cập nhật dự án (khảo sát mặt bằng)\n- Chuẩn bị kick-off nội bộ/ Chuẩn bị họp cập nhật dự án (vẽ bản vẽ xin phép)\n\nTrong giai đoạn **DEFECT-HANDOVER**, team 2D có 1 task:\n- Chuẩn bị hồ sơ Quyết toán (điều chỉnh bản vẽ hoàn công)",
-  "query_time": 7.967323303222656
-}

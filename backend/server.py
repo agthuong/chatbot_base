@@ -13,6 +13,26 @@ from datetime import datetime
 from typing import Dict, Any, List, Optional
 import aiohttp
 import traceback
+from dotenv import load_dotenv
+
+# Thêm thư mục hiện tại vào path để import module gemini_handler
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+# Import từ gemini_handler mới
+from gemini_handler import (
+    configure_gemini_model, 
+    format_history_for_gemini, 
+    create_gemini_system_prompt,
+    query_gemini_llm_streaming,
+    gemini_rag_query,
+    retrieve_relevant_content,
+    ensure_data_directory,
+    initialize_cache,
+    create_sample_markdown_data
+)
+
+# Tải biến môi trường từ file .env nếu có
+load_dotenv()
 
 # Cấu hình logging
 logging.basicConfig(
@@ -62,6 +82,9 @@ LLM_CFG = {
     'model_server': 'http://192.168.0.43:1234/v1'
 }
 
+# Khởi tạo Gemini model khi bắt đầu server
+configure_gemini_model()
+
 # Nhập DepartmentInfoTool
 try:
     from department_info_tool import DepartmentInfoTool
@@ -86,15 +109,20 @@ current_session_id = None
 
 def create_session(session_name=None):
     """Tạo phiên hội thoại mới"""
+    global current_session_id
     session_id = str(uuid.uuid4())
     sessions[session_id] = {
         "id": session_id,
         "name": session_name or f"Phiên hội thoại {len(sessions) + 1}",
         "created_at": datetime.now().isoformat(),
-        "history": [],
+        "original_model_history": [],
+        "gemini_model_history": [],
         "message_count": 0,
-        "enable_thinking": False  # Mặc định bật chế độ thinking
+        "enable_thinking": True,
+        "current_model_type": "original"
     }
+    current_session_id = session_id
+    logger.info(f"Đã tạo phiên mới: {session_id} với model mặc định là 'original'")
     return session_id
 
 def get_sessions():
@@ -104,33 +132,49 @@ def get_sessions():
             "id": session_id,
             "name": session["name"],
             "created_at": session["created_at"],
-            "message_count": session["message_count"]
+            "message_count": session["message_count"],
+            "current_model_type": session.get("current_model_type", "original")
         }
         for session_id, session in sessions.items()
     ]
 
-def get_session_history(session_id):
-    """Lấy lịch sử hội thoại của một phiên"""
+def get_session_history(session_id, model_type=None):
+    """Lấy lịch sử hội thoại của một phiên dựa trên model_type"""
     if session_id in sessions:
-        return sessions[session_id]["history"]
+        session = sessions[session_id]
+        active_model_type = model_type or session.get("current_model_type", "original")
+        
+        if active_model_type == "gemini":
+            return session.get("gemini_model_history", [])
+        else:
+            return session.get("original_model_history", [])
     return []
 
-def add_to_history(session_id, query, response, department=None):
-    """Thêm một hội thoại vào lịch sử của phiên"""
+def add_to_history(session_id, query, response, model_type, department=None):
+    """Thêm một hội thoại vào lịch sử của phiên dựa trên model_type"""
     if session_id not in sessions:
-        logger.warning(f"Phiên {session_id} không tồn tại")
+        logger.warning(f"Phiên {session_id} không tồn tại, không thể thêm lịch sử.")
         return
     
-    # Loại bỏ hậu tố /think và /no_think từ câu query trước khi lưu
+    session = sessions[session_id]
     clean_query = query.replace(" /think", "").replace(" /no_think", "").strip()
     
-    sessions[session_id]["history"].append({
+    history_entry = {
         "timestamp": datetime.now().isoformat(),
         "query": clean_query,
         "response": response,
-        "department": department
-    })
-    sessions[session_id]["message_count"] += 1
+    }
+    if department:
+        history_entry["department"] = department
+
+    if model_type == "gemini":
+        session.setdefault("gemini_model_history", []).append(history_entry)
+        logger.info(f"Đã thêm vào gemini_model_history của phiên {session_id}")
+    else:
+        session.setdefault("original_model_history", []).append(history_entry)
+        logger.info(f"Đã thêm vào original_model_history của phiên {session_id}")
+        
+    session["message_count"] = len(session.get("original_model_history", [])) + len(session.get("gemini_model_history", []))
 
 def delete_session(session_id):
     """Xóa một phiên hội thoại"""
@@ -159,10 +203,12 @@ def rename_session(session_id, new_name):
     return False
 
 def clear_session_history(session_id):
-    """Xóa lịch sử hội thoại của một phiên"""
+    """Xóa lịch sử hội thoại của một phiên (cả hai model)"""
     if session_id in sessions:
-        sessions[session_id]["history"] = []
+        sessions[session_id]["original_model_history"] = []
+        sessions[session_id]["gemini_model_history"] = []
         sessions[session_id]["message_count"] = 0
+        logger.info(f"Đã xóa toàn bộ lịch sử của phiên {session_id}")
         return True
     return False
 
@@ -178,10 +224,51 @@ def extract_thinking(text):
         thinking_content = thinking_match.group(1).strip()
         # Loại bỏ phần thinking khỏi text gốc
         remaining_text = re.sub(thinking_pattern, '', text, flags=re.DOTALL).strip()
+        
+        # Xử lý các danh sách và khoảng cách dòng trong phần còn lại
+        # 1. Đảm bảo dấu gạch ngang (-) ở đầu dòng được bảo toàn
+        remaining_text = re.sub(r'(?m)^(\s*)- ', r'\1- ', remaining_text)
+        
+        # 2. Đảm bảo chỉ có 1 dòng trống liên tiếp
+        remaining_text = re.sub(r'\n{3,}', '\n\n', remaining_text)
+        
+        # 3. Đảm bảo mỗi mục danh sách có khoảng cách phù hợp
+        remaining_text = re.sub(r'(?m)^- (.+)\n\n- ', r'- \1\n- ', remaining_text)
+        
         logger.info(f"Đã trích xuất thinking ({len(thinking_content)} ký tự) và còn lại {len(remaining_text)} ký tự phản hồi")
+        # Ghi lại nội dung phản hồi chuẩn hóa để kiểm tra
+        # timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        # log_path = f"data/logs/llm_response_{timestamp}.txt"
+        # os.makedirs(os.path.dirname(log_path), exist_ok=True)
+        # with open(log_path, 'w', encoding='utf-8') as f:
+        #     f.write("<think>\n\n</think>\n\n")
+        #     f.write(remaining_text)
+        # logger.info(f"Đã lưu phản hồi đã xử lý vào: {log_path}")
+        
         return thinking_content, remaining_text
     else:
-        return None, text.strip()
+        # Xử lý các danh sách và khoảng cách dòng trong trường hợp không có thẻ thinking
+        processed_text = text.strip()
+        
+        # 1. Đảm bảo dấu gạch ngang (-) ở đầu dòng được bảo toàn
+        processed_text = re.sub(r'(?m)^(\s*)- ', r'\1- ', processed_text)
+        
+        # 2. Đảm bảo chỉ có 1 dòng trống liên tiếp
+        processed_text = re.sub(r'\n{3,}', '\n\n', processed_text)
+        
+        # 3. Đảm bảo mỗi mục danh sách có khoảng cách phù hợp
+        processed_text = re.sub(r'(?m)^- (.+)\n\n- ', r'- \1\n- ', processed_text)
+        
+        # Ghi lại nội dung phản hồi chuẩn hóa để kiểm tra
+        # timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        # log_path = f"data/logs/llm_response_{timestamp}.txt"
+        # os.makedirs(os.path.dirname(log_path), exist_ok=True)
+        # with open(log_path, 'w', encoding='utf-8') as f:
+        #     f.write("<think>\n\n</think>\n\n")
+        #     f.write(processed_text)
+        # logger.info(f"Đã lưu phản hồi đã xử lý vào: {log_path}")
+        
+        return None, processed_text
 
 def filter_thinking_tags(response_text):
     """
@@ -420,7 +507,7 @@ def add_history_to_prompt(prompt, session_id):
         return prompt
     
     # Lấy 5 tin nhắn gần nhất
-    history = sessions[session_id]["history"]
+    history = sessions[session_id]["original_model_history"]
     if not history or len(history) == 0:
         logger.info("Không có lịch sử tin nhắn cho phiên này")
         return prompt
@@ -448,38 +535,216 @@ def add_history_to_prompt(prompt, session_id):
     logger.info(f"Đã thêm {len(recent_messages)} tin nhắn gần nhất vào prompt")
     
     # Lưu lịch sử tin nhắn vào file log
-    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    history_log_path = f"data/logs/history_prompt_{timestamp}.txt"
-    os.makedirs(os.path.dirname(history_log_path), exist_ok=True)
+    # timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    # history_log_path = f"data/logs/history_prompt_{timestamp}.txt"
+    # os.makedirs(os.path.dirname(history_log_path), exist_ok=True)
     
-    with open(history_log_path, 'w', encoding='utf-8') as f:
-        f.write(f"=== LỊCH SỬ TIN NHẮN CHO SESSION {session_id} ===\n\n")
-        f.write(f"{history_text}\n\n")
-        f.write(f"=== PROMPT GỐC ===\n\n")
-        f.write(f"{prompt}\n\n")
-        f.write(f"=== PROMPT ĐẦY ĐỦ ===\n\n")
-        f.write(f"{history_text}\n{prompt}")
+    # with open(history_log_path, 'w', encoding='utf-8') as f:
+    #     f.write(f"=== LỊCH SỬ TIN NHẮN CHO SESSION {session_id} ===\n\n")
+    #     f.write(f"{history_text}\n\n")
+    #     f.write(f"=== PROMPT GỐC ===\n\n")
+    #     f.write(f"{prompt}\n\n")
+    #     f.write(f"=== PROMPT ĐẦY ĐỦ ===\n\n")
+    #     f.write(f"{history_text}\n{prompt}")
     
-    logger.info(f"Đã lưu lịch sử tin nhắn và prompt vào file: {history_log_path}")
+    # logger.info(f"Đã lưu lịch sử tin nhắn và prompt vào file: {history_log_path}")
     
     return f"{history_text}\n{prompt}"
 
-async def process_streaming_response(websocket, content, detected_department=None, session_id=None):
+async def handle_gemini_request(websocket, content, session_id):
     """
-    Xử lý phản hồi theo phương thức streaming
+    Xử lý yêu cầu dùng model Gemini
+    
+    Args:
+        websocket: WebSocket connection
+        content: Nội dung câu hỏi
+        session_id: ID phiên
+    """
+    try:
+        logger.info(f"=== BẮT ĐẦU XỬ LÝ YÊU CẦU GEMINI ===")
+        logger.info(f"Xử lý yêu cầu Gemini: '{content[:100]}...' (session_id={session_id})")
+        
+        # Đảm bảo thư mục data tồn tại
+        ensure_data_directory()
+        
+        # Đảm bảo file dữ liệu tồn tại, nhưng không lưu cache
+        initialize_cache()
+        logger.info("Đã đảm bảo thư mục và file dữ liệu tồn tại")
+        
+        # Chuẩn bị câu hỏi - chỉ loại bỏ hậu tố /think và /no_think ở cuối nếu có
+        clean_query = content
+        if clean_query.endswith(" /think"):
+            clean_query = clean_query[:-7].strip()
+        elif clean_query.endswith(" /no_think"):
+            clean_query = clean_query[:-10].strip()
+            
+        logger.info(f"Câu hỏi gốc: '{content}', câu hỏi sau khi làm sạch: '{clean_query}'")
+        
+        # Lấy lịch sử hội thoại của Gemini
+        gemini_history = get_session_history(session_id, "gemini")
+        
+        # Format lịch sử theo định dạng Gemini yêu cầu
+        formatted_gemini_history = format_history_for_gemini(gemini_history)
+        
+        # Truy xuất nội dung RAG trực tiếp từ nội dung câu hỏi
+        # Không cần phân tích phòng ban vì RAG mới hoạt động dựa trên file markdown
+        # Luôn đọc lại dữ liệu từ file mỗi lần gọi
+        logger.info("Truy xuất nội dung RAG từ file...")
+        rag_content = retrieve_relevant_content(clean_query)
+        
+        # Kiểm tra RAG content kỹ lưỡng
+        if rag_content:
+            logger.info(f"ĐÃ NHẬN RAG CONTENT, độ dài: {len(rag_content)} ký tự")
+            logger.info(f"Đoạn đầu RAG content: {rag_content[:100]}...")
+        else:
+            logger.warning("KHÔNG NHẬN ĐƯỢC RAG CONTENT từ retrieve_relevant_content!")
+            
+        logger.info(f"Đã truy xuất dữ liệu RAG: {len(rag_content) if rag_content else 0} ký tự")
+        
+        # Thông báo đang xử lý cho client
+        processing_msg = json.dumps({
+            "role": "assistant",
+            "content": "",  # Bắt đầu với nội dung trống
+            "model_type": "gemini",
+            "session_id": session_id
+        })
+        await websocket.send(processing_msg)
+        
+        # Biến để tích lũy phản hồi đầy đủ
+        full_response = ""
+        
+        # Biến lưu trữ cảnh báo nếu có
+        warning_message = None
+        
+        # Lưu log chi tiết về yêu cầu
+        # log_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "logs")
+        # os.makedirs(log_dir, exist_ok=True)
+        # timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        # request_log_file = os.path.join(log_dir, f"gemini_request_{timestamp}.txt")
+        
+        # try:
+        #     with open(request_log_file, "w", encoding="utf-8") as f:
+        #         f.write("=== GEMINI REQUEST DETAILS ===\n\n")
+        #         f.write(f"Thời gian: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
+        #         f.write(f"Query: '{clean_query}'\n\n")
+        #         f.write(f"RAG content tồn tại: {'Có' if rag_content else 'Không'}\n")
+        #         if rag_content:
+        #             f.write(f"Độ dài RAG content: {len(rag_content)} ký tự\n")
+        #             f.write("Đoạn đầu RAG content:\n")
+        #             f.write(f"{rag_content[:500] if rag_content else 'Không có nội dung'}...\n\n")
+        #         f.write(f"History: {'Có' if formatted_gemini_history else 'Không'}\n")
+        #         if formatted_gemini_history:
+        #             f.write(f"History items: {len(formatted_gemini_history)}\n\n")
+        #     logger.info(f"Đã lưu chi tiết yêu cầu vào: {request_log_file}")
+        # except Exception as e:
+        #     logger.error(f"Lỗi khi lưu chi tiết yêu cầu: {str(e)}")
+        
+        logger.info("Gọi gemini_rag_query với RAG content...")
+        # Gọi Gemini API với cơ chế streaming và RAG
+        async for chunk in gemini_rag_query(
+            clean_query,
+            rag_content=rag_content,
+            formatted_history=formatted_gemini_history
+        ):
+            if chunk == "[END]":
+                # Kết thúc streaming
+                break
+                
+            try:
+                # Parse chunk JSON
+                chunk_data = json.loads(chunk)
+                
+                # Kiểm tra lỗi
+                if "error" in chunk_data:
+                    error_msg = chunk_data["error"]
+                    logger.error(f"Gemini API error: {error_msg}")
+                    
+                    # Gửi thông báo lỗi cho client
+                    error_response = json.dumps({
+                        "role": "assistant",
+                        "content": f"❌ Lỗi từ Gemini API: {error_msg}",
+                        "model_type": "gemini",
+                        "session_id": session_id
+                    })
+                    await websocket.send(error_response)
+                    return
+                
+                # Kiểm tra cảnh báo
+                if "warning" in chunk_data:
+                    warning_message = chunk_data["warning"]
+                    logger.warning(f"Cảnh báo từ Gemini RAG: {warning_message}")
+                    
+                    # Gửi thông báo cảnh báo cho client
+                    warning_response = json.dumps({
+                        "role": "assistant",
+                        "content": f"⚠️ {warning_message}",
+                        "model_type": "gemini",
+                        "session_id": session_id,
+                        "is_warning": True
+                    })
+                    await websocket.send(warning_response)
+                    continue  # Bỏ qua chunk này, không thêm vào phản hồi đầy đủ
+                
+                # Xử lý nội dung chunk
+                if "content" in chunk_data:
+                    chunk_content = chunk_data["content"]
+                    full_response += chunk_content
+                    
+                    # Gửi nội dung hiện tại cho client
+                    update_msg = json.dumps({
+                        "role": "assistant",
+                        "content": full_response,  # Gửi toàn bộ nội dung tích lũy
+                        "model_type": "gemini",
+                        "session_id": session_id
+                    })
+                    await websocket.send(update_msg)
+            except json.JSONDecodeError:
+                logger.warning(f"Không thể parse chunk JSON: {chunk}")
+        
+        # Lưu vào lịch sử sau khi hoàn thành
+        if full_response:
+            add_to_history(session_id, clean_query, full_response, "gemini")
+            logger.info(f"Đã thêm hội thoại Gemini vào lịch sử: {session_id}")
+            
+            # Gửi thông báo hoàn thành
+            complete_msg = json.dumps({
+                "role": "assistant",
+                "content": full_response,
+                "model_type": "gemini",
+                "session_id": session_id,
+                "status": "complete"
+            })
+            await websocket.send(complete_msg)
+            
+    except Exception as e:
+        error_msg = f"Lỗi khi xử lý yêu cầu Gemini: {str(e)}"
+        logger.error(error_msg, exc_info=True)
+        
+        error_response = json.dumps({
+            "role": "assistant",
+            "content": f"❌ Đã xảy ra lỗi: {error_msg}",
+            "model_type": "gemini",
+            "session_id": session_id
+        })
+        await websocket.send(error_response)
+
+# Cập nhật process_streaming_response để phân luồng theo model_type
+async def process_streaming_response(websocket, content, detected_department=None, session_id=None, model_type=None):
+    """
+    Xử lý phản hồi theo phương thức streaming, phân luồng theo model_type
     
     Args:
         websocket: WebSocket connection
         content: Nội dung tin nhắn từ người dùng
-        detected_department: Phòng ban đã được phát hiện trước đó (nếu có)
-        session_id: ID phiên hiện tại 
+        detected_department: Phòng ban đã được phát hiện (tùy chọn)
+        session_id: ID phiên hiện tại (tùy chọn)
+        model_type: Loại model sử dụng ("original" hoặc "gemini") (tùy chọn)
     """
     try:
         global current_session_id
         
         # Đảm bảo session_id luôn có giá trị
         if not session_id:
-            # Nếu session_id trống, sử dụng current_session_id
             session_id = current_session_id
             logger.info(f"Session ID không được cung cấp, sử dụng current_session_id: {session_id}")
         
@@ -489,160 +754,172 @@ async def process_streaming_response(websocket, content, detected_department=Non
             current_session_id = session_id
             logger.info(f"Tạo phiên mới vì session_id không tồn tại: {session_id}")
         
-        logger.info(f"Xử lý streaming response cho: '{content}', phòng ban: {detected_department}, session_id: {session_id}")
-        
-        # Ghi log session_id để debug
-        if session_id:
-            logger.info(f"Session ID nhận được: {session_id}")
+        # Xác định model_type nếu không được cung cấp
+        if not model_type:
+            model_type = sessions[session_id].get("current_model_type", "original")
+            logger.info(f"Model type không được cung cấp, sử dụng model mặc định của phiên: {model_type}")
         else:
-            logger.warning("Session ID không được cung cấp!")
+            # Cập nhật model_type trong session
+            sessions[session_id]["current_model_type"] = model_type
+            logger.info(f"Cập nhật current_model_type của phiên {session_id}: {model_type}")
+            
+        logger.info(f"Xử lý streaming response cho: '{content}', phòng ban: {detected_department}, session_id: {session_id}, model_type: {model_type}")
         
-        # Lấy trạng thái thinking từ session
-        enable_thinking = sessions[session_id].get("enable_thinking", True)
-        
-        # Tạo bản sao của nội dung gốc để xử lý
-        query = content
-        query_for_model = content  # Nội dung sẽ gửi đến mô hình, giữ nguyên hậu tố
-        
-        # Xác định chế độ thinking dựa trên hậu tố của tin nhắn hiện tại
-        if content.endswith('/think'):
-            # Cập nhật trạng thái thinking trong session
-            sessions[session_id]["enable_thinking"] = True
-            enable_thinking = True
-            # Loại bỏ hậu tố chỉ khỏi query hiển thị, không phải query gửi đến mô hình
-            query = content[:-7].strip()  # Loại bỏ hậu tố cho hiển thị trong lịch sử
-            logger.info(f"Phát hiện lệnh /think, bật chế độ thinking cho: {query}")
-        elif content.endswith('/no_think'):
-            # Cập nhật trạng thái thinking trong session
-            sessions[session_id]["enable_thinking"] = False
-            enable_thinking = False
-            # Loại bỏ hậu tố chỉ khỏi query hiển thị, không phải query gửi đến mô hình
-            query = content[:-10].strip()  # Loại bỏ hậu tố cho hiển thị trong lịch sử
-            logger.info(f"Phát hiện lệnh /no_think, tắt chế độ thinking cho: {query}")
+        # Xử lý theo model_type
+        if model_type == "gemini":
+            # Sử dụng luồng xử lý dành riêng cho Gemini - không có thinking, không cần phân tích phòng ban
+            await handle_gemini_request(websocket, content, session_id)
         else:
-            # Không có hậu tố, sử dụng trạng thái trong session
+            # Model cũ - giữ lại logic hiện tại
+            # Lấy trạng thái thinking từ session
+            enable_thinking = sessions[session_id].get("enable_thinking", True)
+            
+            # Tạo bản sao của nội dung gốc để xử lý
             query = content
-        
-        logger.info(f"Xử lý streaming response. Query: '{query}', Mode thinking: {enable_thinking}")
-        
-        # Thêm lịch sử tin nhắn vào prompt
-        content_with_history = add_history_to_prompt(query, session_id)
-        
-        # Phân tích câu hỏi để xác định phòng ban nếu chưa có
-        if not detected_department:
-            # Phân tích câu hỏi
-            analysis_result = analyze_query_with_llm(content_with_history, session_id)
+            query_for_model = content  # Nội dung sẽ gửi đến mô hình, giữ nguyên hậu tố
             
-            # Xử lý trường hợp LLM trả về thẻ <think> thay vì JSON
-            if isinstance(analysis_result, str) and "<think>" in analysis_result:
-                logger.warning("Phát hiện thẻ <think> trong phản hồi của analyze_query_with_llm")
-                # Sử dụng filter_thinking_tags để lọc thẻ <think> và trích xuất JSON
-                filtered_result = filter_thinking_tags(analysis_result)
-                if filtered_result:
-                    analysis_result = filtered_result
+            # Xác định chế độ thinking dựa trên hậu tố của tin nhắn hiện tại
+            if content.endswith('/think'):
+                # Cập nhật trạng thái thinking trong session
+                sessions[session_id]["enable_thinking"] = True
+                enable_thinking = True
+                # Loại bỏ hậu tố chỉ khỏi query hiển thị, không phải query gửi đến mô hình
+                query = content[:-7].strip()  # Loại bỏ hậu tố cho hiển thị trong lịch sử
+                logger.info(f"Phát hiện lệnh /think, bật chế độ thinking cho: {query}")
+            elif content.endswith('/no_think'):
+                # Cập nhật trạng thái thinking trong session
+                sessions[session_id]["enable_thinking"] = False
+                enable_thinking = False
+                # Loại bỏ hậu tố chỉ khỏi query hiển thị, không phải query gửi đến mô hình
+                query = content[:-10].strip()  # Loại bỏ hậu tố cho hiển thị trong lịch sử
+                logger.info(f"Phát hiện lệnh /no_think, tắt chế độ thinking cho: {query}")
+            else:
+                # Không có hậu tố, sử dụng trạng thái trong session
+                query = content
+            
+            logger.info(f"Xử lý streaming response với model cũ. Query: '{query}', Mode thinking: {enable_thinking}")
+            
+            # Thêm lịch sử tin nhắn vào prompt - chỉ lấy lịch sử của model cũ
+            content_with_history = add_history_to_prompt(query, session_id)
+            
+            # Phân tích câu hỏi để xác định phòng ban nếu chưa có
+            if not detected_department:
+                # Phân tích câu hỏi
+                analysis_result = analyze_query_with_llm(content_with_history, session_id)
+                
+                # Xử lý trường hợp LLM trả về thẻ <think> thay vì JSON
+                if isinstance(analysis_result, str) and "<think>" in analysis_result:
+                    logger.warning("Phát hiện thẻ <think> trong phản hồi của analyze_query_with_llm")
+                    # Sử dụng filter_thinking_tags để lọc thẻ <think> và trích xuất JSON
+                    filtered_result = filter_thinking_tags(analysis_result)
+                    if filtered_result:
+                        analysis_result = filtered_result
+                    else:
+                        # Nếu không tìm thấy JSON, sử dụng kết quả mặc định
+                        logger.warning("Không thể trích xuất JSON từ phản hồi có thẻ <think>, sử dụng kết quả mặc định")
+                        analysis_result = {
+                            "department": None,
+                            "query_type": "general",
+                            "error": False
+                        }
+                
+                # Kiểm tra xem analysis_result có phải là None không
+                if analysis_result is None:
+                    logger.warning("analyze_query_with_llm trả về None. Sử dụng giá trị mặc định.")
+                    analysis_result = {"department": None, "query_type": "general", "error": False}
+            else:
+                # Sử dụng kết quả phân tích trước đó
+                analysis_result = {"department": detected_department, "query_type": "department_specific", "error": False}
+            
+            # Kiểm tra lỗi nhiều phòng ban
+            if analysis_result.get("error", False):
+                error_message = analysis_result.get("error_message", "Phát hiện nhiều phòng ban trong một câu hỏi")
+                error_response = json.dumps({
+                    "role": "assistant",
+                    "content": f"❌ {error_message}. Vui lòng chỉ hỏi về một phòng ban mỗi lần.",
+                    "thinking": None,
+                    "warning": error_message,
+                    "session_id": session_id,
+                    "model_type": "original"
+                })
+                await websocket.send(error_response)
+                return
+                
+            # Xác định phòng ban từ kết quả phân tích
+            department = analysis_result.get("department")
+            query_type = analysis_result.get("query_type")
+            
+            # Đảm bảo luôn gửi hậu tố thinking đúng đến mô hình
+            if enable_thinking and not query_for_model.endswith('/think'):
+                query_for_model = query_for_model + ' /think'
+            elif not enable_thinking and not query_for_model.endswith('/no_think'):
+                query_for_model = query_for_model + ' /no_think'
+            
+            logger.info(f"Phân tích câu hỏi: Phòng ban={department}, Loại={query_type}, Thinking={enable_thinking}")
+            logger.info(f"Query thực tế gửi đến mô hình: {query_for_model}")
+            
+            # Xử lý phản hồi dạng streaming
+            if query_type == "department_specific" and department:
+                # Câu hỏi về phòng ban cụ thể
+                logger.info(f"Câu hỏi về phòng ban cụ thể: {department}, chế độ thinking: {enable_thinking}")
+                
+                # Sử dụng query_for_model để đảm bảo hậu tố được gửi đến mô hình
+                response_content = smart_rag_query(query_for_model, None, department, session_id)
+                
+                # Kiểm tra và xử lý thẻ <think> nếu có
+                thinking_part = None
+                if "<think>" in response_content:
+                    # Trích xuất phần thinking và phần còn lại
+                    thinking_part, response_content = extract_thinking(response_content)
+                    logger.info(f"Đã trích xuất phần thinking ({len(thinking_part) if thinking_part else 0} ký tự) từ phản hồi")
+                
+                # Lưu vào lịch sử hội thoại - chỉ lưu phần query đã loại bỏ hậu tố
+                if session_id and session_id in sessions:
+                    add_to_history(session_id, query, response_content, "original", department)
+                    logger.info(f"Đã lưu hội thoại phòng ban {department} vào lịch sử của session {session_id}")
                 else:
-                    # Nếu không tìm thấy JSON, sử dụng kết quả mặc định
-                    logger.warning("Không thể trích xuất JSON từ phản hồi có thẻ <think>, sử dụng kết quả mặc định")
-                    analysis_result = {
-                        "department": None,
-                        "query_type": "general",
-                        "error": False
-                    }
-            
-            # Kiểm tra xem analysis_result có phải là None không
-            if analysis_result is None:
-                logger.warning("analyze_query_with_llm trả về None. Sử dụng giá trị mặc định.")
-                analysis_result = {"department": None, "query_type": "general", "error": False}
-        else:
-            # Sử dụng kết quả phân tích trước đó
-            analysis_result = {"department": detected_department, "query_type": "department_specific", "error": False}
-        
-        # Kiểm tra lỗi nhiều phòng ban
-        if analysis_result.get("error", False):
-            error_message = analysis_result.get("error_message", "Phát hiện nhiều phòng ban trong một câu hỏi")
-            error_response = json.dumps({
-                "role": "assistant",
-                "content": f"❌ {error_message}. Vui lòng chỉ hỏi về một phòng ban mỗi lần.",
-                "thinking": None,
-                "warning": error_message,
-                "session_id": session_id
-            })
-            await websocket.send(error_response)
-            return
-            
-        # Xác định phòng ban từ kết quả phân tích
-        department = analysis_result.get("department")
-        query_type = analysis_result.get("query_type")
-        
-        # Đảm bảo luôn gửi hậu tố thinking đúng đến mô hình
-        if enable_thinking and not query_for_model.endswith('/think'):
-            query_for_model = query_for_model + ' /think'
-        elif not enable_thinking and not query_for_model.endswith('/no_think'):
-            query_for_model = query_for_model + ' /no_think'
-            
-        logger.info(f"Phân tích câu hỏi: Phòng ban={department}, Loại={query_type}, Thinking={enable_thinking}")
-        logger.info(f"Query thực tế gửi đến mô hình: {query_for_model}")
-        
-        # Xử lý phản hồi dạng streaming
-        if query_type == "department_specific" and department:
-            # Câu hỏi về phòng ban cụ thể
-            logger.info(f"Câu hỏi về phòng ban cụ thể: {department}, chế độ thinking: {enable_thinking}")
-            
-            # Sử dụng query_for_model để đảm bảo hậu tố được gửi đến mô hình
-            response_content = smart_rag_query(query_for_model, None, department, session_id)
-            
-            # Kiểm tra và xử lý thẻ <think> nếu có
-            thinking_part = None
-            if "<think>" in response_content:
-                # Trích xuất phần thinking và phần còn lại
-                thinking_part, response_content = extract_thinking(response_content)
-                logger.info(f"Đã trích xuất phần thinking ({len(thinking_part) if thinking_part else 0} ký tự) từ phản hồi")
-            
-            # Lưu vào lịch sử hội thoại - chỉ lưu phần query đã loại bỏ hậu tố
-            if session_id and session_id in sessions:
-                add_to_history(session_id, query, response_content, department)
-                logger.info(f"Đã lưu hội thoại phòng ban {department} vào lịch sử của session {session_id}")
-            else:
-                logger.warning(f"Không thể lưu hội thoại phòng ban vào lịch sử: session_id={session_id}")
-            
-            # Gửi phản hồi cuối cùng với thinking nếu có
-            final_message = json.dumps({
-                "role": "assistant",
-                "content": response_content,
-                "thinking": thinking_part if enable_thinking else None,
-                "session_id": session_id  # Thêm session_id vào message
-            })
-            await websocket.send(final_message)
-            
-        elif query_type == "general":
-            # Câu hỏi chung về quy trình
-            logger.info(f"Câu hỏi chung, chế độ thinking: {enable_thinking}")
-            
-            # Sử dụng query_for_model để đảm bảo hậu tố được gửi đến mô hình
-            response_content = handle_general_query(query_for_model, session_id=session_id)
-            
-            # Kiểm tra và xử lý thẻ <think> nếu có
-            thinking_part = None
-            if "<think>" in response_content:
-                # Trích xuất phần thinking và phần còn lại
-                thinking_part, response_content = extract_thinking(response_content)
-                logger.info(f"Đã trích xuất phần thinking ({len(thinking_part) if thinking_part else 0} ký tự) từ phản hồi")
-            
-            # Lưu vào lịch sử hội thoại - chỉ lưu phần query đã loại bỏ hậu tố
-            if session_id and session_id in sessions:
-                add_to_history(session_id, query, response_content, None)
-                logger.info(f"Đã lưu hội thoại chung vào lịch sử của session {session_id}")
-            else:
-                logger.warning(f"Không thể lưu hội thoại chung vào lịch sử: session_id={session_id}")
-            
-            # Gửi phản hồi cuối cùng với thinking nếu có
-            final_message = json.dumps({
-                "role": "assistant",
-                "content": response_content,
-                "thinking": thinking_part if enable_thinking else None,
-                "session_id": session_id  # Thêm session_id vào message
-            })
-            await websocket.send(final_message)
+                    logger.warning(f"Không thể lưu hội thoại phòng ban vào lịch sử: session_id={session_id}")
+                
+                # Gửi phản hồi cuối cùng với thinking nếu có
+                final_message = json.dumps({
+                    "role": "assistant",
+                    "content": response_content,
+                    "thinking": thinking_part if enable_thinking else None,
+                    "session_id": session_id,
+                    "model_type": "original"  # Thêm model_type
+                })
+                await websocket.send(final_message)
+                
+            elif query_type == "general":
+                # Câu hỏi chung về quy trình
+                logger.info(f"Câu hỏi chung, chế độ thinking: {enable_thinking}")
+                
+                # Sử dụng query_for_model để đảm bảo hậu tố được gửi đến mô hình
+                response_content = handle_general_query(query_for_model, session_id=session_id)
+                
+                # Kiểm tra và xử lý thẻ <think> nếu có
+                thinking_part = None
+                if "<think>" in response_content:
+                    # Trích xuất phần thinking và phần còn lại
+                    thinking_part, response_content = extract_thinking(response_content)
+                    logger.info(f"Đã trích xuất phần thinking ({len(thinking_part) if thinking_part else 0} ký tự) từ phản hồi")
+                
+                # Lưu vào lịch sử hội thoại - chỉ lưu phần query đã loại bỏ hậu tố
+                if session_id and session_id in sessions:
+                    add_to_history(session_id, query, response_content, "original", None)
+                    logger.info(f"Đã lưu hội thoại chung vào lịch sử của session {session_id}")
+                else:
+                    logger.warning(f"Không thể lưu hội thoại chung vào lịch sử: session_id={session_id}")
+                
+                # Gửi phản hồi cuối cùng với thinking nếu có
+                final_message = json.dumps({
+                    "role": "assistant",
+                    "content": response_content,
+                    "thinking": thinking_part if enable_thinking else None,
+                    "session_id": session_id,  # Thêm session_id vào message
+                    "model_type": "original"   # Thêm model_type
+                })
+                await websocket.send(final_message)
         
     except Exception as e:
         logger.error(f"Lỗi khi xử lý streaming response: {str(e)}")
@@ -654,203 +931,9 @@ async def process_streaming_response(websocket, content, detected_department=Non
             "content": f"❌ Đã xảy ra lỗi khi xử lý câu hỏi: {str(e)}",
             "thinking": None,
             "warning": f"Lỗi: {str(e)}",
-            "session_id": session_id  # Thêm session_id vào message
+            "session_id": session_id,  # Thêm session_id vào message
+            "model_type": model_type or "original"  # Thêm model_type
         })
-        await websocket.send(error_response)
-
-async def handle_thinking_request(websocket, query, session_id=None, request_id=None):
-    """
-    Xử lý yêu cầu phân tích (thinking) từ client và trả về nội dung thinking
-    
-    Args:
-        websocket: WebSocket connection
-        query: Nội dung câu hỏi cần phân tích
-        session_id: ID phiên hiện tại
-        request_id: ID yêu cầu để ghép cặp yêu cầu-phản hồi
-    """
-    logger.info(f"Nhận yêu cầu phân tích (thinking) cho câu hỏi: {query[:100]}")
-    
-    try:
-        if not session_id:
-            session_id = current_session_id
-            logger.info(f"Sử dụng session_id mặc định: {session_id}")
-            
-        # Loại bỏ hậu tố /think và /no_think nếu có
-        clean_query = query.replace(" /think", "").replace(" /no_think", "").strip()
-            
-        # Thêm lịch sử tin nhắn vào prompt nếu có
-        content_with_history = add_history_to_prompt(clean_query, session_id)
-        
-        # Đầu tiên xác định xem đây là câu hỏi thuộc phòng ban nào
-        logger.info("Phân tích câu hỏi để xác định phòng ban hoặc loại câu hỏi")
-        analysis_result = analyze_query_with_llm(content_with_history, session_id)
-        
-        # Xử lý trường hợp LLM trả về thẻ <think> thay vì JSON
-        if isinstance(analysis_result, str) and "<think>" in analysis_result:
-            filtered_result = filter_thinking_tags(analysis_result)
-            if filtered_result:
-                analysis_result = filtered_result
-            else:
-                analysis_result = {"department": None, "query_type": "general", "error": False}
-        
-        # Nếu kết quả phân tích là None, sử dụng kết quả mặc định
-        if analysis_result is None:
-            analysis_result = {"department": None, "query_type": "general", "error": False}
-        
-        # Lấy thông tin phòng ban và loại câu hỏi
-        department = None
-        query_type = "general"
-        
-        if isinstance(analysis_result, dict):
-            department = analysis_result.get("department")
-            query_type = analysis_result.get("query_type")
-        
-        # Lấy nội dung thinking dựa trên loại câu hỏi
-        thinking_content = ""
-        
-        if query_type == "department_specific" and department:
-            # Nếu là câu hỏi phòng ban cụ thể, sử dụng smart_rag_query để lấy kết quả
-            logger.info(f"Lấy phân tích cho câu hỏi phòng ban: {department}")
-            
-            # Thêm hậu tố /think để đảm bảo nhận được phần thinking
-            query_with_think = clean_query + " /think"
-            
-            # Sử dụng smart_rag_query trực tiếp và trích xuất phần thinking
-            response = smart_rag_query(query_with_think, None, department, session_id)
-            
-            # Trích xuất phần thinking từ phản hồi nếu có
-            if "<think>" in response:
-                thinking_extracted, _ = extract_thinking(response)
-                if thinking_extracted:
-                    thinking_content = thinking_extracted
-                    logger.info(f"Đã trích xuất phần thinking ({len(thinking_content)} ký tự) từ phản hồi smart_rag_query")
-                else:
-                    # Nếu không tìm thấy thẻ <think>, tạo phân tích mới
-                    analysis_prompt = f"""
-Hãy phân tích chi tiết câu hỏi sau về phòng ban {department}:
-
-{clean_query}
-
-Phân tích:
-1. Nhu cầu thông tin cụ thể
-2. Các khía cạnh cần đề cập
-3. Cách tiếp cận để trả lời toàn diện
-"""
-                    # Sử dụng department_info_tool để lấy thông tin phòng ban
-                    dept_tool = DepartmentInfoTool()
-                    dept_info = dept_tool.get_department_info(department)
-                    
-                    # Tạo một prompt cụ thể cho phòng ban
-                    llm_prompt = create_llm_prompt(analysis_prompt, dept_info, session_id)
-                    system_prompt = create_system_prompt(None, department)
-                    
-                    # Lấy phân tích
-                    thinking_content = query_llm(llm_prompt, system_prompt, max_tokens=800, stream=False)
-            else:
-                # Nếu không có thẻ <think>, tạo phân tích tự động
-                thinking_content = f"""
-## Phân tích câu hỏi về phòng ban {department}
-
-Câu hỏi: {clean_query}
-
-### Nhu cầu thông tin
-- Thông tin về quy trình, nhiệm vụ hoặc trách nhiệm của phòng ban {department}
-- Hiểu rõ về các thông tin liên quan đến phòng ban này
-
-### Cách tiếp cận
-- Phân tích và tổng hợp thông tin từ cơ sở dữ liệu về phòng ban {department}
-- Cung cấp thông tin chính xác và cụ thể về các quy trình liên quan
-"""
-        else:
-            # Nếu là câu hỏi chung, sử dụng một prompt chung để phân tích
-            logger.info("Lấy phân tích cho câu hỏi chung")
-            
-            # Thêm hậu tố /think để đảm bảo nhận được phần thinking
-            query_with_think = clean_query + " /think"
-            
-            # Sử dụng handle_general_query trực tiếp và trích xuất phần thinking
-            response = handle_general_query(query_with_think, session_id=session_id)
-            
-            # Trích xuất phần thinking từ phản hồi nếu có
-            if "<think>" in response:
-                thinking_extracted, _ = extract_thinking(response)
-                if thinking_extracted:
-                    thinking_content = thinking_extracted
-                    logger.info(f"Đã trích xuất phần thinking ({len(thinking_content)} ký tự) từ phản hồi handle_general_query")
-                else:
-                    # Nếu không tìm thấy thẻ <think>, tạo phân tích mới
-                    analysis_prompt = f"""
-Hãy phân tích chi tiết câu hỏi sau:
-
-{clean_query}
-
-Phân tích:
-1. Nhu cầu thông tin cụ thể
-2. Các khía cạnh cần đề cập
-3. Cách tiếp cận để trả lời toàn diện
-"""
-                    # Sử dụng hệ thống prompt chung
-                    system_prompt = create_system_prompt()
-                    
-                    # Lấy phân tích
-                    thinking_content = query_llm(analysis_prompt, system_prompt, max_tokens=800, stream=False)
-            else:
-                # Nếu không có thẻ <think>, tạo phân tích tự động
-                thinking_content = f"""
-## Phân tích câu hỏi chung
-
-Câu hỏi: {clean_query}
-
-### Nhu cầu thông tin
-- Thông tin chung về quy trình làm việc
-- Hiểu rõ về các nhiệm vụ và trách nhiệm 
-
-### Cách tiếp cận
-- Phân tích và tổng hợp thông tin từ cơ sở dữ liệu chung
-- Cung cấp thông tin tổng quát về các quy trình
-"""
-        
-        # Đảm bảo có kết quả trả về
-        if not thinking_content or thinking_content.strip() == "":
-            thinking_content = "Không thể tạo nội dung phân tích cho câu hỏi này."
-            
-        thinking_content = thinking_content.replace("Expecting value: line 1 column 1 (char 0)", 
-                                                 "Lỗi khi phân tích JSON từ phản hồi.")
-        
-        # Chuẩn bị phản hồi JSON
-        response = {
-            "role": "assistant",
-            "content": "",  # Không có nội dung chính, chỉ có thinking
-            "thinking": thinking_content,
-            "session_id": session_id
-        }
-        
-        # Thêm request_id nếu được cung cấp
-        if request_id:
-            response["request_id"] = request_id
-            logger.info(f"Gửi phản hồi thinking với request_id: {request_id}")
-        
-        # Gửi phản hồi dạng JSON
-        await websocket.send(json.dumps(response))
-        logger.info(f"Đã gửi nội dung thinking ({len(thinking_content)} ký tự)")
-        
-    except Exception as e:
-        logger.error(f"Lỗi khi xử lý yêu cầu thinking: {str(e)}", exc_info=True)
-        
-        # Tạo phản hồi lỗi nhưng vẫn là JSON hợp lệ
-        error_response = {
-            "role": "assistant",
-            "content": "",
-            "thinking": f"Đã xảy ra lỗi khi phân tích câu hỏi: {str(e)}",
-            "error": str(e),
-            "session_id": session_id
-        }
-        
-        # Thêm request_id nếu được cung cấp
-        if request_id:
-            error_response["request_id"] = request_id
-        
-        # Gửi phản hồi lỗi
         await websocket.send(json.dumps(error_response))
 
 async def handle_action(websocket, action, data):
@@ -870,7 +953,7 @@ async def handle_action(websocket, action, data):
             response = {
                 "action": "get_sessions_response",
                 "status": "success",
-                "sessions": get_sessions(),
+                "sessions": get_sessions(),  # Đã bao gồm current_model_type cho mỗi session
                 "current_session_id": current_session_id
             }
             logger.info(f"Gửi danh sách {len(get_sessions())} phiên cho client")
@@ -878,21 +961,146 @@ async def handle_action(websocket, action, data):
             
         elif action == "create_session":
             session_name = data.get("session_name", "Phiên mới")
+            # Có thể nhận model_type khi tạo phiên mới
+            model_type = data.get("model_type", "original")
+            
             session_id = create_session(session_name)
             current_session_id = session_id
+            
+            # Cập nhật model_type nếu khác mặc định
+            if model_type != "original":
+                sessions[session_id]["current_model_type"] = model_type
+                logger.info(f"Đặt model_type={model_type} cho phiên mới {session_id}")
             
             response = {
                 "action": "create_session_response",
                 "status": "success",
-                "session_id": session_id
+                "session_id": session_id,
+                "model_type": model_type
             }
             await websocket.send(json.dumps(response))
+            
+        elif action == "set_session_model_type":
+            # Action mới: thiết lập model_type cho session
+            session_id = data.get("session_id", current_session_id)
+            model_type = data.get("model_type")
+            
+            if not model_type or model_type not in ["original", "gemini"]:
+                response = {
+                    "action": "set_session_model_type_response",
+                    "status": "error",
+                    "error": "model_type không hợp lệ. Phải là 'original' hoặc 'gemini'."
+                }
+                await websocket.send(json.dumps(response))
+                return
+                
+            if session_id and session_id in sessions:
+                # Nếu chuyển sang model Gemini, đảm bảo dữ liệu RAG được chuẩn bị
+                if model_type == "gemini":
+                    # Đảm bảo thư mục data tồn tại
+                    ensure_data_directory()
+                    
+                    # Đảm bảo file dữ liệu tồn tại, nhưng không lưu cache
+                    if initialize_cache():
+                        logger.info("Đã đảm bảo thư mục và file dữ liệu tồn tại")
+                    else:
+                        logger.warning("Không thể đảm bảo file dữ liệu tồn tại")
+                        # Thử tạo file mẫu
+                        logger.info("Thử tạo file mẫu...")
+                        create_sample_markdown_data()
+                        initialize_cache()  # Thử lại một lần nữa
+                
+                # Lấy model_type hiện tại của phiên
+                current_model_type = sessions[session_id].get("current_model_type", "original")
+                
+                # Kiểm tra xem phiên hiện tại có lịch sử tin nhắn của model cũ không
+                current_history = []
+                if current_model_type == "original":
+                    current_history = sessions[session_id].get("original_model_history", [])
+                else:
+                    current_history = sessions[session_id].get("gemini_model_history", [])
+                
+                # Nếu phiên không có tin nhắn hoặc model_type vẫn giữ nguyên, cập nhật model_type bình thường
+                if len(current_history) == 0 or current_model_type == model_type:
+                    # Cập nhật model_type cho session hiện tại
+                    sessions[session_id]["current_model_type"] = model_type
+                    logger.info(f"Đã cập nhật model_type={model_type} cho phiên {session_id} (không có lịch sử)")
+                    
+                    # Lấy lịch sử tương ứng với model_type mới
+                    history = get_session_history(session_id, model_type)
+                    
+                    response = {
+                        "action": "set_session_model_type_response",
+                        "status": "success",
+                        "session_id": session_id,
+                        "model_type": model_type,
+                        "history": history  # Gửi lịch sử tin nhắn tương ứng với model mới
+                    }
+                    await websocket.send(json.dumps(response))
+                else:
+                    # Trường hợp phiên có lịch sử và đổi model, tạo session mới và chuyển qua đó
+                    session_name = f"{sessions[session_id]['name']} - {model_type}"
+                    new_session_id = create_session(session_name)
+                    
+                    # Thiết lập model_type cho session mới
+                    sessions[new_session_id]["current_model_type"] = model_type
+                    
+                    # Cập nhật session hiện tại
+                    current_session_id = new_session_id
+                    
+                    logger.info(f"Đã tạo phiên mới {new_session_id} với model_type={model_type} từ phiên {session_id}")
+                    
+                    # Lấy lịch sử trống của model mới
+                    history = []
+                    
+                    response = {
+                        "action": "set_session_model_type_response",
+                        "status": "success",
+                        "session_id": new_session_id,  # Trả về session_id mới
+                        "model_type": model_type,
+                        "history": history,
+                        "new_session": True           # Đánh dấu rằng đã tạo session mới
+                    }
+                    await websocket.send(json.dumps(response))
+                    
+                    # Thông báo cho client biết phiên hiện tại đã thay đổi
+                    session_updated = {
+                        "action": "session_updated",
+                        "status": "success",
+                        "current_session_id": new_session_id,
+                        "model_type": model_type,
+                        "history": history
+                    }
+                    await websocket.send(json.dumps(session_updated))
+            else:
+                response = {
+                    "action": "set_session_model_type_response",
+                    "status": "error",
+                    "error": "Phiên không tồn tại"
+                }
+                await websocket.send(json.dumps(response))
             
         elif action == "get_thinking":
             # Xử lý yêu cầu lấy thinking content
             query = data.get('query', '')
             session_id = data.get('session_id', current_session_id)
             request_id = data.get('request_id')  # Lấy request_id nếu có
+            
+            # Kiểm tra model_type của session
+            model_type = sessions[session_id].get("current_model_type", "original") if session_id in sessions else "original"
+            
+            # Nếu là Gemini, không hỗ trợ thinking
+            if model_type == "gemini":
+                response = {
+                    "action": "get_thinking_response",
+                    "status": "error",
+                    "error": "Model Gemini không hỗ trợ chức năng thinking",
+                    "request_id": request_id,
+                    "session_id": session_id,
+                    "model_type": "gemini"
+                }
+                await websocket.send(json.dumps(response))
+                return
             
             # Kiểm tra session_id có tồn tại không
             if not session_id or session_id not in sessions:
@@ -913,14 +1121,18 @@ async def handle_action(websocket, action, data):
             if session_id and session_id in sessions:
                 current_session_id = session_id
                 
-                # Lấy lịch sử của phiên mới để gửi cùng phản hồi
-                history = get_session_history(session_id)
+                # Lấy model_type của phiên mới
+                model_type = sessions[session_id].get("current_model_type", "original")
+                
+                # Lấy lịch sử tương ứng với model_type của phiên đó
+                history = get_session_history(session_id, model_type)
                 
                 response = {
                     "action": "switch_session_response",
                     "status": "success",
                     "session_id": session_id,
-                    "history": history  # Gửi lịch sử tin nhắn của phiên mới
+                    "model_type": model_type,
+                    "history": history  # Gửi lịch sử tin nhắn của phiên mới và model đang dùng
                 }
                 await websocket.send(json.dumps(response))
                 
@@ -929,6 +1141,7 @@ async def handle_action(websocket, action, data):
                     "action": "session_updated",
                     "status": "success",
                     "current_session_id": current_session_id,
+                    "model_type": model_type,
                     "history": history
                 }
                 await websocket.send(json.dumps(session_updated))
@@ -945,13 +1158,20 @@ async def handle_action(websocket, action, data):
             if session_id and session_id in sessions:
                 new_session_id = delete_session(session_id)
                 
-                # Lấy lịch sử của phiên mới (nếu có)
-                history = get_session_history(new_session_id) if new_session_id else []
+                if new_session_id:
+                    # Lấy model_type của phiên mới
+                    new_model_type = sessions[new_session_id].get("current_model_type", "original")
+                    # Lấy lịch sử của phiên mới
+                    history = get_session_history(new_session_id, new_model_type)
+                else:
+                    new_model_type = "original"
+                    history = []
                 
                 response = {
                     "action": "delete_session_response",
                     "status": "success",
                     "new_session_id": new_session_id,
+                    "model_type": new_model_type,
                     "history": history  # Gửi lịch sử tin nhắn của phiên mới
                 }
                 await websocket.send(json.dumps(response))
@@ -962,6 +1182,7 @@ async def handle_action(websocket, action, data):
                         "action": "session_updated",
                         "status": "success",
                         "current_session_id": new_session_id,
+                        "model_type": new_model_type,
                         "history": history
                     }
                     await websocket.send(json.dumps(session_updated))
@@ -996,14 +1217,21 @@ async def handle_action(websocket, action, data):
                 
         elif action == "get_history":
             session_id = data.get("session_id", current_session_id)
+            # Thêm tham số model_type để có thể lấy lịch sử cụ thể cho model
+            model_type = data.get("model_type")
             
             if session_id and session_id in sessions:
-                history = get_session_history(session_id)
+                # Nếu không có model_type cụ thể, lấy theo model hiện tại của phiên
+                if not model_type:
+                    model_type = sessions[session_id].get("current_model_type", "original")
+                    
+                history = get_session_history(session_id, model_type)
                 
                 response = {
                     "action": "get_history_response",
                     "status": "success",
-                    "history": history
+                    "history": history,
+                    "model_type": model_type
                 }
                 await websocket.send(json.dumps(response))
             else:
@@ -1020,10 +1248,14 @@ async def handle_action(websocket, action, data):
             if session_id and session_id in sessions:
                 success = clear_session_history(session_id)
                 
+                # Lấy model hiện tại của phiên
+                model_type = sessions[session_id].get("current_model_type", "original")
+                
                 response = {
                     "action": "clear_history_response",
                     "status": "success" if success else "error",
-                    "session_id": session_id
+                    "session_id": session_id,
+                    "model_type": model_type
                 }
                 await websocket.send(json.dumps(response))
                 
@@ -1032,6 +1264,7 @@ async def handle_action(websocket, action, data):
                     "action": "session_updated",
                     "status": "success",
                     "current_session_id": session_id,
+                    "model_type": model_type,
                     "history": []  # Lịch sử đã bị xóa
                 }
                 await websocket.send(json.dumps(session_updated))
@@ -1070,198 +1303,82 @@ async def handle_message(websocket):
     
     # Gửi dữ liệu khởi tạo cho client khi kết nối mới được thiết lập
     try:
+        # Lấy model_type hiện tại của phiên
+        model_type = "original"
+        if current_session_id and current_session_id in sessions:
+            model_type = sessions[current_session_id].get("current_model_type", "original")
+            
+        # Lấy lịch sử tương ứng với model_type
+        history = get_session_history(current_session_id, model_type) if current_session_id else []
+        
         init_data = {
             "action": "init_session_data",
             "status": "success",
             "sessions": get_sessions(),
             "current_session_id": current_session_id,
-            "history": get_session_history(current_session_id) if current_session_id else []
+            "model_type": model_type,
+            "history": history
         }
         await websocket.send(json.dumps(init_data))
-        logger.info(f"Đã gửi dữ liệu khởi tạo với current_session_id: {current_session_id}")
+        logger.info(f"Đã gửi dữ liệu khởi tạo với current_session_id={current_session_id}, model_type={model_type}")
     except Exception as e:
         logger.error(f"Lỗi khi gửi dữ liệu khởi tạo: {str(e)}", exc_info=True)
     
     try:
         async for message in websocket:
-            # Kiểm tra xem message có phải là JSON action không
+            # Kiểm tra xem message có phải là JSON hay không
             try:
                 data = json.loads(message)
                 
                 # Kiểm tra xem có phải là action không
                 if 'action' in data:
+                    # Chuyển xử lý cho hàm handle_action
                     await handle_action(websocket, data['action'], data)
                 else:
-                    # Nếu không phải là action, xử lý như tin nhắn JSON
-                    logger.info(f"Nhận tin nhắn dạng JSON: {message[:100]}")
+                    # Nếu không phải là action, xử lý như tin nhắn thường
+                    logger.info(f"Nhận tin nhắn dạng JSON: {message[:100]}...")
+                    
+                    # Lấy các thông tin từ JSON
                     content = data.get('content', '')
-                    session_id = data.get('session_id', '')
+                    session_id = data.get('session_id', current_session_id)
+                    model_type = data.get('model_type')
                     
-                    # Đảm bảo session_id luôn có giá trị
-                    if not session_id:
+                    # Đảm bảo session_id tồn tại
+                    if not session_id or session_id not in sessions:
                         session_id = current_session_id
-                        logger.info(f"Session ID không được cung cấp trong tin nhắn JSON, sử dụng current_session_id: {session_id}")
+                        if not session_id or session_id not in sessions:
+                            session_id = create_session("Phiên tự động")
+                            current_session_id = session_id
                     
-                    # Đảm bảo phiên tồn tại
-                    if session_id not in sessions:
-                        session_id = create_session("Phiên tự động")
-                        current_session_id = session_id
-                        logger.info(f"Tạo phiên mới vì session_id không tồn tại: {session_id}")
+                    # Nếu model_type không được cung cấp, sử dụng từ phiên hiện tại
+                    if not model_type:
+                        model_type = sessions[session_id].get("current_model_type", "original")
+                        logger.info(f"model_type không được cung cấp, sử dụng từ phiên: {model_type}")
+                    else:
+                        # Cập nhật model_type cho phiên
+                        sessions[session_id]["current_model_type"] = model_type
+                        logger.info(f"Cập nhật model_type={model_type} cho phiên {session_id}")
                     
-                    # Log session_id để debug
-                    logger.info(f"Session ID từ client (sau khi kiểm tra): {session_id}")
-                    
-                    # Xử lý hậu tố think/no_think như với tin nhắn thông thường
-                    enable_thinking = False
-                    # Giữ nguyên query, KHÔNG loại bỏ hậu tố
-                    query = content
-                    
-                    if " /think" in content:
-                        enable_thinking = True
-                        # KHÔNG loại bỏ hậu tố, giữ nguyên query
-                        logger.info(f"Bật chế độ thinking cho câu hỏi: {query[:50]}...")
-                    elif " /no_think" in content:
-                        enable_thinking = False
-                        # KHÔNG loại bỏ hậu tố, giữ nguyên query
-                        logger.info(f"Tắt chế độ thinking cho câu hỏi: {query[:50]}...")
-                    
-                    logger.info(f"Nhận tin nhắn thông thường: {query[:100]}, enable_thinking={enable_thinking}")
-                    
-                    try:
-                        # Thêm lịch sử tin nhắn vào prompt
-                        query_with_history = add_history_to_prompt(query, session_id)
-                        
-                        # Phân tích câu hỏi để tìm phòng ban hoặc thông tin khác - truyền thêm session_id
-                        analysis_result = analyze_query_with_llm(query_with_history, session_id)
-                        
-                        # Xử lý trường hợp LLM trả về thẻ <think> thay vì JSON
-                        if isinstance(analysis_result, str) and "<think>" in analysis_result:
-                            logger.warning("Phát hiện thẻ <think> trong phản hồi của analyze_query_with_llm")
-                            # Sử dụng filter_thinking_tags để lọc thẻ <think> và trích xuất JSON
-                            filtered_result = filter_thinking_tags(analysis_result)
-                            if filtered_result:
-                                analysis_result = filtered_result
-                            else:
-                                # Nếu không tìm thấy JSON, sử dụng kết quả mặc định
-                                logger.warning("Không thể trích xuất JSON từ phản hồi có thẻ <think>, sử dụng kết quả mặc định")
-                                analysis_result = {
-                                    "department": None,
-                                    "query_type": "general",
-                                    "error": False
-                                }
-                    except Exception as e:
-                        logger.error(f"Lỗi khi phân tích câu hỏi: {str(e)}", exc_info=True)
-                        analysis_result = {
-                            "department": None,
-                            "query_type": "general", 
-                            "error": False
-                        }
-                    
-                    # Nếu kết quả phân tích là None, sử dụng kết quả mặc định
-                    if analysis_result is None:
-                        logger.warning("analyze_query_with_llm trả về None. Sử dụng giá trị mặc định.")
-                        analysis_result = {
-                            "department": None,
-                            "query_type": "general",
-                            "error": False
-                        }
-                    
-                    # Kiểm tra lỗi nhiều phòng ban
-                    if analysis_result.get("error", False):
-                        error_message = analysis_result.get("error_message", "Phát hiện nhiều phòng ban trong một câu hỏi")
-                        error_response = json.dumps({
-                            "role": "assistant",
-                            "content": f"❌ {error_message}. Vui lòng chỉ hỏi về một phòng ban mỗi lần.",
-                            "thinking": None,
-                            "warning": error_message,
-                            "session_id": session_id
-                        })
-                        await websocket.send(error_response)
-                        continue
-                    
-                    # Xác định phòng ban từ kết quả phân tích
-                    department = analysis_result.get("department")
-                    query_type = analysis_result.get("query_type")
-                    
-                    logger.info(f"Phân tích câu hỏi: Phòng ban={department}, Loại={query_type}, Thinking={enable_thinking}")
-                    
-                    # Xử lý phản hồi dạng streaming
-                    await process_streaming_response(websocket, query, department, session_id)
+                    # Gọi hàm xử lý streaming với model_type
+                    await process_streaming_response(websocket, content, None, session_id, model_type)
                     
             except json.JSONDecodeError:
                 # Không phải JSON, xử lý như tin nhắn văn bản thông thường
-                logger.info(f"Nhận tin nhắn thường: {message[:100]}")
+                logger.info(f"Nhận tin nhắn thường (không phải JSON): {message[:100]}...")
                 
-                # Kiểm tra hậu tố think/no_think để quyết định trạng thái thinking
-                enable_thinking = False
-                # Giữ nguyên query, KHÔNG loại bỏ hậu tố
-                query = message
+                # Sử dụng phiên hiện tại và model_type tương ứng
+                session_id = current_session_id
                 
-                # Kiểm tra hậu tố /think và /no_think
-                if " /think" in message:
-                    enable_thinking = True
-                    # KHÔNG loại bỏ hậu tố, giữ nguyên query
-                    logger.info(f"Bật chế độ thinking cho câu hỏi: {query[:50]}...")
-                elif " /no_think" in message:
-                    enable_thinking = False
-                    # KHÔNG loại bỏ hậu tố, giữ nguyên query
-                    logger.info(f"Tắt chế độ thinking cho câu hỏi: {query[:50]}...")
+                if session_id and session_id in sessions:
+                    model_type = sessions[session_id].get("current_model_type", "original")
+                else:
+                    # Nếu không có phiên hiện tại, tạo mới
+                    session_id = create_session("Phiên tự động")
+                    current_session_id = session_id
+                    model_type = "original"
                 
-                logger.info(f"Nhận tin nhắn thường: {query[:100]}, enable_thinking={enable_thinking}")
-                
-                try:
-                    # Thêm lịch sử tin nhắn vào prompt
-                    query_with_history = add_history_to_prompt(query, current_session_id)
-                    
-                    # Phân tích câu hỏi để tìm phòng ban hoặc thông tin khác - truyền thêm session_id
-                    analysis_result = analyze_query_with_llm(query_with_history, current_session_id)
-                    
-                    # Xử lý trường hợp LLM trả về thẻ <think> thay vì JSON
-                    if isinstance(analysis_result, str) and "<think>" in analysis_result:
-                        logger.warning("Phát hiện thẻ <think> trong phản hồi của analyze_query_with_llm")
-                        # Sử dụng filter_thinking_tags để lọc thẻ <think> và trích xuất JSON
-                        filtered_result = filter_thinking_tags(analysis_result)
-                        if filtered_result:
-                            analysis_result = filtered_result
-                        else:
-                            # Nếu không tìm thấy JSON, sử dụng kết quả mặc định
-                            logger.warning("Không thể trích xuất JSON từ phản hồi có thẻ <think>, sử dụng kết quả mặc định")
-                            analysis_result = {
-                                "department": None,
-                                "query_type": "general",
-                                "error": False
-                            }
-                except Exception as e:
-                    logger.error(f"Lỗi khi phân tích câu hỏi: {str(e)}", exc_info=True)
-                    analysis_result = {
-                        "department": None,
-                        "query_type": "general", 
-                        "error": False
-                    }
-                
-                # Nếu kết quả phân tích là None, sử dụng kết quả mặc định
-                if analysis_result is None:
-                    logger.warning("analyze_query_with_llm trả về None. Sử dụng giá trị mặc định.")
-                    analysis_result = {
-                        "department": None,
-                        "query_type": "general",
-                        "error": False
-                    }
-                
-                # Kiểm tra lỗi nhiều phòng ban
-                if analysis_result.get("error", False):
-                    error_message = analysis_result.get("error_message", "Phát hiện nhiều phòng ban trong một câu hỏi")
-                    await websocket.send(f"❌ {error_message}. Vui lòng chỉ hỏi về một phòng ban mỗi lần.")
-                    continue
-                
-                # Xác định phòng ban từ kết quả phân tích
-                department = analysis_result.get("department")
-                query_type = analysis_result.get("query_type")
-                
-                logger.info(f"Phân tích câu hỏi: Phòng ban={department}, Loại={query_type}, Thinking={enable_thinking}")
-                
-                # Xử lý phản hồi dạng streaming
-                await process_streaming_response(websocket, query, department, current_session_id)
+                logger.info(f"Xử lý tin nhắn thường với model_type={model_type}, session_id={session_id}")
+                await process_streaming_response(websocket, message, None, session_id, model_type)
     
     except websockets.exceptions.ConnectionClosed:
         logger.info("WebSocket connection closed")
@@ -1273,6 +1390,27 @@ async def main():
     # Đảm bảo thư mục log tồn tại
     os.makedirs('data/logs', exist_ok=True)
     
+    # Đảm bảo thư mục data tồn tại
+    ensure_data_directory()
+    
+    # Đảm bảo file dữ liệu tồn tại, nhưng không lưu cache
+    if initialize_cache():
+        logger.info("Đã đảm bảo file dữ liệu tồn tại khi khởi động server")
+    else:
+        logger.warning("Không thể đảm bảo file dữ liệu tồn tại khi khởi động server")
+        
+        # Nếu không thể khởi tạo, thử tạo file mẫu
+        logger.info("Thử tạo file mẫu...")
+        create_sample_markdown_data()
+        if initialize_cache():
+            logger.info("Đã đảm bảo file dữ liệu tồn tại sau khi tạo file mẫu")
+    
+    # Khởi tạo Gemini Model
+    if not configure_gemini_model():
+        logger.warning("Không thể khởi tạo Gemini Model. Chức năng Gemini sẽ không khả dụng.")
+    else:
+        logger.info("Đã khởi tạo Gemini Model thành công.")
+
     # Địa chỉ và port của server
     host = "0.0.0.0"  # Lắng nghe trên tất cả các interface
     port = 8090       # Cổng mà UI hiện tại đang kết nối đến

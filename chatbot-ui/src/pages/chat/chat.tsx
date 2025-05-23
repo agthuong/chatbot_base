@@ -2,7 +2,7 @@ import { ChatInput } from "@/components/custom/chatinput";
 import { PreviewMessage, ThinkingMessage } from "../../components/custom/message";
 import { useScrollToBottom } from '@/components/custom/use-scroll-to-bottom';
 import { useState, useRef, useEffect } from "react";
-import { message, WebSocketAction } from "../../interfaces/interfaces"
+import { message } from "../../interfaces/interfaces"
 import { Overview } from "@/components/custom/overview";
 import { Header } from "@/components/custom/header";
 import {v4 as uuidv4} from 'uuid';
@@ -20,10 +20,6 @@ const getWebSocketUrl = () => {
 
 // const socket = new WebSocket(API_WS_URL);
 
-// Định nghĩa kiểu dữ liệu cho lịch sử tin nhắn theo phiên
-interface SessionMessagesMap {
-  [sessionId: string]: message[];
-}
 
 export function Chat() {
   const [messagesContainerRef, messagesEndRef] = useScrollToBottom<HTMLDivElement>();
@@ -32,58 +28,29 @@ export function Chat() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [currentSessionId, setCurrentSessionId] = useState<string>("");
   const [thinkEnabled, setThinkEnabled] = useState<boolean>(false);
-  // Thêm state để lưu trữ lịch sử tin nhắn của tất cả các phiên
-  const [sessionMessages, setSessionMessages] = useState<SessionMessagesMap>({});
-  // Thêm state để theo dõi đã tải lịch sử của các phiên chưa
-  const [loadedSessions, setLoadedSessions] = useState<Set<string>>(new Set());
+  const [_socketConnected, _setSocketConnected] = useState<boolean>(false);
+  const [isLoggedIn, _setIsLoggedIn] = useState<boolean>(true);
+  const [modelType, setModelType] = useState<"original" | "gemini">("original");
 
   const socketRef = useRef<WebSocket | null>(null);
-  const messageHandlerRef = useRef<any>(null);
   const latestMessageId = useRef<string | null>(null);
-
-  // State để lưu trữ thinking cho tin nhắn hiện tại
-  let thinking = "";
-  // Biến để theo dõi xem đã nhận được token đầu tiên hay chưa
-  let receivedFirstToken = false;
-  // Biến để theo dõi xem đã tạo tin nhắn assistant mới chưa
   const createdAssistantMessageRef = useRef(false);
 
-  // Xử lý chuyển đổi session
+  // State để lưu trữ thinking cho tin nhắn hiện tại
+
+  // Biến để theo dõi xem đã nhận được token đầu tiên hay chưa
+  let receivedFirstToken = false;
+
+  // Khi chuyển phiên, chỉ gửi 1 request switch_session
   const handleSessionChange = (sessionId: string) => {
     if (sessionId === currentSessionId) return;
-    
-    // Lưu lịch sử tin nhắn của phiên hiện tại
-    if (currentSessionId) {
-      setSessionMessages(prev => ({
-        ...prev,
-        [currentSessionId]: messages
-      }));
-      console.log(`Lưu ${messages.length} tin nhắn của phiên ${currentSessionId}`);
-    }
-    
     setCurrentSessionId(sessionId);
     setIsLoading(true);
-    
-    // Kiểm tra xem đã có lịch sử tin nhắn của phiên mới trong state chưa
-    if (sessionMessages[sessionId]) {
-      console.log(`Sử dụng ${sessionMessages[sessionId].length} tin nhắn đã lưu của phiên ${sessionId}`);
-      setMessages(sessionMessages[sessionId]);
-      setIsLoading(false);
-    } else if (loadedSessions.has(sessionId)) {
-      // Nếu đã từng tải lịch sử nhưng không có tin nhắn nào
-      console.log(`Phiên ${sessionId} đã từng được tải nhưng không có tin nhắn`);
-      setMessages([]);
-      setIsLoading(false);
-    } else {
-      // Tải lịch sử tin nhắn từ server nếu chưa có
-      if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-        const action: WebSocketAction = {
-          action: "get_history",
-          session_id: sessionId
-        };
-        socketRef.current.send(JSON.stringify(action));
-        console.log(`Đang tải lịch sử tin nhắn của phiên ${sessionId} từ server`);
-      }
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      socketRef.current.send(JSON.stringify({
+        action: "switch_session",
+        session_id: sessionId
+      }));
     }
   };
 
@@ -92,269 +59,131 @@ export function Chat() {
     setThinkEnabled(prev => !prev);
   };
 
+  // Xử lý đổi model_type từ dropdown
+  const handleModelTypeChange = (newType: string) => {
+    if (newType === modelType) return;
+    setModelType(newType as "original" | "gemini");
+    
+    // Lưu model_type vào localStorage để giữ lại sau khi reload trang
+    localStorage.setItem('preferred_model_type', newType);
+    
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      socketRef.current.send(JSON.stringify({
+        action: "set_session_model_type",
+        session_id: currentSessionId,
+        model_type: newType
+      }));
+    }
+  };
+
   // Load lịch sử tin nhắn khi component mount
   useEffect(() => {
-    // Tạo WebSocket connection
+    // Khôi phục model_type từ localStorage nếu có
+    const savedModelType = localStorage.getItem('preferred_model_type');
+    if (savedModelType && (savedModelType === 'original' || savedModelType === 'gemini')) {
+      setModelType(savedModelType as "original" | "gemini");
+    }
+
     const socket = new WebSocket(getWebSocketUrl());
     socketRef.current = socket;
-    
-    // WebSocket event handlers
-    socket.onopen = (event) => {
-      console.log("WebSocket connection opened:", event);
-      setSocketConnected(true);
-      
-      // Gửi yêu cầu lấy thông tin phiên hiện tại nếu đã đăng nhập
+    socket.onopen = () => {
+      _setSocketConnected(true);
       if (isLoggedIn) {
         socket.send(JSON.stringify({
           action: "get_session",
           session_id: currentSessionId
         }));
-        console.log("Đã gửi yêu cầu lấy thông tin phiên:", currentSessionId);
       }
     };
-    
-    socket.onclose = (event) => {
-      console.log("WebSocket connection closed:", event);
-      setSocketConnected(false);
-    };
-    
-    socket.onerror = (error) => {
-      console.error("WebSocket error:", error);
-      toast.error("Lỗi kết nối WebSocket. Vui lòng tải lại trang.");
-    };
-    
-    // Cleanup khi component unmount
-    return () => {
-      console.log("Đóng kết nối WebSocket...");
-      socket.close();
-    };
+    socket.onclose = () => _setSocketConnected(false);
+    socket.onerror = () => toast.error("Lỗi kết nối WebSocket. Vui lòng tải lại trang.");
+    return () => { socket.close(); };
   }, []);
 
-  // Khởi tạo message handler hiệu quả hơn
+  // Lắng nghe các event WebSocket và cập nhật đúng phiên
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       try {
-        // Kiểm tra và xử lý trường hợp có nhiều JSON trong cùng một thông điệp
         let dataStr = event.data as string;
-        
-        // Kiểm tra xem dataStr có chứa nhiều JSON đính kém không
         if (dataStr.indexOf('}{') > 0) {
-          console.warn("Phát hiện nhiều JSON trong một thông điệp, tách ra và xử lý từng cái.");
-          
-          // Phân tách các chuỗi JSON
           const jsonStrings = dataStr.split('}{').map((str, i, arr) => {
             if (i === 0) return str + '}';
             if (i === arr.length - 1) return '{' + str;
             return '{' + str + '}';
           });
-          
-          // Xử lý từng chuỗi JSON một
           jsonStrings.forEach(jsonStr => {
-            try {
-              const singleData = JSON.parse(jsonStr);
-              handleSingleMessage(singleData);
-            } catch (e) {
-              console.error("Lỗi phân tích chuỗi JSON riêng:", e);
-            }
+            try { handleSingleMessage(JSON.parse(jsonStr)); } catch {}
           });
-          
-          return; // Đã xử lý tất cả các phần, không cần xử lý tiếp
+          return;
         }
-        
-        // Xử lý JSON duy nhất
         const data = JSON.parse(dataStr);
         handleSingleMessage(data);
-        
-      } catch (e) {
-        console.error("Lỗi xử lý dữ liệu từ WebSocket:", e, "Data:", event.data);
-      }
+      } catch {}
     };
-    
+
     // Hàm xử lý riêng cho từng thông điệp JSON
     const handleSingleMessage = (data: any) => {
-        // Xử lý response từ action get_history
-        if (data.action === "get_history_response" && data.status === "success") {
-          setIsLoading(false); // Tắt loading khi nhận được dữ liệu
-          const history = data.history || [];
-          
-          // Chuyển đổi lịch sử thành định dạng tin nhắn
-          const historyMessages: message[] = [];
-          
-          if (history && history.length > 0) {
-            history.forEach((item: any) => {
-              // Thêm tin nhắn người dùng
-              if (item.query) {
-                historyMessages.push({
-                  content: item.query,
-                  role: "user",
-                  id: `history_${item.timestamp}_user`
-                });
-              }
-              
-              // Thêm tin nhắn từ trợ lý
-              if (item.response) {
-                historyMessages.push({
-                  content: item.response,
-                  role: "assistant",
-                  id: `history_${item.timestamp}_assistant`
-                });
-              }
-            });
-            
-            // Cập nhật messages và sessionMessages
-            setMessages(historyMessages);
-            setSessionMessages(prev => ({
-              ...prev,
-              [currentSessionId]: historyMessages
-            }));
-            
-            // Đánh dấu phiên này đã được tải
-            setLoadedSessions(prev => new Set(prev).add(currentSessionId));
-            
-            console.log(`Đã tải ${historyMessages.length} tin nhắn từ lịch sử phiên ${currentSessionId}`);
-          } else {
-            // Nếu không có lịch sử, đặt messages thành mảng rỗng
-            setMessages([]);
-            setSessionMessages(prev => ({
-              ...prev,
-              [currentSessionId]: []
-            }));
-            
-            // Đánh dấu phiên này đã được tải
-            setLoadedSessions(prev => new Set(prev).add(currentSessionId));
-            
-            console.log("Không có lịch sử tin nhắn cho phiên này");
-          }
-        }
-        // Xử lý init_session_data từ server khi kết nối lại
-        else if (data.action === "init_session_data" && data.status === "success") {
-          console.log("Nhận được dữ liệu khởi tạo phiên:", data);
-          
-          // Cập nhật session ID hiện tại
-          setCurrentSessionId(data.current_session_id);
-          
-          // Chuyển đổi lịch sử thành định dạng tin nhắn
-          const history = data.history || [];
-          const historyMessages: message[] = [];
-          
-          if (history && history.length > 0) {
-            history.forEach((item: any) => {
-              // Thêm tin nhắn người dùng
-              if (item.query) {
-                historyMessages.push({
-                  content: item.query,
-                  role: "user",
-                  id: `history_${item.timestamp}_user`
-                });
-              }
-              
-              // Thêm tin nhắn từ trợ lý
-              if (item.response) {
-                historyMessages.push({
-                  content: item.response,
-                  role: "assistant",
-                  id: `history_${item.timestamp}_assistant`
-                });
-              }
-            });
-            
-            // Cập nhật messages và sessionMessages
-            setMessages(historyMessages);
-            setSessionMessages(prev => ({
-              ...prev,
-              [data.current_session_id]: historyMessages
-            }));
-            
-            // Đánh dấu phiên này đã được tải
-            setLoadedSessions(prev => new Set(prev).add(data.current_session_id));
-            
-            console.log(`Khôi phục ${historyMessages.length} tin nhắn từ phiên ${data.current_session_id}`);
-          } else {
-            // Không có lịch sử, đặt messages thành mảng rỗng
-            setMessages([]);
-            
-            // Đánh dấu phiên này đã được tải
-            setLoadedSessions(prev => new Set(prev).add(data.current_session_id));
-          }
-          
-          setIsLoading(false);
-        }
-        // Xử lý thông điệp switch_session_response với lịch sử tin nhắn
-        else if (data.action === "switch_session_response" && data.status === "success") {
-          console.log("Đã chuyển đổi phiên thành công:", data);
+      // Xử lý phản hồi khi chuyển đổi model_type
+      if (data.action === "set_session_model_type_response" && data.status === "success") {
+        // Nếu đã tạo session mới, cập nhật currentSessionId
+        if (data.new_session) {
           setCurrentSessionId(data.session_id);
-          
-          // Nếu đã tải phiên này rồi và có trong bộ nhớ, sử dụng lại
-          if (loadedSessions.has(data.session_id) && sessionMessages[data.session_id]) {
-            setMessages(sessionMessages[data.session_id]);
-            console.log(`Sử dụng ${sessionMessages[data.session_id].length} tin nhắn đã lưu trong bộ nhớ cho phiên ${data.session_id}`);
-            return;
-          }
-          
-          // Chuyển đổi lịch sử từ server thành định dạng tin nhắn
-          const history = data.history || [];
-          const historyMessages: message[] = [];
-          
-          if (history && history.length > 0) {
-            history.forEach((item: any) => {
-              // Thêm tin nhắn người dùng
-              if (item.query) {
-                historyMessages.push({
-                  content: item.query,
-                  role: "user",
-                  id: `history_${item.timestamp}_user`
-                });
-              }
-              
-              // Thêm tin nhắn từ trợ lý
-              if (item.response) {
-                historyMessages.push({
-                  content: item.response,
-                  role: "assistant",
-                  id: `history_${item.timestamp}_assistant`
-                });
-              }
-            });
-            
-            // Cập nhật messages và sessionMessages
-            setMessages(historyMessages);
-            setSessionMessages(prev => ({
-              ...prev,
-              [data.session_id]: historyMessages
-            }));
-            
-            // Đánh dấu phiên này đã được tải
-            setLoadedSessions(prev => new Set(prev).add(data.session_id));
-            
-            console.log(`Đã tải ${historyMessages.length} tin nhắn từ server cho phiên ${data.session_id}`);
-          } else {
-            // Không có lịch sử, đặt messages thành mảng rỗng
-            setMessages([]);
-            setSessionMessages(prev => ({
-              ...prev,
-              [data.session_id]: []
-            }));
-            
-            // Đánh dấu phiên này đã được tải
-            setLoadedSessions(prev => new Set(prev).add(data.session_id));
-            console.log(`Phiên ${data.session_id} không có lịch sử tin nhắn`);
-          }
-          
-          setIsLoading(false);
         }
-        // Xử lý session_updated từ server khi chuyển phiên
-        else if (data.action === "session_updated" && data.status === "success") {
-          console.log("Nhận được cập nhật phiên:", data);
+        
+        // Cập nhật model_type
+        setModelType(data.model_type as "original" | "gemini");
+        
+        // Lưu model_type vào localStorage để giữ lại sau khi reload trang
+        localStorage.setItem('preferred_model_type', data.model_type);
+        
+        // Cập nhật lịch sử tin nhắn
+        const history = data.history || [];
+        const historyMessages: message[] = [];
+        if (history && history.length > 0) {
+          history.forEach((item: any) => {
+            if (item.query) {
+              historyMessages.push({
+                content: item.query,
+                role: "user",
+                id: `history_${item.timestamp}_user`
+              });
+            }
+            if (item.response) {
+              historyMessages.push({
+                content: item.response,
+                role: "assistant",
+                id: `history_${item.timestamp}_assistant`
+              });
+            }
+          });
+          setMessages(historyMessages);
+        } else {
+          setMessages([]);
+        }
+        
+        setIsLoading(false);
+        
+        // Thông báo thành công
+        toast.success(`Đã chuyển sang model: ${data.model_type === "gemini" ? "Gemini" : "Mô hình gốc"}`);
+      }
+      // Xử lý các event liên quan đến chuyển phiên/lịch sử
+      else if ((data.action === "switch_session_response" || data.action === "session_updated" || data.action === "get_history_response") && data.status === "success") {
+        // Ưu tiên lấy session_id từ data, nếu không có thì lấy currentSessionId
+        const sessionId = data.session_id || data.current_session_id || currentSessionId;
+        // Chỉ cập nhật nếu đúng phiên đang active
+        if (sessionId === currentSessionId) {
+          // Cập nhật model_type nếu có
+          if (data.model_type) {
+            setModelType(data.model_type as "original" | "gemini");
+            // Lưu model_type vào localStorage để giữ lại sau khi reload trang
+            localStorage.setItem('preferred_model_type', data.model_type);
+          }
           
-          setCurrentSessionId(data.current_session_id);
-          
+          const history = data.history || [];
           // Chuyển đổi lịch sử thành định dạng tin nhắn
-          const history = data.history || [];
           const historyMessages: message[] = [];
-          
           if (history && history.length > 0) {
             history.forEach((item: any) => {
-              // Thêm tin nhắn người dùng
               if (item.query) {
                 historyMessages.push({
                   content: item.query,
@@ -362,8 +191,6 @@ export function Chat() {
                   id: `history_${item.timestamp}_user`
                 });
               }
-              
-              // Thêm tin nhắn từ trợ lý
               if (item.response) {
                 historyMessages.push({
                   content: item.response,
@@ -372,40 +199,85 @@ export function Chat() {
                 });
               }
             });
-            
-            // Cập nhật messages và sessionMessages
             setMessages(historyMessages);
-            setSessionMessages(prev => ({
-              ...prev,
-              [data.current_session_id]: historyMessages
-            }));
-            
-            console.log(`Cập nhật ${historyMessages.length} tin nhắn cho phiên ${data.current_session_id}`);
           } else {
-            // Không có lịch sử, đặt messages thành mảng rỗng
             setMessages([]);
-            setSessionMessages(prev => ({
-              ...prev,
-              [data.current_session_id]: []
-            }));
           }
-          
-          // Đánh dấu phiên này đã được tải
-          setLoadedSessions(prev => new Set(prev).add(data.current_session_id));
           setIsLoading(false);
+          // Scroll xuống cuối khi có dữ liệu mới
+          setTimeout(() => {
+            if (messagesEndRef && messagesEndRef.current) {
+              messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+            }
+          }, 100);
         }
+      }
+      // Xử lý init_session_data khi load lại trang
+      else if (data.action === "init_session_data" && data.status === "success") {
+        setCurrentSessionId(data.current_session_id);
+        
+        // Cập nhật model_type từ server, nhưng ưu tiên giá trị đã lưu trong localStorage
+        if (data.model_type) {
+          const savedModelType = localStorage.getItem('preferred_model_type');
+          if (savedModelType && (savedModelType === 'original' || savedModelType === 'gemini')) {
+            // Nếu có model_type đã lưu trong localStorage, sử dụng và gửi lệnh cập nhật nếu khác với model_type trên server
+            setModelType(savedModelType as "original" | "gemini");
+            
+            // Chỉ gửi lệnh cập nhật nếu khác với model_type trên server
+            if (savedModelType !== data.model_type && socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+              socketRef.current.send(JSON.stringify({
+                action: "set_session_model_type",
+                session_id: data.current_session_id,
+                model_type: savedModelType
+              }));
+            }
+          } else {
+            // Nếu không có trong localStorage, sử dụng giá trị từ server
+            setModelType(data.model_type as "original" | "gemini");
+            localStorage.setItem('preferred_model_type', data.model_type);
+          }
+        }
+        
+        const history = data.history || [];
+        const historyMessages: message[] = [];
+        if (history && history.length > 0) {
+          history.forEach((item: any) => {
+            if (item.query) {
+              historyMessages.push({
+                content: item.query,
+                role: "user",
+                id: `history_${item.timestamp}_user`
+              });
+            }
+            if (item.response) {
+              historyMessages.push({
+                content: item.response,
+                role: "assistant",
+                id: `history_${item.timestamp}_assistant`
+              });
+            }
+          });
+          setMessages(historyMessages);
+        } else {
+          setMessages([]);
+        }
+        setIsLoading(false);
+        setTimeout(() => {
+          if (messagesEndRef && messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 100);
+      }
+      // Các event khác giữ nguyên logic cũ
     };
 
     socketRef.current && socketRef.current.addEventListener("message", handleMessage);
-    return () => socketRef.current && socketRef.current.removeEventListener("message", handleMessage);
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.removeEventListener("message", handleMessage);
+      }
+    };
   }, [currentSessionId]);
-
-  const cleanupMessageHandler = () => {
-    if (messageHandlerRef.current && socketRef.current) {
-      socketRef.current.removeEventListener("message", messageHandlerRef.current);
-      messageHandlerRef.current = null;
-    }
-  };
 
   // Thêm một message rỗng cho assistant để hiển thị streaming
   function addEmptyAssistantMessage(messageId: string) {
@@ -426,16 +298,11 @@ export function Chat() {
       const emptyAssistantMessage: message = {
         role: "assistant",
         id: messageId,
-        content: ""
+        content: "",
+        model_type: modelType as "original" | "gemini"
       };
       
       const newMessages = [...prevMessages, emptyAssistantMessage];
-      
-      // Cập nhật session messages
-      setSessionMessages(prevSessions => ({
-        ...prevSessions,
-        [currentSessionId]: newMessages
-      }));
       
       return newMessages;
     });
@@ -445,15 +312,10 @@ export function Chat() {
   function preprocessContent(content: string) {
     if (!content) return "";
     
-    // Kiểm tra nếu nội dung đã có HTML
-    if (/<[a-z][\s\S]*>/i.test(content)) {
-      console.log("Nội dung đã chứa HTML, giữ nguyên định dạng");
-      return content;
-    }
+    // Log nội dung gốc
+    console.log("preprocessContent - Nội dung gốc:", content);
     
-    console.log("Tiền xử lý nội dung tin nhắn:", content.substring(0, 30) + "...");
-    
-    // Đảm bảo các từ khóa đặc biệt được định dạng đúng
+    // Chỉ làm nổi bật từ khóa đặc biệt, không động chạm gì đến \n hoặc markdown
     const specialKeywords = [
       "MKT-SALES", 
       "PROPOSAL", 
@@ -461,21 +323,18 @@ export function Chat() {
       "DEFECT-HANDOVER", 
       "AFTERSALE-MAINTENANCE"
     ];
-    
-    // Xử lý các mốc thời gian đặc biệt (không cần thay đổi)
     let processedContent = content;
-    
-    // Xử lý các từ khóa đặc biệt
     specialKeywords.forEach(keyword => {
       // Đảm bảo từ khóa giữ nguyên dạng markdown với **
       const regex = new RegExp(`(?<!\\*)\\b${keyword}\\b(?!\\*)`, 'gi');
       processedContent = processedContent.replace(regex, `**${keyword}**`);
     });
-
-    // Xử lý các số được nhắc đến
-    processedContent = processedContent.replace(/\b(là|có)\s+(\d+)\b/gi, (match, prefix, number) => {
+    processedContent = processedContent.replace(/\b(là|có)\s+(\d+)\b/gi, (prefix, number) => {
       return `${prefix} **${number}**`;
     });
+    
+    // Log nội dung sau khi xử lý
+    console.log("preprocessContent - Nội dung sau xử lý:", processedContent);
     
     return processedContent;
   }
@@ -483,7 +342,7 @@ export function Chat() {
   // Hàm xử lý thông điệp JSON từ WebSocket
   function processJsonData(data: any) {
     try {
-      console.log("Đang xử lý JSON data:", data);
+      console.log("Đang xử lý JSON data:", JSON.stringify(data).substring(0, 1000));
 
       // Xử lý các loại thông điệp khác nhau
       if (data.thinking) {
@@ -509,7 +368,8 @@ export function Chat() {
         setIsLoading(false);
       } else if (data.content !== undefined) {
         // Nếu có nội dung, xử lý như tin nhắn hoàn chỉnh
-        console.log("Nhận được tin nhắn có nội dung:", data.content.substring(0, 50));
+        console.log("Nhận được tin nhắn có nội dung (50 ký tự đầu):", data.content.substring(0, 50), "...");
+        console.log("Toàn bộ nội dung tin nhắn (2000 ký tự đầu):", data.content.substring(0, 2000));
 
         // Lấy ID tin nhắn từ dữ liệu hoặc sử dụng ID mặc định
         const messageId = data.id || latestMessageId.current || "latest_message";
@@ -556,89 +416,51 @@ export function Chat() {
   // Cập nhật tin nhắn assistant với nội dung
   function updateOrCreateAssistantMessage(msgId: string, content: string) {
     console.log(`Cập nhật tin nhắn ID: ${msgId}, nội dung:`, content.substring(0, 30));
-    
-    // Dùng functional update để đảm bảo luôn có state mới nhất
     setMessages(prev => {
-      // Tìm tin nhắn assistant hiện tại
       const assistantIndex = prev.findIndex(msg => 
         msg.role === "assistant" && msg.id === msgId && !msg.isWarning
       );
-      
-      // Log để debug
-      console.log(`Tìm tin nhắn: assistantIndex=${assistantIndex}`);
-      
       if (assistantIndex >= 0) {
-        // Cập nhật tin nhắn đã tồn tại với nội dung mới
         const updatedMessage = { 
           ...prev[assistantIndex], 
           content
         };
-        
         const newMessages = [
           ...prev.slice(0, assistantIndex), 
           updatedMessage, 
           ...prev.slice(assistantIndex + 1)
         ];
-        
-        // Cập nhật sessionMessages
-        setSessionMessages(prevSessions => ({
-          ...prevSessions,
-          [currentSessionId]: newMessages
-        }));
-        
         return newMessages;
       } else {
-        // Tạo tin nhắn mới nếu không tìm thấy
         const newMessage: message = {
           content,
           role: "assistant",
-          id: msgId
+          id: msgId,
+          model_type: modelType as "original" | "gemini"
         };
-        
-        const newMessages = [...prev, newMessage];
-        
-        // Cập nhật sessionMessages
-        setSessionMessages(prevSessions => ({
-          ...prevSessions,
-          [currentSessionId]: newMessages
-        }));
-        
-        return newMessages;
+        return [...prev, newMessage];
       }
     });
   }
 
   // Cập nhật tin nhắn assistant với thinking
   function updateAssistantMessageWithThinking(msgId: string, thinking: string) {
-    // Dùng functional update để đảm bảo luôn có state mới nhất
     setMessages(prev => {
-      // Tìm tin nhắn assistant hiện tại
       const assistantIndex = prev.findIndex(msg => 
         msg.role === "assistant" && msg.id === msgId && !msg.isWarning
       );
-      
       if (assistantIndex >= 0) {
-        // Cập nhật thinking cho tin nhắn đã tồn tại
         const updatedMessage = { 
           ...prev[assistantIndex], 
           thinking
         };
-        
         const newMessages = [
           ...prev.slice(0, assistantIndex), 
           updatedMessage, 
           ...prev.slice(assistantIndex + 1)
         ];
-        
-        // Cập nhật sessionMessages
-        setSessionMessages(prevSessions => ({
-          ...prevSessions,
-          [currentSessionId]: newMessages
-        }));
-        
         return newMessages;
       }
-      
       return prev;
     });
   }
@@ -647,30 +469,15 @@ export function Chat() {
   async function handleSubmit(text?: string) {
     const socket = socketRef.current;
     if (!socket || socket.readyState !== WebSocket.OPEN || isLoading) return;
-
     let messageText = text || question;
-    
-    // Kiểm tra để đảm bảo rằng messageText không rỗng
     if (!messageText || messageText.trim() === '') return;
-    
-    // Reset các trạng thái
     setIsLoading(true);
-    
-    // Tạo và lưu ID tin nhắn mới
     const messageId = uuidv4();
     console.log("Tạo tin nhắn mới với ID:", messageId);
-    
-    // Lưu messageId hiện tại vào ref để sử dụng cho các tin nhắn từ WebSocket
     latestMessageId.current = messageId;
-    
-    // Reset các biến trạng thái khác
     receivedFirstToken = false;
     createdAssistantMessageRef.current = false;
-    
-    // Hiển thị tin nhắn gốc cho người dùng (không bao gồm hậu tố think)
     const displayMessage = messageText;
-    
-    // Thêm hậu tố think hoặc no_think vào câu hỏi
     messageText = messageText.trim();
     if (thinkEnabled) {
       messageText = `${messageText} /think`;
@@ -679,174 +486,112 @@ export function Chat() {
       messageText = `${messageText} /no_think`;
       console.log("Đã thêm hậu tố /no_think:", messageText); 
     }
-    
-    // Đảm bảo dọn dẹp message handler cũ trước khi tạo mới
-    cleanupMessageHandler();
-    
     // Thêm tin nhắn người dùng vào danh sách
     const newUserMessage: message = { 
       content: displayMessage, 
       role: "user", 
-      id: messageId 
+      id: messageId,
+      model_type: modelType as "original" | "gemini"
     };
-    // Sử dụng functional update để đảm bảo luôn có state mới nhất
     setMessages(prev => {
       const updatedMessages = [...prev, newUserMessage];
-      
-      // Sử dụng setTimeout để tách biệt hai lần cập nhật state
-      setTimeout(() => {
-        // Cập nhật lịch sử tin nhắn cho phiên hiện tại
-        setSessionMessages(prevSessions => ({
-          ...prevSessions,
-          [currentSessionId]: updatedMessages
-        }));
-      }, 0);
-      
       return updatedMessages;
     });
-    
     // Tạo tin nhắn trống của assistant để hiển thị ngay
     const emptyAssistantMessage: message = {
       content: "",
       role: "assistant",
-      id: messageId
+      id: messageId,
+      model_type: modelType as "original" | "gemini"
     };
-    
-    // Thêm tin nhắn trống của assistant vào danh sách ngay lập tức
-    // Sử dụng functional update để đảm bảo luôn có state mới nhất
     setMessages(prev => {
       const updatedMessagesWithAssistant = [...prev, emptyAssistantMessage];
-      
-      // Sử dụng setTimeout để tách biệt hai lần cập nhật state
-      setTimeout(() => {
-        // Cập nhật lịch sử tin nhắn cho phiên hiện tại
-        setSessionMessages(prevSessions => ({
-          ...prevSessions,
-          [currentSessionId]: updatedMessagesWithAssistant
-        }));
-      }, 0);
-      
       return updatedMessagesWithAssistant;
     });
-    
     createdAssistantMessageRef.current = true;
-    
-    // Gửi tin nhắn thông thường hoặc tin nhắn JSON tùy thuộc vào trường hợp
-    if (displayMessage.startsWith('/')) {
-      // Xử lý các lệnh đặc biệt
-      if (displayMessage === '/clear') {
-        // Xóa lịch sử hội thoại
-        const action: WebSocketAction = {
-          action: "clear_history",
-          session_id: currentSessionId
-        };
-        socket.send(JSON.stringify(action));
-        setMessages([]);
-        
-        // Cập nhật trong sessionMessages
-        setSessionMessages(prev => ({
-          ...prev,
-          [currentSessionId]: []
-        }));
-        
-        setIsLoading(false);
-        return;
-      }
-    } else {
-      // Gửi tin nhắn bình thường với session_id để đảm bảo lưu lịch sử đúng
-      const message = {
-        content: messageText,
-        session_id: currentSessionId
-      };
-      // Gửi dưới dạng JSON để server có thể xử lý session_id
-      socket.send(JSON.stringify(message));
-      console.log("Đã gửi tin nhắn với session_id:", currentSessionId);
-    }
-    
-    // Thêm đoạn này vào
+    const message = {
+      content: messageText,
+      session_id: currentSessionId,
+      model_type: modelType as "original" | "gemini"
+    };
+    socket.send(JSON.stringify(message));
+    console.log("Đã gửi tin nhắn với session_id:", currentSessionId);
     setTimeout(() => {
-      // Thêm tin nhắn trống cho assistant ngay sau khi gửi tin nhắn
       addEmptyAssistantMessage(messageId);
     }, 50);
-    
-    // Reset input và trạng thái
     setQuestion("");
-
     try {
-      // Định nghĩa message handler
       const messageHandler = (event: MessageEvent) => {
-        // Log dữ liệu nhận được để debug
         console.log("WebSocket received data:", typeof event.data, event.data.substring ? event.data.substring(0, 100) : event.data);
-        
-        // Ẩn ThinkingMessage ngay khi nhận được token đầu tiên
         if (!receivedFirstToken) {
           receivedFirstToken = true;
           setIsLoading(false);
         }
-
-        // Kiểm tra kết thúc tin nhắn
         if(typeof event.data === 'string' && event.data.includes("[END]")) {
-          cleanupMessageHandler();
           return;
         }
-        
         try {
-          // Parse và xử lý dữ liệu JSON từ WebSocket
           const jsonData = JSON.parse(event.data);
-          console.log("Đã parse JSON thành công:", jsonData);
-          
-          // Xử lý dữ liệu JSON
           processJsonData(jsonData);
-
-          // Force re-render bằng cách gửi event resize
           setTimeout(() => {
             window.dispatchEvent(new Event('resize'));
           }, 10);
         } catch (error) {
-          console.error("Lỗi khi parse hoặc xử lý JSON:", error);
-          
-          // Nếu không phải JSON, xử lý như text thông thường
           if (typeof event.data === 'string') {
             updateAssistantMessageWithThinking(messageId, event.data);
           }
         }
       };
-
-      // Đăng ký message handler
-      messageHandlerRef.current = messageHandler;
       socket.addEventListener("message", messageHandler);
-      
-      // Log để kiểm tra message handler đã được đăng ký chưa
       console.log("Đã đăng ký message handler cho WebSocket");
     } catch (error) {
-      console.error("WebSocket error:", error);
       setIsLoading(false);
     }
   }
 
   return (
     <div className="flex flex-col min-w-0 h-dvh bg-background">
-      <Header socketRef={socketRef} onSessionChange={handleSessionChange}/>
-      <div className="flex flex-col min-w-0 gap-6 flex-1 overflow-y-scroll pt-4" ref={messagesContainerRef}>
-        {messages.length == 0 && <Overview />}
+      <div className="flex flex-row items-center justify-between px-4 pt-2">
+        {socketRef.current
+          ? <Header socket={socketRef.current} onSessionChange={handleSessionChange} />
+          : <Header onSessionChange={handleSessionChange} />
+        }
+        <div className="flex items-center gap-2">
+          <span className="text-xs">Chọn mô hình:</span>
+          <select
+            value={modelType}
+            onChange={e => handleModelTypeChange(e.target.value)}
+            className="border rounded px-2 py-1 text-xs bg-white text-black border-gray-300 dark:bg-[#222] dark:text-white dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="original">AI-Internal</option>
+            <option value="gemini">AI-External</option>
+          </select>
+        </div>
+        <div className="text-xs text-muted-foreground italic ml-4">
+          Đang sử dụng: {modelType === "gemini" ? "Gemini" : "Qwen"}
+        </div>
+      </div>
+      <div className="flex flex-col gap-6 flex-1 overflow-y-scroll pt-4 mx-auto w-full max-w-3xl px-4" ref={messagesContainerRef}>
+        {messages.length == 0 && <Overview modelType={modelType} />}
         {messages.map((message, _index) => (
           <PreviewMessage
             key={message.id}
             message={message}
-            socket={socketRef.current}
+            socket={socketRef.current ?? undefined}
             sessionId={currentSessionId}
           />
         ))}
-        {isLoading && <ThinkingMessage />}
+        {isLoading && modelType === "original" && <ThinkingMessage />}
         <div ref={messagesEndRef} className="shrink-0 min-w-[24px] min-h-[24px]"/>
       </div>
-      <div className="flex-col mx-auto px-4 bg-background pb-4 md:pb-6 gap-2 w-full md:max-w-4xl">
+      <div className="flex-col mx-auto px-4 bg-background pb-4 md:pb-6 gap-2 w-full max-w-3xl">
         <div className="flex justify-end mb-2">
           <Button
             onClick={toggleThink}
             variant={thinkEnabled ? "default" : "outline"}
             size="sm"
             className="flex items-center gap-1.5 font-medium"
+            disabled={modelType === "gemini"}
           >
             <BrainCircuit className="h-4 w-4" />
             {thinkEnabled ? "Think: Bật" : "Think: Tắt"}
@@ -857,6 +602,7 @@ export function Chat() {
           setQuestion={setQuestion}
           onSubmit={handleSubmit}
           isLoading={isLoading}
+          modelType={modelType}
         />
       </div>
     </div>

@@ -78,11 +78,11 @@ const NonMemoizedMarkdown = ({ children }: { children: string }) => {
       const htmlContent = typeof children === 'string' && /<[a-z][\s\S]*>/i.test(children);
       
       if (htmlContent) {
-        return <div className="mb-1.5" dangerouslySetInnerHTML={{ __html: children }} />;
+        return <div className="mb-1" dangerouslySetInnerHTML={{ __html: children }} />;
       }
       
       return (
-        <p className="mb-1.5" {...props}>
+        <p className="mb-1 leading-snug" {...props}>
           {children}
         </p>
       );
@@ -137,21 +137,21 @@ const NonMemoizedMarkdown = ({ children }: { children: string }) => {
     },
     ol: ({ node, children, ...props }: any) => {
       return (
-        <ol className="list-decimal list-outside ml-4" {...props}>
+        <ol className="list-decimal pl-4" {...props}>
           {children}
         </ol>
       );
     },
     li: ({ node, children, ...props }: any) => {
       return (
-        <li className="py-1" {...props}>
+        <li className="pl-0 ml-0" {...props}>
           {children}
         </li>
       );
     },
     ul: ({ node, children, ...props }: any) => {
       return (
-        <ul className="list-disc list-outside ml-4" {...props}>
+        <ul className="pl-4" {...props}>
           {children}
         </ul>
       );

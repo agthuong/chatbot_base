@@ -1,8 +1,0 @@
-<think>
-
-</think>
-
-Team IT tham gia giai đoạn **CONSTRUCTION**. 
-
-Cụ thể, task liên quan đến Team IT là:
-- **Họp Kick-off nội bộ/ Họp cập nhật dự án** (id: TEA-001) thuộc giai đoạn **CONSTRUCTION**, sub-phase **Construction**.

@@ -1,9 +1,0 @@
-{
-  "timestamp": "2025-05-19T15:15:08.772726",
-  "query": "team IT tham gia giai đoạn nào /no_think",
-  "sub_phase": null,
-  "department": "Team dự án",
-  "session_id": "0d7b300c-e003-4892-8306-5ccb2a238a2d",
-  "response": "<think>\n\n</think>\n\nTeam IT tham gia giai đoạn **CONSTRUCTION**. \n\nCụ thể, task liên quan đến Team IT là:\n- **Họp Kick-off nội bộ/ Họp cập nhật dự án** (id: TEA-001) thuộc giai đoạn **CONSTRUCTION**, sub-phase **Construction**.",
-  "query_time": 5.608278036117554
-}

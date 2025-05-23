@@ -1,6 +1,0 @@
-<think>
-Okay, let's tackle this query. The user is asking "giai đoạn tiếp theo làm gì", which translates to "What is the next stage doing?" in English. First, I need to determine the department, query type, and check for errors.
-
-Looking at the history, there's no mention of any specific department. The user's current question is a follow-up but doesn't explicitly state which department they're referring to. According to rule 4, if the question is short like "bước tiếp theo" (next step), we should use the department from the previous context. However, in this case, the history doesn't have any prior department mentioned. 
-
-Rule 3 says that if there's no direct mention of a department in the current question, we check the previous context. But since there's nothing before, we default to general. Also, rule 6 mentions that questions about DBhomes/DBplus are general, but this isn't applicable

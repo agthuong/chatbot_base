@@ -1,5 +1,0 @@
-<think>
-
-</think>
-
-{"department": "2D", "query_type": "department_specific", "error": false}

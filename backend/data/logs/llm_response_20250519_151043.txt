@@ -1,7 +1,0 @@
-<think>
-
-</think>
-
-Vâng, team kinh doanh có thể bị đánh nếu không hoàn thành công việc. Trong dữ liệu, có nhiều task liên quan đến quy trình bán hàng và quản lý dự án, bao gồm cả các bước chuyển tiếp và điều kiện quay lại task nếu không đạt mục tiêu.
-
-Tuy nhiên, thông tin cụ thể về hình thức "đánh" (như phạt, đánh giá, hoặc xử lý) **không được nêu rõ trong dữ liệu**. Do đó, bạn cần tham khảo quy định nội bộ của công ty để biết chính xác cách xử lý khi không hoàn thành nhiệm vụ.

@@ -1,6 +1,0 @@
-<think>
-Okay, let's break this down. The user's current question is "giai đoạn tiếp theo làm gì" which translates to "What is the next phase doing?" and then they ask "giai đoạn tiếp theo là sao" meaning "What is the next phase?" 
-
-First, I need to check if there's any mention of a specific department in the current question. The words here are "giai đoạn" (phase) and "tiếp theo" (next), which don't directly point to any specific department listed. The departments provided are 2D, Dự toán, Kinh doanh, Kế toán, Marketing, Mua hàng, Team dự án, Thi công, Thiết kế, Đặt hàng. None of these are mentioned here.
-
-Next, looking at the history. The previous message from the user was "giai đoạn tiếp theo làm gì" and then "giai đoạn tiếp theo là sao". There

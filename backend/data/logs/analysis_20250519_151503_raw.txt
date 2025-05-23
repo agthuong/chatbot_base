@@ -1,5 +1,0 @@
-<think>
-
-</think>
-
-{"department": "Team dự án", "query_type": "department_specific", "error": false}

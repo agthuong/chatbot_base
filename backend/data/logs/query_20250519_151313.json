@@ -1,9 +1,0 @@
-{
-  "timestamp": "2025-05-19T15:13:13.139380",
-  "query": "team IT có tham gia thi công không /no_think",
-  "sub_phase": null,
-  "department": "Team dự án",
-  "session_id": "9f86cb47-6957-4383-8a08-a9646899f847",
-  "response": "<think>\n\n</think>\n\nTeam IT **không tham gia thi công**.  \n\nThông tin về task:\n- Task: Họp Kick-off nội bộ/ Họp cập nhật dự án  \n- Giai đoạn: CONSTRUCTION  \n- Mô tả: Đảm bảo team dự án biết rõ nên làm gì, khi nào để đạt đúng deadline và chất lượng.",
-  "query_time": 5.873562812805176
-}

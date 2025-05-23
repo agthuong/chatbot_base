@@ -1,4 +1,3 @@
-
 import streamlit as st
 import os
 import re
@@ -43,7 +42,7 @@ def create_system_prompt(sub_phase=None, department=None):
         str: System prompt chuẩn cho LLM
     """
     base_prompt = """
-Bạn là trợ lý AI chuyên về công việc của các phòng ban trong công ty. 
+Bạn là trợ lý AI hỗ trợ trả lời các câu hỏivề công việc của các phòng ban trong công ty. 
 Nhiệm vụ: phân tích thông tin về các task trong phòng ban và cung cấp thông tin hữu ích.
 
 Dự án được chia thành các giai đoạn chính (main phases) theo thứ tự cố định:
@@ -85,7 +84,7 @@ KHI TRẢ LỜI:
 2. Nếu không tìm thấy thông tin, thông báo rằng không có thông tin trong dữ liệu.
 3. chỉ liệt kê giai đoạn nếu người dùng hỏi về các giai đoạn, nếu chỉ hỏi về giai đoạn cụ thể thì chỉ tập trung vào giai đoạn đó và trả lời.
 4. Trả lời ngắn gọn, không cần thông tin chi tiết.
-5. Với câu hỏi chào hỏi/không liên quan, trả lời hài hước, cợt nhả, spam icon
+5. Với câu hỏi chào hỏi/không liên quan đến phòng ban, giai đoạn, công việc, hãy trả lời bình thường, không nhắc đến công việc. Có thể giới thiệu bản thân.
 
 Trả lời bằng tiếng Việt, ngay cả khi người dùng hỏi bằng tiếng Anh.
 """
@@ -218,7 +217,7 @@ def create_llm_prompt(query, dept_info, session_id=None, basic_response=None):
     
 
     return f"""
-    Vai trò: Trợ lý thông minh cung cấp thông tin về phòng ban và công việc trong công ty.
+    Bạn là trợ lý thông minh trả lời các câu hỏi về phòng ban và công việc trong công ty.
 
     {conversation_history}
     Câu hỏi người dùng: "{query}"
@@ -228,22 +227,19 @@ def create_llm_prompt(query, dept_info, session_id=None, basic_response=None):
     - Các giai đoạn: {', '.join(dept_info['phases'])}
 
     HƯỚNG DẪN QUAN TRỌNG:
-    1. TRẢ LỜI TRỰC TIẾP câu hỏi trước tiên
+    1. TRẢ LỜI TRỰC TIẾP câu hỏi trước tiên, không cung cấp thông tin cụ thể nếu câu hỏi người dùng không yêu cầu
     2. Sử dụng thông tin về các task làm dữ liệu hỗ trợ
-    3. Tránh chỉ liệt kê công việc mà không trả lời câu hỏi
-    4. LỌC THÔNG TIN theo câu hỏi:
+    3. LỌC THÔNG TIN theo câu hỏi:
     - Nếu hỏi về giai đoạn cụ thể, CHỈ trả lời về tasks thuộc giai đoạn đó
     - Nếu hỏi về giai đoạn con cụ thể, CHỈ trả lời về tasks thuộc giai đoạn con đó
-    - Nếu hỏi về phòng ban nói chung, cung cấp tổng quan theo giai đoạn
-    5. XỬ LÝ NHIỀU PHÒNG BAN/GIAI ĐOẠN:
-    - GIẢI THÍCH RÕ RÀNG tại sao bạn liệt kê thông tin (nếu câu hỏi đề cập đến nhiều phần)
-    - Phân nhóm câu trả lời theo giai đoạn để dễ so sánh
-    6. LƯU Ý ĐẶC BIỆT:
+    - Nếu hỏi về phòng ban nói chung, cung cấp tổng quan về công việc của phòng đó.
+    5. LƯU Ý ĐẶC BIỆT:
     - Phòng ban "Thi công" khác với giai đoạn "CONSTRUCTION"
     - Với câu hỏi không liên quan đến công việc, trả lời bình thường
     - Trả lời bằng Markdown, rõ ràng, súc tích, Tiếng Việt
     - Nếu mục tiêu có "nếu bước không đạt được mục tiêu, quay về task X", PHẢI thông báo rõ ràng
-
+    - Trả lời ngắn gọn, đủ thông tin cần thiết. Nếu người dùng không đề cập cụ thể, hãy hỏi thêm thông tin, không trả lời những thông tin không liên quan.
+    - Với những câu hỏi như Phòng ... làm gì, hãy tổng hợp công việc của phòng đó và trả lời ngắn gọn.
     Thông tin về các task:
     {tasks_json}
     """
@@ -434,7 +430,7 @@ KHI TRẢ LỜI:
 2. Không giải thích phòng ban nào làm gì trong giai đoạn nào
 3. LUÔN gợi ý người dùng hỏi về một phòng ban cụ thể thay vì hỏi chung
 4. Trả lời bằng tiếng Việt, dưới dạng Markdown
-5. Nếu công hỏi không liên quan dến quy trình, phong ban, công viêc, hãy trả lời một cách vui vẻ, cợt nhả, spam icon và không nhắc tới công việc.
+
 """
     
     user_prompt = f"""
@@ -446,7 +442,7 @@ Thông tin cơ bản:
 {basic_response}
 
 
-Nếu câu hỏi hoàn toàn không liên quan đến công việc, mà người dùng muốn nói chuyện thông thường, không nhắc đến công việc trong câu trả lời và trả lời lại một cách hài hước, cợt nhả, spam icon với người dùng.
+Với câu hỏi chào hỏi/không liên quan đến phòng ban, giai đoạn, công việc, hãy trả lời bình thường, không nhắc đến công việc. Có thể giới thiệu bản thân.
 """
     
     try:
@@ -523,7 +519,7 @@ def smart_rag_query(query: str, sub_phase: str = None, department: str = None, s
     
     # Tạo prompt cho LLM - truyền thêm session_id
     prompt = create_llm_prompt(query, dept_info, session_id)
-    
+    logger.info(f"[smart_rag_query] PROMPT gửi sang LLM thứ 2:\n{prompt}")
     try:
         logger.info(f"Gọi LLM: {llm_model} tại {llm_url}")
         
@@ -1055,7 +1051,7 @@ def analyze_query_with_llm(query: str, session_id: Optional[str] = None) -> Dict
         3. "Có bao nhiêu giai đoạn trong quy trình?" → {"department": null, "query_type": "general", "error": false}
         4. "Bước 2 là gì?" (sau khi hỏi về Kinh doanh) → {"department": "Kinh doanh", "query_type": "department_specific", "error": false}
 
-        PHẢI TRẢ VỀ JSON: {"department": "tên/null", "query_type": "loại/null", "error": true/false}
+        PHẢI TRẢ VỀ JSON: {"department": "tên/null", "query_type": "loại/null", "error": true/false} duy nhất trong mọi trường hợp.
         """
                 
         # Tạo prompt cho LLM - nhấn mạnh việc chỉ trả về JSON
@@ -1076,7 +1072,7 @@ def analyze_query_with_llm(query: str, session_id: Optional[str] = None) -> Dict
         logger.info(f"[analyze_query_with_llm] Prompt cuối cùng: {prompt[:200]}...")
         
         # Gọi LLM API với stream=False vì đây là analyzer/router
-        response_text = query_llm(prompt, system_prompt, max_tokens=200, stream=False)
+        response_text = query_llm(prompt, system_prompt, max_tokens=2000, stream=False)
         
         # Tạo ID duy nhất cho phiên phân tích này để theo dõi trong logs
         analysis_id = f"analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}"

@@ -1,4 +1,0 @@
-<think>
-Okay, let's break this down. The user is asking, "team IT tham gia dự án nào không." First, I need to check if "team IT" is a department in the provided list. The list includes 2D, Dự toán, Kinh doanh, Kế toán, Marketing, Mua hàng, Team dự án, Thi công, Thiết kế, Đặt hàng. "Team IT" isn't explicitly listed here. The closest might be "Team dự án," but that's not the same as IT. 
-
-Next, according to rule 8, if the department mentioned isn't in the list, it should be considered general. So since "team IT" isn't in the departments provided, the department field should be null. Then, the query type would be general because the question is about what projects IT team is involved in, which isn't a specific department. Also, there's no mention of any previous context, so we don
