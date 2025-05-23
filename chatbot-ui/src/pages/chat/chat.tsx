@@ -572,7 +572,7 @@ export function Chat() {
         </div>
       </div>
       <div className="flex flex-col gap-6 flex-1 overflow-y-scroll pt-4 mx-auto w-full max-w-3xl px-4" ref={messagesContainerRef}>
-        {messages.length == 0 && <Overview />}
+        {messages.length == 0 && <Overview modelType={modelType} />}
         {messages.map((message, _index) => (
           <PreviewMessage
             key={message.id}
@@ -602,6 +602,7 @@ export function Chat() {
           setQuestion={setQuestion}
           onSubmit={handleSubmit}
           isLoading={isLoading}
+          modelType={modelType}
         />
       </div>
     </div>

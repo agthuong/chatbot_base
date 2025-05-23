@@ -1,0 +1,5 @@
+<think>
+
+</think>
+
+Bản vẽ hoàn công là bản vẽ được điều chỉnh theo thực tế để phục vụ cho quá trình hoàn công với tòa nhà. Đây là đầu ra của task 2D-003 trong giai đoạn DEFECT-HANDOVER.

@@ -11,6 +11,7 @@ interface ChatInputProps {
     setQuestion: (question: string) => void;
     onSubmit: (text?: string) => void;
     isLoading: boolean;
+    modelType: "original" | "gemini";
 }
 
 const suggestedActions = [
@@ -26,12 +27,12 @@ const suggestedActions = [
     },
 ];
 
-export const ChatInput = ({ question, setQuestion, onSubmit, isLoading }: ChatInputProps) => {
+export const ChatInput = ({ question, setQuestion, onSubmit, isLoading, modelType }: ChatInputProps) => {
     const [showSuggestions, setShowSuggestions] = useState(true);
 
     return(
     <div className="relative w-full flex flex-col gap-4">
-        {showSuggestions && (
+        {showSuggestions && modelType !== "gemini" && (
             <div className="hidden md:grid sm:grid-cols-2 gap-2 w-full">
                 {suggestedActions.map((suggestedAction, index) => (
                     <motion.div

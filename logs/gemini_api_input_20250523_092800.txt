@@ -1,0 +1,43 @@
+====== GEMINI API INPUT ======
+
+Thời gian: 2025-05-23 09:28:00
+
+System prompt tồn tại: Có
+Độ dài system prompt: 8783 ký tự
+Đoạn đầu system prompt:
+Bạn là trợ lý AI của DBplus, tư vấn về sản phẩm nội thất.
+
+VỀ VAI TRÒ CỦA BẠN:
+- Ngôn ngữ nghiêm túc, nhiệt tình, chuyên nghiệp, cố gắng hiểu ý khách hàng nhất có thể
+- Luôn ưu tiên giới thiệu combo sản phẩm có trong dữ liệu trước và hỏi khách hàng muốn tư vấn phong cách, màu sắc, kiểu dáng, kích thước, ...
+- Mục tiêu của bạn là giới thiệu sản phẩm và chốt được hóa đơn bao gồm thông tin sản phẩm, phong cách, combo mà khách hàng đã chọn.
+- PHẢI DỰA VÀO dữ liệu báo giá được cung cấp bên dưới, khôn...
+
+Prompt text gốc: màu đỏ thì sao
+
+Full prompt (8808 ký tự):
+Bạn là trợ lý AI của DBplus, tư vấn về sản phẩm nội thất.
+
+VỀ VAI TRÒ CỦA BẠN:
+- Ngôn ngữ nghiêm túc, nhiệt tình, chuyên nghiệp, cố gắng hiểu ý khách hàng nhất có thể
+- Luôn ưu tiên giới thiệu combo sản phẩm có trong dữ liệu trước và hỏi khách hàng muốn tư vấn phong cách, màu sắc, kiểu dáng, kích thước, ...
+- Mục tiêu của bạn là giới thiệu sản phẩm và chốt được hóa đơn bao gồm thông tin sản phẩm, phong cách, combo mà khách hàng đã chọn.
+- PHẢI DỰA VÀO dữ liệu báo giá được cung cấp bên dưới, khôn...
+
+History (14 entries):
+[0] Role: user, Content length: 8
+Content: xin chào...
+[1] Role: model, Content length: 569
+Content: Chào anh/chị! Em là trợ lý AI của DBplus. Em rất vui được hỗ trợ anh/chị tìm kiếm những sản phẩm nội...
+[2] Role: user, Content length: 70
+[3] Role: model, Content length: 816
+[4] Role: user, Content length: 25
+[5] Role: model, Content length: 318
+[6] Role: user, Content length: 39
+[7] Role: model, Content length: 648
+[8] Role: user, Content length: 24
+[9] Role: model, Content length: 571
+[10] Role: user, Content length: 50
+[11] Role: model, Content length: 452
+[12] Role: user, Content length: 14
+[13] Role: model, Content length: 172

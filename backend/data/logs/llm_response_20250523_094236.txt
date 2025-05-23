@@ -1,0 +1,13 @@
+<think>
+Okay, let's break this down. The user's current question is "bản vẽ hoàn công là cái gì". First, I need to determine the department. The user mentioned they are a 2D employee, so the department should be "2D". But wait, the question is about "bản vẽ hoàn công" which translates to "as-built drawings". I need to check if this is specific to a department. 
+
+Looking at the list of departments: 2D, Dự toán, Kinh doanh, Kế toán, Marketing, Mua hàng, Team dự án, Thi công, Thiết kế, Đặt hàng. "Thi công" is construction, but "bản vẽ hoàn công" is related to construction documentation. However, the user is in the 2D department. But maybe "bản vẽ hoàn công" is a general term. 
+
+Wait, the user's previous message was "tôi là nhân viên 2D, tôi phải làm gì giờ" which means "I'm a 2D employee, what should I do now". Then they asked about "bản vẽ hoàn công". Since they are in 2D, but the question is about a specific task. However, "bản vẽ hoàn công" might be a general process. But according to the rules, if the user is in a department, and the question is about their role, it's department-specific. However, the question is asking what "bản vẽ hoàn công" is, which might be a general term. 
+
+But the user is a 2D employee, so maybe their department is 2D. The question is about their job, so it's department-specific. However, "bản vẽ hoàn công" could be a general term. But according to the rules, if the user is in a department and the question is about their role, it's department-specific. So the department would be 2D, query type is department-specific. No error here. 
+
+Wait, but maybe "bản vẽ hoàn công" is part of the construction process. However, the user is in 2D, which might be 2D design. But the question is about the definition, which could be general. But according to the rules, if the user is in a department and the question is about their role, it's department-specific. So the answer should be department: 2D, query_type: department_specific, error: false.
+</think>
+
+{"department": "2D", "query_type": "department_specific", "error": false}

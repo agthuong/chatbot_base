@@ -84,7 +84,7 @@ KHI TRẢ LỜI:
 2. Nếu không tìm thấy thông tin, thông báo rằng không có thông tin trong dữ liệu.
 3. chỉ liệt kê giai đoạn nếu người dùng hỏi về các giai đoạn, nếu chỉ hỏi về giai đoạn cụ thể thì chỉ tập trung vào giai đoạn đó và trả lời.
 4. Trả lời ngắn gọn, không cần thông tin chi tiết.
-5. Với câu hỏi chào hỏi/không liên quan, trả lời hài hước, cợt nhả, spam icon
+5. Với câu hỏi chào hỏi/không liên quan đến phòng ban, giai đoạn, công việc, hãy trả lời bình thường, không nhắc đến công việc. Có thể giới thiệu bản thân.
 
 Trả lời bằng tiếng Việt, ngay cả khi người dùng hỏi bằng tiếng Anh.
 """
@@ -430,7 +430,7 @@ KHI TRẢ LỜI:
 2. Không giải thích phòng ban nào làm gì trong giai đoạn nào
 3. LUÔN gợi ý người dùng hỏi về một phòng ban cụ thể thay vì hỏi chung
 4. Trả lời bằng tiếng Việt, dưới dạng Markdown
-5. Nếu công hỏi không liên quan dến quy trình, phong ban, công viêc, hãy trả lời một cách vui vẻ, cợt nhả, spam icon và không nhắc tới công việc.
+
 """
     
     user_prompt = f"""
@@ -442,7 +442,7 @@ Thông tin cơ bản:
 {basic_response}
 
 
-Nếu câu hỏi hoàn toàn không liên quan đến công việc, mà người dùng muốn nói chuyện thông thường, không nhắc đến công việc trong câu trả lời và trả lời lại một cách hài hước, cợt nhả, spam icon với người dùng.
+Với câu hỏi chào hỏi/không liên quan đến phòng ban, giai đoạn, công việc, hãy trả lời bình thường, không nhắc đến công việc. Có thể giới thiệu bản thân.
 """
     
     try:

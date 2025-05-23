@@ -1,0 +1,20 @@
+=== LỊCH SỬ TIN NHẮN CHO SESSION fd3f82d6-9220-4923-ba96-5e5dca158223 ===
+
+Lịch sử tin nhắn:
+Người dùng: xin chào
+Người dùng: tôi là nhân viên 2D, tôi phải làm gì giờ
+Người dùng: bản vẽ hoàn công là cái gì
+
+
+=== PROMPT GỐC ===
+
+phòng kinh doanh thì làm gì
+
+=== PROMPT ĐẦY ĐỦ ===
+
+Lịch sử tin nhắn:
+Người dùng: xin chào
+Người dùng: tôi là nhân viên 2D, tôi phải làm gì giờ
+Người dùng: bản vẽ hoàn công là cái gì
+
+phòng kinh doanh thì làm gì
