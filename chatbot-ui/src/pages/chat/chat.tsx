@@ -563,8 +563,8 @@ export function Chat() {
             onChange={e => handleModelTypeChange(e.target.value)}
             className="border rounded px-2 py-1 text-xs bg-white text-black border-gray-300 dark:bg-[#222] dark:text-white dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="original">Quy trình</option>
-            <option value="gemini">Sale</option>
+            <option value="original">AI-Internal</option>
+            <option value="gemini">AI-External</option>
           </select>
         </div>
         <div className="text-xs text-muted-foreground italic ml-4">

@@ -237,13 +237,13 @@ def extract_thinking(text):
         
         logger.info(f"Đã trích xuất thinking ({len(thinking_content)} ký tự) và còn lại {len(remaining_text)} ký tự phản hồi")
         # Ghi lại nội dung phản hồi chuẩn hóa để kiểm tra
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        log_path = f"data/logs/llm_response_{timestamp}.txt"
-        os.makedirs(os.path.dirname(log_path), exist_ok=True)
-        with open(log_path, 'w', encoding='utf-8') as f:
-            f.write("<think>\n\n</think>\n\n")
-            f.write(remaining_text)
-        logger.info(f"Đã lưu phản hồi đã xử lý vào: {log_path}")
+        # timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        # log_path = f"data/logs/llm_response_{timestamp}.txt"
+        # os.makedirs(os.path.dirname(log_path), exist_ok=True)
+        # with open(log_path, 'w', encoding='utf-8') as f:
+        #     f.write("<think>\n\n</think>\n\n")
+        #     f.write(remaining_text)
+        # logger.info(f"Đã lưu phản hồi đã xử lý vào: {log_path}")
         
         return thinking_content, remaining_text
     else:
@@ -260,13 +260,13 @@ def extract_thinking(text):
         processed_text = re.sub(r'(?m)^- (.+)\n\n- ', r'- \1\n- ', processed_text)
         
         # Ghi lại nội dung phản hồi chuẩn hóa để kiểm tra
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        log_path = f"data/logs/llm_response_{timestamp}.txt"
-        os.makedirs(os.path.dirname(log_path), exist_ok=True)
-        with open(log_path, 'w', encoding='utf-8') as f:
-            f.write("<think>\n\n</think>\n\n")
-            f.write(processed_text)
-        logger.info(f"Đã lưu phản hồi đã xử lý vào: {log_path}")
+        # timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        # log_path = f"data/logs/llm_response_{timestamp}.txt"
+        # os.makedirs(os.path.dirname(log_path), exist_ok=True)
+        # with open(log_path, 'w', encoding='utf-8') as f:
+        #     f.write("<think>\n\n</think>\n\n")
+        #     f.write(processed_text)
+        # logger.info(f"Đã lưu phản hồi đã xử lý vào: {log_path}")
         
         return None, processed_text
 
@@ -535,19 +535,19 @@ def add_history_to_prompt(prompt, session_id):
     logger.info(f"Đã thêm {len(recent_messages)} tin nhắn gần nhất vào prompt")
     
     # Lưu lịch sử tin nhắn vào file log
-    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    history_log_path = f"data/logs/history_prompt_{timestamp}.txt"
-    os.makedirs(os.path.dirname(history_log_path), exist_ok=True)
+    # timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    # history_log_path = f"data/logs/history_prompt_{timestamp}.txt"
+    # os.makedirs(os.path.dirname(history_log_path), exist_ok=True)
     
-    with open(history_log_path, 'w', encoding='utf-8') as f:
-        f.write(f"=== LỊCH SỬ TIN NHẮN CHO SESSION {session_id} ===\n\n")
-        f.write(f"{history_text}\n\n")
-        f.write(f"=== PROMPT GỐC ===\n\n")
-        f.write(f"{prompt}\n\n")
-        f.write(f"=== PROMPT ĐẦY ĐỦ ===\n\n")
-        f.write(f"{history_text}\n{prompt}")
+    # with open(history_log_path, 'w', encoding='utf-8') as f:
+    #     f.write(f"=== LỊCH SỬ TIN NHẮN CHO SESSION {session_id} ===\n\n")
+    #     f.write(f"{history_text}\n\n")
+    #     f.write(f"=== PROMPT GỐC ===\n\n")
+    #     f.write(f"{prompt}\n\n")
+    #     f.write(f"=== PROMPT ĐẦY ĐỦ ===\n\n")
+    #     f.write(f"{history_text}\n{prompt}")
     
-    logger.info(f"Đã lưu lịch sử tin nhắn và prompt vào file: {history_log_path}")
+    # logger.info(f"Đã lưu lịch sử tin nhắn và prompt vào file: {history_log_path}")
     
     return f"{history_text}\n{prompt}"
 
@@ -617,27 +617,27 @@ async def handle_gemini_request(websocket, content, session_id):
         warning_message = None
         
         # Lưu log chi tiết về yêu cầu
-        log_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "logs")
-        os.makedirs(log_dir, exist_ok=True)
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        request_log_file = os.path.join(log_dir, f"gemini_request_{timestamp}.txt")
+        # log_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "logs")
+        # os.makedirs(log_dir, exist_ok=True)
+        # timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        # request_log_file = os.path.join(log_dir, f"gemini_request_{timestamp}.txt")
         
-        try:
-            with open(request_log_file, "w", encoding="utf-8") as f:
-                f.write("=== GEMINI REQUEST DETAILS ===\n\n")
-                f.write(f"Thời gian: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
-                f.write(f"Query: '{clean_query}'\n\n")
-                f.write(f"RAG content tồn tại: {'Có' if rag_content else 'Không'}\n")
-                if rag_content:
-                    f.write(f"Độ dài RAG content: {len(rag_content)} ký tự\n")
-                    f.write("Đoạn đầu RAG content:\n")
-                    f.write(f"{rag_content[:500] if rag_content else 'Không có nội dung'}...\n\n")
-                f.write(f"History: {'Có' if formatted_gemini_history else 'Không'}\n")
-                if formatted_gemini_history:
-                    f.write(f"History items: {len(formatted_gemini_history)}\n\n")
-            logger.info(f"Đã lưu chi tiết yêu cầu vào: {request_log_file}")
-        except Exception as e:
-            logger.error(f"Lỗi khi lưu chi tiết yêu cầu: {str(e)}")
+        # try:
+        #     with open(request_log_file, "w", encoding="utf-8") as f:
+        #         f.write("=== GEMINI REQUEST DETAILS ===\n\n")
+        #         f.write(f"Thời gian: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
+        #         f.write(f"Query: '{clean_query}'\n\n")
+        #         f.write(f"RAG content tồn tại: {'Có' if rag_content else 'Không'}\n")
+        #         if rag_content:
+        #             f.write(f"Độ dài RAG content: {len(rag_content)} ký tự\n")
+        #             f.write("Đoạn đầu RAG content:\n")
+        #             f.write(f"{rag_content[:500] if rag_content else 'Không có nội dung'}...\n\n")
+        #         f.write(f"History: {'Có' if formatted_gemini_history else 'Không'}\n")
+        #         if formatted_gemini_history:
+        #             f.write(f"History items: {len(formatted_gemini_history)}\n\n")
+        #     logger.info(f"Đã lưu chi tiết yêu cầu vào: {request_log_file}")
+        # except Exception as e:
+        #     logger.error(f"Lỗi khi lưu chi tiết yêu cầu: {str(e)}")
         
         logger.info("Gọi gemini_rag_query với RAG content...")
         # Gọi Gemini API với cơ chế streaming và RAG

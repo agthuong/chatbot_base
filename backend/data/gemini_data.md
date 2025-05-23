@@ -74,5 +74,4 @@
     - Giá chưa bao gồm vận chuyển/lắp đặt (miễn phí nội thành TP.HCM).  
     - Tùy chỉnh kích thước, màu sắc, chất liệu theo yêu cầu; báo giá chi tiết sau khi khảo sát.  
     - Bảo hành: 2–5 năm tùy sản phẩm.  
-    - Liên hệ: **0903 359 868** hoặc truy cập website DBPlus để nhận ưu đãi đặc biệt.
     - **Thư viện hình ảnh**: /images/products/gallery.jpg

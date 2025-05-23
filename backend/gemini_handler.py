@@ -117,14 +117,13 @@ def create_gemini_system_prompt(rag_content=None):
         logger.warning("KHÔNG CÓ RAG CONTENT khi tạo system prompt!")
     
     # Prompt cơ bản về vai trò
-    prompt = """Bạn là trợ lý AI của DBplus, một công ty thiết kế nội thất, giám đốc là anh Trịnh Minh Nhât (không giới thiệu thông tin này nếu người dùng không hỏi), nhiệm vụ của bạn là tư vấn về sản phẩm nội thất.
+    prompt = """Bạn là Ngọc, trợ lý ảo của DBplus (công ty thiết kế nội thất) hỗ trợ nhân viên sales của DBPlus. Nhiệm vụ chính của bạn là hỗ trợ nhân viên Sales trong việc tra cứu và báo giá sản phẩm nội thất và dịch vụ thi công (hiện tại chưa có giá thi công nên hãy dựa vào kiến thức thị trường để ước lượng, vui lòng nói rõ đây là thông tin tham khảo).
 
 VỀ VAI TRÒ CỦA BẠN:
-- Ngôn ngữ nghiêm túc, nhiệt tình, chuyên nghiệp, cố gắng hiểu ý khách hàng nhất có thể
-- Luôn ưu tiên giới thiệu combo sản phẩm có trong dữ liệu trước và hỏi khách hàng muốn tư vấn phong cách, màu sắc, kiểu dáng, kích thước, ...
-- Mục tiêu của bạn là giới thiệu sản phẩm và chốt được hóa đơn bao gồm thông tin sản phẩm, phong cách, combo mà khách hàng đã chọn.
-- PHẢI DỰA VÀO dữ liệu báo giá được cung cấp bên dưới, không được dùng thông tin khác
-- Nếu trả lời câu hỏi mà không dựa vào dữ liệu báo giá vì dữ liệu không có thông tin, phải nói rõ là không có thông tin.
+- Ngôn ngữ: nghiêm túc, chuyên nghiệp, thân thiện, nhiệt tình.
+- Trả lời ngắn gọn, rõ ràng, chính xác.
+- Không để khách hàng chờ; luôn chủ động cung cấp thông tin.
+- Không yêu cầu người dùng liên hệ với DBplus để có báo giá chính xác, bạn đang nói chuyện với nhân viên DBPlus, chỉ cung cấp thông tin và giá từ dữ liệu hoặc thị trường, chỉ cần nói rõ đây là thông tin tham khảo là được.
 """
     
     # Nếu có RAG content, thêm vào với định dạng rõ ràng
@@ -136,10 +135,10 @@ DỮ LIỆU SẢN PHẨM VÀ BÁO GIÁ:
 ```
 
 HƯỚNG DẪN SỬ DỤNG DỮ LIỆU:
-1. Sử dụng CHÍNH XÁC thông tin giá, tên sản phẩm, mô tả từ dữ liệu báo giá trên
-2. Nếu được hỏi về sản phẩm, TÌM trong dữ liệu báo giá và TRÍCH DẪN thông tin chính xác
-3. Ưu tiên giới thiệu các combo tiết kiệm khi khách hỏi về sản phẩm
-4. KHÔNG được tạo ra thông tin giá cả hoặc sản phẩm không có trong dữ liệu
+1. Sử dụng CHÍNH XÁC thông tin giá, tên sản phẩm, mô tả từ dữ liệu báo giá trên.
+2. Nếu người dùng hỏi về sản phẩm, hãy TÌM trong dữ liệu báo giá và TRÍCH DẪN thông tin chính xác.
+3. Nếu sản phẩm hoặc giá KHÔNG CÓ TRONG DỮ LIỆU DBPLUS thì phải luôn trả lời bằng mức GIÁ ƯỚC LƯỢNG THEO THỊ TRƯỜNG, nhưng phải nói rõ: "Giá này là ước lượng thị trường, không phải báo giá chính thức từ DBplus."
+4. - Không yêu cầu người dùng liên hệ với DBplus để có báo giá chính xác, bạn đang nói chuyện với nhân viên DBPlus, chỉ cung cấp thông tin và giá từ dữ liệu hoặc thị trường, chỉ cần nói rõ đây là thông tin tham khảo là được.
 """
     else:
         prompt += """
@@ -148,34 +147,25 @@ CẢNH BÁO: KHÔNG CÓ DỮ LIỆU SẢN PHẨM ĐƯỢC CUNG CẤP!
 - Đề nghị họ liên hệ số điện thoại 0903 359 868 để được tư vấn trực tiếp
 """
 
-    # Hướng dẫn phản hồi đầy đủ
-    prompt += """
-CÁCH PHẢN HỒI:
-- Ngắn gọn, chính xác, rõ ràng
-- Không yêu cầu khách hàng chờ để trọ lý AI tìm kiếm thông tin, nếu không có hoặc khó trả lời, hãy nói sẽ liên hệ với cấp trên rồi sẽ có người liên hệ.
-- Luôn đưa ra giá sản phẩm, combo, ưu điểm tiết kiệm (nêu rõ % hoặc số tiền tiết kiệm)
-- Chủ động hỏi thêm nhu cầu phong cách, màu sắc, kiểu dáng, kích thước
-- Kết thúc thân thiện, mời khách tiếp tục hỏi hoặc đặt hàng
-"""
     
     # Lưu lại nội dung prompt đầy đủ để debug
-    log_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "logs")
-    os.makedirs(log_dir, exist_ok=True)
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    prompt_log_file = os.path.join(log_dir, f"gemini_prompt_{timestamp}.txt")
+    # log_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "logs")
+    # os.makedirs(log_dir, exist_ok=True)
+    # timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    # prompt_log_file = os.path.join(log_dir, f"gemini_prompt_{timestamp}.txt")
     
-    try:
-        with open(prompt_log_file, "w", encoding="utf-8") as f:
-            f.write("====== GEMINI SYSTEM PROMPT ======\n\n")
-            f.write(f"Thời gian: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
-            f.write(f"RAG content tồn tại: {'Có' if rag_content else 'Không'}\n")
-            if rag_content:
-                f.write(f"Độ dài RAG content: {len(rag_content)} ký tự\n\n")
-            f.write(f"Prompt ({len(prompt)} ký tự):\n")
-            f.write(prompt)
-        logger.info(f"Đã lưu system prompt đầy đủ vào: {prompt_log_file}")
-    except Exception as e:
-        logger.error(f"Lỗi khi lưu system prompt: {str(e)}")
+    # try:
+    #     with open(prompt_log_file, "w", encoding="utf-8") as f:
+    #         f.write("====== GEMINI SYSTEM PROMPT ======\n\n")
+    #         f.write(f"Thời gian: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
+    #         f.write(f"RAG content tồn tại: {'Có' if rag_content else 'Không'}\n")
+    #         if rag_content:
+    #             f.write(f"Độ dài RAG content: {len(rag_content)} ký tự\n\n")
+    #         f.write(f"Prompt ({len(prompt)} ký tự):\n")
+    #         f.write(prompt)
+    #     logger.info(f"Đã lưu system prompt đầy đủ vào: {prompt_log_file}")
+    # except Exception as e:
+    #     logger.error(f"Lỗi khi lưu system prompt: {str(e)}")
     
     logger.info(f"Đã tạo system prompt đầy đủ ({len(prompt)} ký tự)")
     return prompt
@@ -219,33 +209,33 @@ async def query_gemini_llm_streaming(prompt_text, gemini_system_prompt=None, for
             full_prompt = prompt_text
         
         # Lưu prompt để debug
-        log_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "logs")
-        os.makedirs(log_dir, exist_ok=True)
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        api_log_file = os.path.join(log_dir, f"gemini_api_input_{timestamp}.txt")
+        # log_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "logs")
+        # os.makedirs(log_dir, exist_ok=True)
+        # timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        # api_log_file = os.path.join(log_dir, f"gemini_api_input_{timestamp}.txt")
         
-        try:
-            with open(api_log_file, "w", encoding="utf-8") as f:
-                f.write("====== GEMINI API INPUT ======\n\n")
-                f.write(f"Thời gian: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
-                f.write(f"System prompt tồn tại: {'Có' if gemini_system_prompt else 'Không'}\n")
-                if gemini_system_prompt:
-                    f.write(f"Độ dài system prompt: {len(gemini_system_prompt)} ký tự\n")
-                    f.write("Đoạn đầu system prompt:\n")
-                    f.write(f"{gemini_system_prompt[:500]}...\n\n")
-                f.write(f"Prompt text gốc: {prompt_text}\n\n")
-                f.write(f"Full prompt ({len(full_prompt)} ký tự):\n")
-                f.write(f"{full_prompt[:500]}...\n\n")
+        # try:
+        #     with open(api_log_file, "w", encoding="utf-8") as f:
+        #         f.write("====== GEMINI API INPUT ======\n\n")
+        #         f.write(f"Thời gian: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
+        #         f.write(f"System prompt tồn tại: {'Có' if gemini_system_prompt else 'Không'}\n")
+        #         if gemini_system_prompt:
+        #             f.write(f"Độ dài system prompt: {len(gemini_system_prompt)} ký tự\n")
+        #             f.write("Đoạn đầu system prompt:\n")
+        #             f.write(f"{gemini_system_prompt[:500]}...\n\n")
+        #         f.write(f"Prompt text gốc: {prompt_text}\n\n")
+        #         f.write(f"Full prompt ({len(full_prompt)} ký tự):\n")
+        #         f.write(f"{full_prompt[:500]}...\n\n")
                 
-                if formatted_history:
-                    f.write(f"History ({len(formatted_history)} entries):\n")
-                    for i, entry in enumerate(formatted_history):
-                        f.write(f"[{i}] Role: {entry.get('role')}, Content length: {len(entry.get('parts', [''])[0])}\n")
-                        if i < 2:  # Chỉ hiển thị nội dung của 2 mục đầu tiên
-                            f.write(f"Content: {entry.get('parts', [''])[0][:100]}...\n")
-            logger.info(f"Đã lưu API input vào: {api_log_file}")
-        except Exception as e:
-            logger.error(f"Lỗi khi lưu API input: {str(e)}")
+        #         if formatted_history:
+        #             f.write(f"History ({len(formatted_history)} entries):\n")
+        #             for i, entry in enumerate(formatted_history):
+        #                 f.write(f"[{i}] Role: {entry.get('role')}, Content length: {len(entry.get('parts', [''])[0])}\n")
+        #                 if i < 2:  # Chỉ hiển thị nội dung của 2 mục đầu tiên
+        #                     f.write(f"Content: {entry.get('parts', [''])[0][:100]}...\n")
+        #     logger.info(f"Đã lưu API input vào: {api_log_file}")
+        # except Exception as e:
+        #     logger.error(f"Lỗi khi lưu API input: {str(e)}")
         
         # Sử dụng lịch sử nếu có
         if formatted_history and len(formatted_history) > 0:
@@ -348,69 +338,69 @@ async def gemini_rag_query(
             logger.info(f"Độ dài RAG content sau tạo lại: {len(rag_content)} ký tự")
     
     # Ghi log riêng về nội dung RAG
-    log_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "logs")
-    os.makedirs(log_dir, exist_ok=True)
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    rag_log_file = os.path.join(log_dir, f"gemini_rag_{timestamp}.txt")
+    # log_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "logs")
+    # os.makedirs(log_dir, exist_ok=True)
+    # timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    # rag_log_file = os.path.join(log_dir, f"gemini_rag_{timestamp}.txt")
     
-    try:
-        with open(rag_log_file, "w", encoding="utf-8") as f:
-            f.write("====== GEMINI RAG CONTENT ======\n\n")
-            f.write(f"Thời gian: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
-            f.write(f"Câu hỏi: {query_text}\n\n")
-            f.write(f"Nội dung RAG ({len(rag_content)} ký tự):\n")
-            f.write(rag_content)
-        logger.info(f"Đã lưu riêng nội dung RAG vào: {rag_log_file}")
-    except Exception as e:
-        logger.error(f"Lỗi khi lưu nội dung RAG: {str(e)}")
+    # try:
+    #     with open(rag_log_file, "w", encoding="utf-8") as f:
+    #         f.write("====== GEMINI RAG CONTENT ======\n\n")
+    #         f.write(f"Thời gian: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
+    #         f.write(f"Câu hỏi: {query_text}\n\n")
+    #         f.write(f"Nội dung RAG ({len(rag_content)} ký tự):\n")
+    #         f.write(rag_content)
+    #     logger.info(f"Đã lưu riêng nội dung RAG vào: {rag_log_file}")
+    # except Exception as e:
+    #     logger.error(f"Lỗi khi lưu nội dung RAG: {str(e)}")
     
     # Tạo system prompt
     gemini_system_prompt = create_gemini_system_prompt(rag_content=rag_content)
     
     # Ghi log tổng hợp đầu vào
-    input_log_file = os.path.join(log_dir, f"gemini_input_{timestamp}.txt")
-    try:
-        with open(input_log_file, "w", encoding="utf-8") as f:
-            f.write("====== GEMINI API INPUT LOG ======\n\n")
-            f.write(f"Thời gian: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
+    # input_log_file = os.path.join(log_dir, f"gemini_input_{timestamp}.txt")
+    # try:
+    #     with open(input_log_file, "w", encoding="utf-8") as f:
+    #         f.write("====== GEMINI API INPUT LOG ======\n\n")
+    #         f.write(f"Thời gian: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
             
-            # Ghi system prompt
-            f.write("=== SYSTEM PROMPT ===\n")
-            f.write(gemini_system_prompt)
-            f.write("\n\n")
+    #         # Ghi system prompt
+    #         f.write("=== SYSTEM PROMPT ===\n")
+    #         f.write(gemini_system_prompt)
+    #         f.write("\n\n")
             
-            # Ghi câu hỏi người dùng
-            f.write("=== USER QUERY ===\n")
-            f.write(query_text)
-            f.write("\n\n")
+    #         # Ghi câu hỏi người dùng
+    #         f.write("=== USER QUERY ===\n")
+    #         f.write(query_text)
+    #         f.write("\n\n")
             
-            # Ghi lịch sử hội thoại
-            if formatted_history and len(formatted_history) > 0:
-                f.write("=== CONVERSATION HISTORY ===\n")
-                for i, entry in enumerate(formatted_history):
-                    role = entry.get("role", "unknown")
-                    content = entry.get("parts", [""])[0]
-                    f.write(f"[{i+1}] {role.upper()}: {content}\n")
-                f.write("\n\n")
+    #         # Ghi lịch sử hội thoại
+    #         if formatted_history and len(formatted_history) > 0:
+    #             f.write("=== CONVERSATION HISTORY ===\n")
+    #             for i, entry in enumerate(formatted_history):
+    #                 role = entry.get("role", "unknown")
+    #                 content = entry.get("parts", [""])[0]
+    #                 f.write(f"[{i+1}] {role.upper()}: {content}\n")
+    #             f.write("\n\n")
             
-            # Thông tin tổng hợp
-            f.write("=== THỐNG KÊ ===\n")
-            total_size = len(gemini_system_prompt) + len(query_text)
-            f.write(f"Kích thước system prompt: {len(gemini_system_prompt)} ký tự\n")
-            f.write(f"Kích thước RAG content: {len(rag_content)} ký tự\n")
-            f.write(f"Kích thước câu hỏi: {len(query_text)} ký tự\n")
+    #         # Thông tin tổng hợp
+    #         f.write("=== THỐNG KÊ ===\n")
+    #         total_size = len(gemini_system_prompt) + len(query_text)
+    #         f.write(f"Kích thước system prompt: {len(gemini_system_prompt)} ký tự\n")
+    #         f.write(f"Kích thước RAG content: {len(rag_content)} ký tự\n")
+    #         f.write(f"Kích thước câu hỏi: {len(query_text)} ký tự\n")
             
-            if formatted_history:
-                history_size = sum(len(entry.get("parts", [""])[0]) for entry in formatted_history)
-                f.write(f"Kích thước lịch sử: {history_size} ký tự\n")
-                total_size += history_size
+    #         if formatted_history:
+    #             history_size = sum(len(entry.get("parts", [""])[0]) for entry in formatted_history)
+    #             f.write(f"Kích thước lịch sử: {history_size} ký tự\n")
+    #             total_size += history_size
             
-            f.write(f"Tổng kích thước dữ liệu: {total_size} ký tự\n")
-            f.write(f"Ước tính số token (~4 ký tự/token): {total_size/4:.0f} tokens\n")
+    #         f.write(f"Tổng kích thước dữ liệu: {total_size} ký tự\n")
+    #         f.write(f"Ước tính số token (~4 ký tự/token): {total_size/4:.0f} tokens\n")
             
-        logger.info(f"Đã lưu tổng hợp đầu vào vào: {input_log_file}")
-    except Exception as e:
-        logger.error(f"Lỗi khi lưu tổng hợp đầu vào: {str(e)}")
+    #     logger.info(f"Đã lưu tổng hợp đầu vào vào: {input_log_file}")
+    # except Exception as e:
+    #     logger.error(f"Lỗi khi lưu tổng hợp đầu vào: {str(e)}")
     
     # Gọi API và trả về kết quả
     async for chunk in query_gemini_llm_streaming(
@@ -533,21 +523,21 @@ def load_markdown_data():
                         logger.info(f"Đoạn cuối: ...{content[-100:]}")
                         
                         # Lưu file debug
-                        log_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "logs")
-                        os.makedirs(log_dir, exist_ok=True)
-                        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                        debug_log_file = os.path.join(log_dir, f"markdown_content_{timestamp}.txt")
+                        # log_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "logs")
+                        # os.makedirs(log_dir, exist_ok=True)
+                        # timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                        # debug_log_file = os.path.join(log_dir, f"markdown_content_{timestamp}.txt")
                         
-                        try:
-                            with open(debug_log_file, "w", encoding="utf-8") as f:
-                                f.write("=== MARKDOWN RAG CONTENT ===\n\n")
-                                f.write(f"Thời gian: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
-                                f.write(f"File path: {GEMINI_DATA_PATH}\n")
-                                f.write(f"Content length: {len(content)} ký tự\n\n")
-                                f.write(content)
-                            logger.info(f"Đã lưu nội dung file markdown vào: {debug_log_file}")
-                        except Exception as e:
-                            logger.error(f"Lỗi khi lưu debug file: {str(e)}")
+                        # try:
+                        #     with open(debug_log_file, "w", encoding="utf-8") as f:
+                        #         f.write("=== MARKDOWN RAG CONTENT ===\n\n")
+                        #         f.write(f"Thời gian: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
+                        #         f.write(f"File path: {GEMINI_DATA_PATH}\n")
+                        #         f.write(f"Content length: {len(content)} ký tự\n\n")
+                        #         f.write(content)
+                        #     logger.info(f"Đã lưu nội dung file markdown vào: {debug_log_file}")
+                        # except Exception as e:
+                        #     logger.error(f"Lỗi khi lưu debug file: {str(e)}")
                     else:
                         logger.warning("File tồn tại nhưng TRỐNG RỖNG!")
                     return content
