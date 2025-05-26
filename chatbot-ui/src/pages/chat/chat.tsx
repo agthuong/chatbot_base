@@ -15,7 +15,16 @@ import { toast } from "sonner";
 const getWebSocketUrl = () => {
   const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
   const hostname = window.location.hostname;
-  return `${protocol}//${hostname}:8090/`;
+  const port = window.location.port;
+  
+  // Nếu đang chạy trong Docker, sử dụng cùng cổng mà user đang truy cập
+  if (port) {
+    // Sử dụng cùng cổng với trang web hiện tại
+    return `${protocol}//${hostname}:${port}/ws`;
+  } else {
+    // Nếu không có cổng (sử dụng cổng mặc định 80/443), giữ nguyên
+    return `${protocol}//${hostname}/ws`;
+  }
 };
 
 // const socket = new WebSocket(API_WS_URL);

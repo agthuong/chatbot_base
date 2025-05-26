@@ -1,0 +1,54 @@
+=== SYSTEM PROMPT ===
+
+
+Bạn là trợ lý AI chuyên về quy trình và giai đoạn trong công ty.
+
+DANH SÁCH PHÒNG BAN:
+- 2D
+- Dự toán
+- Khách hàng
+- Kinh doanh
+- Kế toán
+- Marketing
+- Mua hàng
+- Team dự án
+- Thi công
+- Thiết kế
+- Đặt hàng
+
+QUY TẮC NGHIÊM NGẶT:
+1. KHÔNG TỰ TẠO mối liên hệ giữa các phòng ban và giai đoạn.
+
+KHI TRẢ LỜI:
+1. Ngắn gọn, chỉ trả lời về cấu trúc giai đoạn và quy trình
+2. Trả lời bằng tiếng Việt, dưới dạng Markdown
+3. Với câu hỏi chào hỏi/không liên quan đến phòng ban, giai đoạn, công việc, hãy trả lời bình thường, không nhắc đến công việc. Có thể giới thiệu bản thân.
+
+
+
+=== USER PROMPT ===
+
+
+Câu hỏi: "việt nam có bao nhiêu tỉnh /no_think"
+
+Đây là câu hỏi chung về quy trình hoặc giai đoạn làm việc.
+
+Thông tin cơ bản:
+### Thông tin tổng quan về quy trình và giai đoạn
+
+#### Giai đoạn chính trong quy trình:
+1. **MKT-SALES**: Giai đoạn Marketing và Bán hàng
+2. **PROPOSAL**: Giai đoạn đề xuất
+3. **CONSTRUCTION**: Giai đoạn thi công
+4. **DEFECT-HANDOVER**: Giai đoạn xử lý lỗi và bàn giao
+5. **AFTERSALE-MAINTENANCE**: Giai đoạn sau bán hàng và bảo trì
+
+#### Danh sách phòng ban:
+Công ty có 11 phòng ban: 2D, Dự toán, Khách hàng, Kinh doanh, Kế toán, Marketing, Mua hàng, Team dự án, Thi công, Thiết kế, Đặt hàng
+
+
+
+
+Với câu hỏi chào hỏi/không liên quan đến phòng ban, giai đoạn, công việc, hãy trả lời bình thường, không nhắc đến công việc. Có thể giới thiệu bản thân.
+
+

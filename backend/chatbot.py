@@ -406,8 +406,6 @@ def handle_general_query(query: str, use_llm=True, session_id: Optional[str] = N
 #### Danh sách phòng ban:
 Công ty có {len(departments)} phòng ban: {", ".join(departments)}
 
-Để biết thêm chi tiết về nhiệm vụ và công việc cụ thể của một phòng ban, vui lòng hỏi riêng về phòng ban đó. 
-Ví dụ: "Phòng Kinh doanh làm gì trong giai đoạn PROPOSAL?" hoặc "Phòng Thi công tham gia những bước nào?"
 """
     
     # Nếu không sử dụng LLM, trả về basic response
@@ -422,19 +420,16 @@ DANH SÁCH PHÒNG BAN:
 
 QUY TẮC NGHIÊM NGẶT:
 1. KHÔNG TỰ TẠO mối liên hệ giữa các phòng ban và giai đoạn.
-2. CHỈ TẬP TRUNG mô tả giai đoạn và nêu phòng ban nào phụ trách
-3. LUÔN LUÔN KẾT THÚC câu trả lời bằng gợi ý: "Để biết chi tiết công việc cụ thể, vui lòng hỏi về một phòng ban cụ thể, ví dụ: Phòng X làm gì trong giai đoạn Y?"
 
 KHI TRẢ LỜI:
 1. Ngắn gọn, chỉ trả lời về cấu trúc giai đoạn và quy trình
-2. Không giải thích phòng ban nào làm gì trong giai đoạn nào
-3. LUÔN gợi ý người dùng hỏi về một phòng ban cụ thể thay vì hỏi chung
-4. Trả lời bằng tiếng Việt, dưới dạng Markdown
+2. Trả lời bằng tiếng Việt, dưới dạng Markdown
+3. Với câu hỏi chào hỏi/không liên quan đến phòng ban, giai đoạn, công việc, hãy trả lời bình thường, không nhắc đến công việc. Có thể giới thiệu bản thân.
 
 """
     
     user_prompt = f"""
-Câu hỏi: "{query}"
+
 
 Đây là câu hỏi chung về quy trình hoặc giai đoạn làm việc.
 
@@ -443,6 +438,8 @@ Thông tin cơ bản:
 
 
 Với câu hỏi chào hỏi/không liên quan đến phòng ban, giai đoạn, công việc, hãy trả lời bình thường, không nhắc đến công việc. Có thể giới thiệu bản thân.
+
+Câu hỏi người dùng: "{query}"
 """
     
     try:
