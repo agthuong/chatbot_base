@@ -6,8 +6,10 @@ import logging
 import time
 import re
 import google.generativeai as genai
+from google.generativeai import GenerativeModel
+from google.generativeai.types import AsyncGenerateContentResponse, GenerationConfig
 from datetime import datetime
-from typing import Dict, Any, List, Optional, Generator
+from typing import Dict, Any, List, Optional, Generator, AsyncGenerator, cast
 
 # Cấu hình logging
 logger = logging.getLogger("gemini_handler")
@@ -28,7 +30,7 @@ GEMINI_DATA_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(
 # Đường dẫn dự phòng
 BACKUP_DATA_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "gemini_data.md")
 
-gemini_model_instance = None  # Biến toàn cục để lưu trữ instance của Gemini model
+gemini_model_instance: Optional[GenerativeModel] = None
 
 # Biến toàn cục để cache nội dung markdown
 _markdown_content_cache = None
@@ -65,9 +67,9 @@ def configure_gemini_model(api_key=None):
         gemini_model_instance = None
         return False
 
-def format_history_for_gemini(history: List[Dict[str, str]]) -> List[Dict[str, any]]:
+def format_history_for_gemini(history: List[Dict[str, str]]) -> List[Dict[str, Any]]:
     """
-    Chuyển đổi lịch sử tin nhắn sang định dạng phù hợp với Gemini API, không giới hạn kích thước
+    Chuyển đổi lịch sử tin nhắn sang định dạng phù hợp với Gemini API
     
     Args:
         history: Lịch sử tin nhắn dạng [{"query": "...", "response": "..."}]
@@ -75,11 +77,9 @@ def format_history_for_gemini(history: List[Dict[str, str]]) -> List[Dict[str, a
     Returns:
         List[Dict]: Lịch sử tin nhắn đã được định dạng
     """
-    # Sử dụng toàn bộ lịch sử, không giới hạn số lượng tin nhắn
     formatted_history = []
     
     for entry in history:
-        # Thêm tin nhắn của user, không giới hạn độ dài
         user_query = entry.get("query", "")
         if user_query:    
             formatted_history.append({
@@ -87,7 +87,6 @@ def format_history_for_gemini(history: List[Dict[str, str]]) -> List[Dict[str, a
                 "parts": [user_query]
             })
         
-        # Thêm tin nhắn của model, không giới hạn độ dài
         model_response = entry.get("response", "")
         if model_response:
             formatted_history.append({
@@ -170,9 +169,13 @@ CẢNH BÁO: KHÔNG CÓ DỮ LIỆU SẢN PHẨM ĐƯỢC CUNG CẤP!
     logger.info(f"Đã tạo system prompt đầy đủ ({len(prompt)} ký tự)")
     return prompt
 
-async def query_gemini_llm_streaming(prompt_text, gemini_system_prompt=None, formatted_history=None):
+async def query_gemini_llm_streaming(
+    prompt_text: str,
+    gemini_system_prompt: Optional[str] = None,
+    formatted_history: Optional[List[Dict[str, Any]]] = None
+) -> AsyncGenerator[str, None]:
     """
-    Gửi truy vấn đến Gemini và trả về kết quả dạng streaming (không giới hạn dữ liệu)
+    Gửi truy vấn đến Gemini và trả về kết quả dạng streaming
     
     Args:
         prompt_text: Nội dung câu hỏi
@@ -184,225 +187,86 @@ async def query_gemini_llm_streaming(prompt_text, gemini_system_prompt=None, for
     """
     global gemini_model_instance
     
-    logger.info("====== QUERY GEMINI LLM STREAMING ======")
-    logger.info(f"Prompt text: '{prompt_text[:100]}...'")
-    if gemini_system_prompt:
-        logger.info(f"System prompt tồn tại, độ dài: {len(gemini_system_prompt)} ký tự")
-    else:
-        logger.warning("KHÔNG CÓ SYSTEM PROMPT!")
-    
     if not gemini_model_instance:
         if not configure_gemini_model():
-            yield json.dumps({"error": "Không thể cấu hình Gemini model"})
-            yield "[END]"
+            yield "Error: Failed to configure Gemini"
             return
-    
+
     try:
-        logger.info(f"Bắt đầu gọi Gemini API với prompt: {prompt_text[:200]}...")
-        
-        # Tạo prompt đầy đủ - Gemini không hỗ trợ system role nên phải gộp vào prompt của user
-        if gemini_system_prompt:
-            # Kết hợp system prompt với user prompt
-            full_prompt = f"{gemini_system_prompt}\n\nCâu hỏi: {prompt_text}"
-            logger.info(f"Đã kết hợp system prompt và user prompt ({len(full_prompt)} ký tự)")
-        else:
-            full_prompt = prompt_text
-        
-        # Lưu prompt để debug
-        # log_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "logs")
-        # os.makedirs(log_dir, exist_ok=True)
-        # timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        # api_log_file = os.path.join(log_dir, f"gemini_api_input_{timestamp}.txt")
-        
-        # try:
-        #     with open(api_log_file, "w", encoding="utf-8") as f:
-        #         f.write("====== GEMINI API INPUT ======\n\n")
-        #         f.write(f"Thời gian: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
-        #         f.write(f"System prompt tồn tại: {'Có' if gemini_system_prompt else 'Không'}\n")
-        #         if gemini_system_prompt:
-        #             f.write(f"Độ dài system prompt: {len(gemini_system_prompt)} ký tự\n")
-        #             f.write("Đoạn đầu system prompt:\n")
-        #             f.write(f"{gemini_system_prompt[:500]}...\n\n")
-        #         f.write(f"Prompt text gốc: {prompt_text}\n\n")
-        #         f.write(f"Full prompt ({len(full_prompt)} ký tự):\n")
-        #         f.write(f"{full_prompt[:500]}...\n\n")
-                
-        #         if formatted_history:
-        #             f.write(f"History ({len(formatted_history)} entries):\n")
-        #             for i, entry in enumerate(formatted_history):
-        #                 f.write(f"[{i}] Role: {entry.get('role')}, Content length: {len(entry.get('parts', [''])[0])}\n")
-        #                 if i < 2:  # Chỉ hiển thị nội dung của 2 mục đầu tiên
-        #                     f.write(f"Content: {entry.get('parts', [''])[0][:100]}...\n")
-        #     logger.info(f"Đã lưu API input vào: {api_log_file}")
-        # except Exception as e:
-        #     logger.error(f"Lỗi khi lưu API input: {str(e)}")
-        
-        # Sử dụng lịch sử nếu có
-        if formatted_history and len(formatted_history) > 0:
-            # Tạo tin nhắn đầu tiên của user chứa cả system prompt
-            if gemini_system_prompt:
-                # Tìm tin nhắn user đầu tiên
-                first_user_index = -1
-                for i, entry in enumerate(formatted_history):
-                    if entry.get("role") == "user":
-                        first_user_index = i
-                        break
-                
-                # Nếu tìm thấy, kết hợp system prompt vào
-                if first_user_index >= 0:
-                    original_user_message = formatted_history[first_user_index]["parts"][0]
-                    formatted_history[first_user_index]["parts"][0] = f"{gemini_system_prompt}\n\nCâu hỏi: {original_user_message}"
-                    logger.info(f"Đã kết hợp system prompt vào tin nhắn user đầu tiên trong lịch sử")
-            
-            logger.info(f"Sử dụng chat history với {len(formatted_history)} tin nhắn")
-            chat = gemini_model_instance.start_chat(history=formatted_history)
-            response = chat.send_message(prompt_text, stream=True)
-        else:
-            # Không có lịch sử, gửi trực tiếp với full prompt
-            logger.info("Không có lịch sử, gửi trực tiếp với full prompt")
-            response = gemini_model_instance.generate_content([full_prompt], stream=True)
-        
-        # Xử lý streaming response
-        content_length = 0
-        for chunk in response:
-            try:
-                if chunk.text:
-                    content_length += len(chunk.text)
-                    yield json.dumps({"content": chunk.text, "model_type": "gemini"})
-            except Exception as e:
-                logger.error(f"Lỗi khi xử lý chunk: {e}")
-                continue
-        
-        logger.info(f"Hoàn thành phản hồi streaming, tổng cộng {content_length} ký tự")
-        yield json.dumps({"status": "complete", "model_type": "gemini"})
-        yield "[END]"
-        
+        # Create the full prompt with system prompt if provided
+        full_prompt = f"{gemini_system_prompt}\n\n{prompt_text}" if gemini_system_prompt else prompt_text
+
+        # Create generation config
+        generation_config = GenerationConfig(
+            temperature=0.7,
+            max_output_tokens=2048
+        )
+
+        # Type check to ensure gemini_model_instance is not None
+        if gemini_model_instance is None:
+            yield "Error: Gemini model not initialized"
+            return
+
+        # Use the streaming method
+        response = await gemini_model_instance.generate_content_async(
+            contents=full_prompt,
+            generation_config=generation_config,
+            stream=True
+        )
+
+        async for chunk in response:
+            if chunk.text:
+                yield chunk.text
+
     except Exception as e:
-        logger.error(f"Lỗi Gemini API: {str(e)}", exc_info=True)
-        yield json.dumps({"error": str(e), "model_type": "gemini"})
-        yield "[END]"
+        logging.error(f"Error in query_gemini_llm_streaming: {str(e)}")
+        yield f"Error: {str(e)}"
 
 async def gemini_rag_query(
     query_text: str, 
-    rag_content: str = None, 
-    formatted_history: List[Dict[str, any]] = None
-):
+    rag_content: Optional[str] = None,
+    formatted_history: Optional[List[Dict[str, Any]]] = None
+) -> AsyncGenerator[str, None]:
     """
-    Thực hiện truy vấn Gemini với RAG (không giới hạn dữ liệu)
+    Thực hiện truy vấn Gemini với RAG
     
     Args:
-        query_text: Nội dung câu hỏi
+        query_text: Câu hỏi của người dùng
         rag_content: Nội dung RAG đã truy xuất (tùy chọn)
         formatted_history: Lịch sử hội thoại đã định dạng (tùy chọn)
         
     Yields:
         str: Từng phần phản hồi từ Gemini
     """
-    # Log thông tin đầu vào
     logger.info("====== BẮT ĐẦU GEMINI RAG QUERY ======")
     logger.info(f"Query: '{query_text}'")
     logger.info(f"RAG content truyền vào: {'Có, ' + str(len(rag_content)) + ' ký tự' if rag_content else 'Không'}")
     logger.info(f"History: {'Có, ' + str(len(formatted_history)) + ' mục' if formatted_history and len(formatted_history) > 0 else 'Không'}")
     
-    # Không giới hạn độ dài câu hỏi
-    
-    # Lấy nội dung RAG mỗi lần gọi
     if rag_content is None:
         logger.info("Chưa có RAG content, sẽ truy xuất từ nội dung câu hỏi")
-        # Đảm bảo thư mục data tồn tại trước khi lấy RAG
         ensure_data_directory()
-        # Luôn đọc lại dữ liệu từ file
         rag_content = retrieve_relevant_content(query_text)
-        logger.info(f"Sau retrieve_relevant_content: RAG content {'tồn tại' if rag_content else 'KHÔNG tồn tại'}")
-        if rag_content:
-            logger.info(f"Độ dài RAG content: {len(rag_content)} ký tự")
-            logger.info(f"Đoạn đầu RAG content: {rag_content[:100]}...")
+        if not rag_content:
+            rag_content = "Không có dữ liệu sản phẩm"
     
-    # Kiểm tra xem rag_content có phải là "Không có dữ liệu sản phẩm" hoặc quá ngắn
     if rag_content == "Không có dữ liệu sản phẩm" or not rag_content or len(rag_content) < 100:
-        # Gửi cảnh báo rằng không có dữ liệu RAG
         warning_msg = json.dumps({
             "warning": "Không tìm thấy dữ liệu RAG. Phản hồi có thể không đầy đủ hoặc thiếu thông tin chính xác."
         })
         yield warning_msg
         
-        # Ghi log cảnh báo
         logger.warning(f"Không tìm thấy dữ liệu RAG đầy đủ! Content: {rag_content}")
         
-        # Thử tạo và đọc lại dữ liệu mẫu một lần nữa
         logger.info("Thử tạo và đọc lại dữ liệu mẫu để sử dụng cho RAG")
         create_sample_markdown_data()
-        rag_content = load_markdown_data()
-        logger.info(f"Sau khi tạo lại mẫu: RAG content {'tồn tại' if rag_content else 'KHÔNG tồn tại'}")
-        if rag_content:
+        new_rag_content = load_markdown_data()
+        if new_rag_content:
+            rag_content = new_rag_content
             logger.info(f"Độ dài RAG content sau tạo lại: {len(rag_content)} ký tự")
     
-    # Ghi log riêng về nội dung RAG
-    # log_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "logs")
-    # os.makedirs(log_dir, exist_ok=True)
-    # timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    # rag_log_file = os.path.join(log_dir, f"gemini_rag_{timestamp}.txt")
-    
-    # try:
-    #     with open(rag_log_file, "w", encoding="utf-8") as f:
-    #         f.write("====== GEMINI RAG CONTENT ======\n\n")
-    #         f.write(f"Thời gian: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
-    #         f.write(f"Câu hỏi: {query_text}\n\n")
-    #         f.write(f"Nội dung RAG ({len(rag_content)} ký tự):\n")
-    #         f.write(rag_content)
-    #     logger.info(f"Đã lưu riêng nội dung RAG vào: {rag_log_file}")
-    # except Exception as e:
-    #     logger.error(f"Lỗi khi lưu nội dung RAG: {str(e)}")
-    
-    # Tạo system prompt
     gemini_system_prompt = create_gemini_system_prompt(rag_content=rag_content)
     
-    # Ghi log tổng hợp đầu vào
-    # input_log_file = os.path.join(log_dir, f"gemini_input_{timestamp}.txt")
-    # try:
-    #     with open(input_log_file, "w", encoding="utf-8") as f:
-    #         f.write("====== GEMINI API INPUT LOG ======\n\n")
-    #         f.write(f"Thời gian: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
-            
-    #         # Ghi system prompt
-    #         f.write("=== SYSTEM PROMPT ===\n")
-    #         f.write(gemini_system_prompt)
-    #         f.write("\n\n")
-            
-    #         # Ghi câu hỏi người dùng
-    #         f.write("=== USER QUERY ===\n")
-    #         f.write(query_text)
-    #         f.write("\n\n")
-            
-    #         # Ghi lịch sử hội thoại
-    #         if formatted_history and len(formatted_history) > 0:
-    #             f.write("=== CONVERSATION HISTORY ===\n")
-    #             for i, entry in enumerate(formatted_history):
-    #                 role = entry.get("role", "unknown")
-    #                 content = entry.get("parts", [""])[0]
-    #                 f.write(f"[{i+1}] {role.upper()}: {content}\n")
-    #             f.write("\n\n")
-            
-    #         # Thông tin tổng hợp
-    #         f.write("=== THỐNG KÊ ===\n")
-    #         total_size = len(gemini_system_prompt) + len(query_text)
-    #         f.write(f"Kích thước system prompt: {len(gemini_system_prompt)} ký tự\n")
-    #         f.write(f"Kích thước RAG content: {len(rag_content)} ký tự\n")
-    #         f.write(f"Kích thước câu hỏi: {len(query_text)} ký tự\n")
-            
-    #         if formatted_history:
-    #             history_size = sum(len(entry.get("parts", [""])[0]) for entry in formatted_history)
-    #             f.write(f"Kích thước lịch sử: {history_size} ký tự\n")
-    #             total_size += history_size
-            
-    #         f.write(f"Tổng kích thước dữ liệu: {total_size} ký tự\n")
-    #         f.write(f"Ước tính số token (~4 ký tự/token): {total_size/4:.0f} tokens\n")
-            
-    #     logger.info(f"Đã lưu tổng hợp đầu vào vào: {input_log_file}")
-    # except Exception as e:
-    #     logger.error(f"Lỗi khi lưu tổng hợp đầu vào: {str(e)}")
-    
-    # Gọi API và trả về kết quả
     async for chunk in query_gemini_llm_streaming(
         query_text, 
         gemini_system_prompt=gemini_system_prompt,
